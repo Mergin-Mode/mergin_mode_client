@@ -62,12 +62,13 @@ function App() {
           width={cameraSettings.width}
           ref={webcamRef}
           videoConstraints={videoConstraints}
-          style={{ zIndex:-1}}
+          audio={false}
+          style={{ zIndex:-10, display:"none"}}
         />
         <div id="three-map" style={{
           position:"absolute",
           width:`${cameraSettings.width}px`,
-          height:`${cameraSettings.height}px`
+          height:`${cameraSettings.height}px`,
         }}></div>   
       </div>
     </div>
