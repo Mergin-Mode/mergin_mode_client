@@ -87,7 +87,14 @@ export default function	createWorld(camera,controls,scene,renderer,pointer,parti
 
 
         scene = new THREE.Scene();
-        const AxesScene = new THREE.Scene();
+
+        const video = document.getElementsByTagName( 'video' )[0];
+        var texture = new THREE.VideoTexture( video );
+            texture.minFilter = THREE.LinearFilter;
+            texture.magFilter = THREE.LinearFilter;
+            texture.format = THREE.RGBFormat;
+        scene.background = texture;
+        // const AxesScene = new THREE.Scene();
         // scene.fog = new THREE.FogExp2( 0xcccccc, 0.002 );
         renderer = new THREE.WebGLRenderer( { antialias: true,alpha:true } );
         renderer.setPixelRatio( window.devicePixelRatio );
@@ -104,7 +111,7 @@ export default function	createWorld(camera,controls,scene,renderer,pointer,parti
         camera = new THREE.PerspectiveCamera( 60, host.clientWidth / host.clientHeight, 1, 10000 );
         // camera = new THREE.OrthographicCamera( host.clientWidth/-2,host.clientWidth/2,host.clientHeight/2,host.clientHeight/-2, 1, 10000 );
         camera.position.set( 80, 80, 80 );
-        camera.up.set(0,0,1);
+        // camera.up = new THREE.Vector3( 1, 0, 0 );
 
         // controls = new TrackballControls( camera, renderer.domElement );
         // controls = new OrbitControls( camera, renderer.domElement );
@@ -115,7 +122,7 @@ export default function	createWorld(camera,controls,scene,renderer,pointer,parti
         controls.screenSpacePanning = false;
         controls.minDistance = 1;
         controls.maxDistance = 1000;
-        controls.maxPolarAngle = Math.PI / 2;
+        // controls.maxPolarAngle = Math.PI / 2;
         controls.rotateSpeed = 0.8;
         controls.panSpeed = 0.8;
         controls.zoomSpeed = 0.8;
@@ -152,6 +159,7 @@ export default function	createWorld(camera,controls,scene,renderer,pointer,parti
 
         plane.castShadow = true;
         plane.receiveShadow = true;
+        plane.geometry.rotateX( Math.PI / 2 );
 
         // var geometry = new THREE.SphereGeometry( 1, 32, 32 );
         // var material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
@@ -161,7 +169,7 @@ export default function	createWorld(camera,controls,scene,renderer,pointer,parti
         scene.add( plane );
         
         var gridHelper = new THREE.GridHelper( 10000, 1000 );
-        gridHelper.geometry.rotateX( Math.PI / 2 );
+        // gridHelper.geometry.rotateX( Math.PI / 2 );
         scene.add( gridHelper );
 
         // var geometry = new THREE.CylinderBufferGeometry( 0, 10, 30, 4, 1 );
