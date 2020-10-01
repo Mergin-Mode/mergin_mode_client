@@ -22,8 +22,8 @@ function App() {
   const [rotation,setRotation] = useState({});
 
   useEffect(()=>{
-    if (window.Accelerometer){
-      let acl = new window.Accelerometer({frequency: 60});
+    if (window.LinearAccelerationSensor){
+      let acl = new window.LinearAccelerationSensor({frequency: 60});
 
       acl.addEventListener('reading', () => {
         setPosition({x:acl.x.toFixed(2),y:acl.y.toFixed(2),z:acl.z.toFixed(2)})
