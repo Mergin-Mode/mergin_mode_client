@@ -1,6 +1,6 @@
 import * as THREE from 'three';
-import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls.js';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+// import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls.js';
+// import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { DeviceOrientationControls } from 'three/examples/jsm/controls/DeviceOrientationControls.js';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
@@ -57,11 +57,11 @@ export default function	createWorld(camera,controls,scene,renderer,pointer,parti
       loaders.FBXLoader = FBXLoader;
     	loaders.GLTFLoader = GLTFLoader;
     	var clock = new THREE.Clock();
-      var raycaster = new THREE.Raycaster();
-      var mouse = new THREE.Vector2();
+      // var raycaster = new THREE.Raycaster();
+      // var mouse = new THREE.Vector2();
 
         const host = document.getElementById("three-map");
-        const axesHost = document.getElementById("axes-helper");
+        // const axesHost = document.getElementById("axes-helper");
       // init();
       //render(); // remove when using next line for animation loop (requestAnimationFrame)
 
@@ -110,7 +110,7 @@ export default function	createWorld(camera,controls,scene,renderer,pointer,parti
         // axesHost.appendChild( renderer2.domElement );
         camera = new THREE.PerspectiveCamera( 60, host.clientWidth / host.clientHeight, 1, 10000 );
         // camera = new THREE.OrthographicCamera( host.clientWidth/-2,host.clientWidth/2,host.clientHeight/2,host.clientHeight/-2, 1, 10000 );
-        camera.position.set( 80, 80, 80 );
+        camera.position.set( 0, 1.7, 0 );
         // camera.up = new THREE.Vector3( 1, 0, 0 );
 
         // controls = new TrackballControls( camera, renderer.domElement );
@@ -157,8 +157,8 @@ export default function	createWorld(camera,controls,scene,renderer,pointer,parti
         const plane = new THREE.Mesh( geometry, material );
         plane.position.set( 0, 0, 0 );
 
-        plane.castShadow = true;
-        plane.receiveShadow = true;
+        plane.castShadow = false;
+        plane.receiveShadow = false;
         plane.geometry.rotateX( Math.PI / 2 );
 
         // var geometry = new THREE.SphereGeometry( 1, 32, 32 );
@@ -228,19 +228,20 @@ export default function	createWorld(camera,controls,scene,renderer,pointer,parti
 
             scene.add( dirLight );
 
-            dirLight.castShadow = true;
-            dirLight.shadowMapWidth = dirLight.shadowMapHeight = 1024*2;
+            dirLight.castShadow = false;
+            // dirLight.shadow.mapSize.width.set(1024*2)
+            // dirLight.shadow.mapSize.height.set(1024*2);
 
-            var d = 300;
+            // var d = 300;
 
-            dirLight.shadowCameraLeft = -d;
-            dirLight.shadowCameraRight = d;
-            dirLight.shadowCameraTop = d;
-            dirLight.shadowCameraBottom = -d;
+            // dirLight.shadow.camera.left.set(-d);
+            // dirLight.shadow.camera.right.set(d);
+            // dirLight.shadow.camera.top.set(d);
+            // dirLight.shadow.camera.bottom.set(-d);
 
-            dirLight.shadowCameraFar = 3500;
-            dirLight.shadowBias = -0.0001;
-            dirLight.shadowDarkness = 0.35;
+            // dirLight.shadow.camera.far.set(3500);
+            // dirLight.shadow.bias.set( -0.0001);
+            // dirLight.shadow.darkness.set(0.35);
 
         // LIGHTS
 
@@ -295,21 +296,18 @@ export default function	createWorld(camera,controls,scene,renderer,pointer,parti
         // scene.add( light );
 
 
-        var geometry = new THREE.SphereGeometry( .5, 32, 32 );
-        var material = new THREE.MeshBasicMaterial( {color: "red"} );
-        pointer = new THREE.Mesh( geometry, material );
+        pointer = new THREE.Mesh( new THREE.SphereGeometry( .5, 32, 32 ), new THREE.MeshBasicMaterial( {color: "red"} ) );
         // scene.add( pointer );
 
-        var geometry = new THREE.SphereGeometry( 150, 32, 32 );
-        var loader = new THREE.TextureLoader();
-        loader.crossOrigin = "";
-        var geometry = new THREE.SphereGeometry( 150, 32, 32 );
-        var material = new THREE.MeshBasicMaterial({opacity: 0,
+        // var geometry = new THREE.SphereGeometry( 150, 32, 32 );
+        // var loader = new THREE.TextureLoader();
+        // loader.crossOrigin = "";
+        
+        const sky = new THREE.Mesh( new THREE.SphereGeometry( 150, 32, 32 ), new THREE.MeshBasicMaterial({opacity: 0,
           transparent: true,
           alphaTest: 0.05,
           side: THREE.DoubleSide
-        });
-        const sky = new THREE.Mesh( geometry, material );
+        }) );
         sky.rotation.set(Math.PI/2,0,0)
         scene.add(sky);
 
@@ -330,37 +328,37 @@ export default function	createWorld(camera,controls,scene,renderer,pointer,parti
         // var test = new THREE.Mesh( geometry, material );
         // scene.add( test );
 
-        function onMouseMove( event ) {
-        // calculate mouse position in normalized device coordinates
-        // (-1 to +1) for both components
-        const el = document.getElementById("three-map").getBoundingClientRect()
-        const left = el.left;
-        const top = el.top;
-        mouse.x = ( (event.clientX-left) / host.clientWidth ) * 2 - 1;
-        mouse.y = - ( (event.clientY - top) / host.clientHeight ) * 2 + 1;
+      //   function onMouseMove( event ) {
+      //   // calculate mouse position in normalized device coordinates
+      //   // (-1 to +1) for both components
+      //   const el = document.getElementById("three-map").getBoundingClientRect()
+      //   const left = el.left;
+      //   const top = el.top;
+      //   mouse.x = ( (event.clientX-left) / host.clientWidth ) * 2 - 1;
+      //   mouse.y = - ( (event.clientY - top) / host.clientHeight ) * 2 + 1;
 
-        raycaster.setFromCamera( mouse, camera );
+      //   raycaster.setFromCamera( mouse, camera );
 
-        // See if the ray from the camera into the world hits one of our meshes
-        var intersects = raycaster.intersectObject( plane );
+      //   // See if the ray from the camera into the world hits one of our meshes
+      //   var intersects = raycaster.intersectObject( plane );
 
-        // Toggle rotation bool for meshes that we clicked
-        if ( intersects.length > 0 ) {
+      //   // Toggle rotation bool for meshes that we clicked
+      //   if ( intersects.length > 0 ) {
 
-          pointer.position.set( 0, 0, 0 );
-          pointer.lookAt( intersects[ 0 ].face.normal );
+      //     pointer.position.set( 0, 0, 0 );
+      //     pointer.lookAt( intersects[ 0 ].face.normal );
 
-          pointer.position.copy( intersects[ 0 ].point );
-          const posX = Math.sqrt(Math.pow(-50 - -50,2) + Math.pow( pointer.position.x - -50,2) ) / 100;
-          const posY = Math.sqrt(Math.pow(-50 - -50,2) + Math.pow( -50 - pointer.position.y,2) ) / 100;
-          const posZ = Math.sqrt(Math.pow(0 - 0,2) + Math.pow( 0 - pointer.position.z,2) );
-          showCoords(posX,posY,posZ);
-          window.array = window.array || "";
-          window.array += `${pointer.position.x.toFixed(4)},${pointer.position.y.toFixed(4)},${pointer.position.z.toFixed(4)}\n`
-        }
+      //     pointer.position.copy( intersects[ 0 ].point );
+      //     const posX = Math.sqrt(Math.pow(-50 - -50,2) + Math.pow( pointer.position.x - -50,2) ) / 100;
+      //     const posY = Math.sqrt(Math.pow(-50 - -50,2) + Math.pow( -50 - pointer.position.y,2) ) / 100;
+      //     const posZ = Math.sqrt(Math.pow(0 - 0,2) + Math.pow( 0 - pointer.position.z,2) );
+      //     showCoords(posX,posY,posZ);
+      //     window.array = window.array || "";
+      //     window.array += `${pointer.position.x.toFixed(4)},${pointer.position.y.toFixed(4)},${pointer.position.z.toFixed(4)}\n`
+      //   }
 
 
-      }
+      // }
       function onWindowResize() {
         camera.aspect = host.clientWidth / host.clientHeight;
         camera.updateProjectionMatrix();
@@ -369,12 +367,14 @@ export default function	createWorld(camera,controls,scene,renderer,pointer,parti
       }
 
       function animate() {
-        // setTimeout( function() {
-        requestAnimationFrame( animate );
-        // }, 1000 / 60 );
-        controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
-        // controls2.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
-        render();
+            setTimeout( function() {
+                requestAnimationFrame( animate );
+                if(window.mergin_mode.scene?.visible !== false){
+                    controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
+                    render();
+                }
+            }, 60 );
+
       }
 
       function render() {
@@ -385,14 +385,14 @@ export default function	createWorld(camera,controls,scene,renderer,pointer,parti
           window.mergin_mode.mixers[ i ].update( delta );
 
         }
-        window.mergin_mode.modelLayer.map(md => {
+        window.mergin_mode.modelLayer.forEach(md => {
           const model = {...md,mesh:md.mesh.children[0]};
           const {x,y,z} = model.mesh.position;
           const {animating,activeRow} = model.runtimeInfo;
-          const activeRowData = window.mergin_mode.vectors.data.filter(v=>v.id == model.vectorId)[0].array[0][activeRow];
+          const activeRowData = window.mergin_mode.vectors.data.filter(v=>v.id === model.vectorId)[0].array[0][activeRow];
           const xStart = activeRowData[0];
           const yStart = activeRowData[1];
-          const zStart = activeRowData[2];
+          // const zStart = activeRowData[2];
           const Gab = activeRowData[3];
           const Sab = activeRowData[4];
           if(
@@ -410,9 +410,9 @@ export default function	createWorld(camera,controls,scene,renderer,pointer,parti
             if(newSab < Sab){
               model.mesh.position.set(newX,newY,newZ);
             } else {
-              const newActiveRow = window.mergin_mode.vectors.data.filter(v=>v.id == model.vectorId)[0].array[0][activeRow + 1];
+              const newActiveRow = window.mergin_mode.vectors.data.filter(v=>v.id === model.vectorId)[0].array[0][activeRow + 1];
               if(!newActiveRow) {
-                  const startActiveRow = window.mergin_mode.vectors.data.filter(v=>v.id == model.vectorId)[0].array[0][0];
+                  // const startActiveRow = window.mergin_mode.vectors.data.filter(v=>v.id === model.vectorId)[0].array[0][0];
 
                   // model.mesh.position.set(startActiveRow[0],startActiveRow[1],startActiveRow[2]);
                   setModelRuntimeInfo(model.id,{animating:false,activeRow:0})

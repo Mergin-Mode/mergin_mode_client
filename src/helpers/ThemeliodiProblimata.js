@@ -1,50 +1,46 @@
+const rad2Grad=63.6619772367581 // 1 rad ~= 63 grads 
+
 export const ThemeliodesProblima_1 = (Xa,Ya,Sab,Gab) => {
-	//1rad=63.6619772367581grads
-	const Xb = Xa + Sab*Math.sin(Gab/63.6619772367581);
-	const Yb = Ya + Sab*Math.cos(Gab/63.6619772367581);
+	const Xb = Xa + Sab*Math.sin(Gab/rad2Grad);
+	const Yb = Ya + Sab*Math.cos(Gab/rad2Grad);
 	return {Xb:Xb , Yb:Yb};
 }
+
 export const calculateSab = (Xa,Ya,Xb,Yb) => {
-	var absDX = Math.abs(Xb-Xa);
-	var absDY = Math.abs(Yb-Ya);
-	var Sab = Math.sqrt( Math.pow(absDX,2) + Math.pow(absDY,2) );
+	const absDX= Math.abs(Xb-Xa);
+	const absDY = Math.abs(Yb-Ya);
+	const Sab = Math.sqrt( Math.pow(absDX,2) + Math.pow(absDY,2) );
 	return Number(Sab.toFixed(4));
 }
+
 export const ThemeliodesProblima_2 = (Xa,Ya,Xb,Yb) => {
 	
-	var absDX = Math.abs(Xb-Xa);
-	var absDY = Math.abs(Yb-Ya);
-	var Sab = Math.sqrt( Math.pow(absDX,2) + Math.pow(absDY,2) );
-	var DX = Xb-Xa;
-	var DY = Yb-Ya;
-	var theta =Math.atan((absDX/absDY))*63.6619772367581; //http://www.translatorscafe.com/cafe/EN/units-converter/angle/2-3/radian-grad/
+	const absDX = Math.abs(Xb-Xa);
+	const absDY = Math.abs(Yb-Ya);
+	const Sab = Math.sqrt( Math.pow(absDX,2) + Math.pow(absDY,2) );
+
+	const DX = Xb-Xa;
+	const DY = Yb-Ya;
+	const theta =Math.atan((absDX/absDY))*rad2Grad; //http://www.translatorscafe.com/cafe/EN/units-converter/angle/2-3/radian-grad/
+	let Gab;
 	if (DX>0 && DY>0){
-		var Gab = theta;
+		 Gab = theta;
+	} else if (DX>0 && DY<0){
+		 Gab = 200 - theta;
+	} else if (DX<0 && DY<0){
+		 Gab = 200 + theta;
+	} else if (DX<0 && DY>0){
+		 Gab = 400 - theta;
+	} else if (DX === 0 && DY>0){
+		 Gab = 0;
+	} else if (DX === 0 && DY<0){
+		 Gab = 200;
+	} else if (DX>0 && DY === 0){
+		 Gab = 100;
+	} else if (DX<0 && DY === 0){
+		 Gab = 300;
+	} else if (DX === 0 && DY === 0){
+		 Gab = 0;
 	}
-	if (DX>0 && DY<0){
-		var Gab = 200 - theta;
-	}
-	if (DX<0 && DY<0){
-		var Gab = 200 + theta;
-	}
-	if (DX<0 && DY>0){
-		var Gab = 400 - theta;
-	}
-	if (DX==0 && DY>0){
-		var Gab = 0;
-	}
-	if (DX==0 && DY<0){
-		var Gab = 200;
-	}
-	if (DX>0 && DY==0){
-		var Gab = 100;
-	}
-	if (DX<0 && DY==0){
-		var Gab = 300;
-	}
-	if (DX==0 && DY==0){
-		var Gab = 0;
-	}
-	//Gab = Gab/63.6619772367581;
 	return {Gab:Gab.toFixed(4) , Sab:Sab.toFixed(4)}
 }
