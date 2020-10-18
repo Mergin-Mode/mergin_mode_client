@@ -11,6 +11,8 @@ function getModalStyle() {
   const left = 50 + rand();
 
   return {
+    maxWidth:"50%",
+    width:"50%",
     top: `${top}%`,
     left: `${left}%`,
     transform: `translate(-${top}%, -${left}%)`,

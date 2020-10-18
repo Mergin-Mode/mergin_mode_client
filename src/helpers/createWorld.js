@@ -7,6 +7,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import {CalculateDeltaPosition} from "./CalculateDeltaPosition";
 import {calculateSab} from "./ThemeliodiProblimata";
         // var modelName = "models/gltf/" + model.name + ".glb";
+var degtorad = Math.PI / 180; // Degree-to-Radian conversion
 
 GLTFLoader.prototype.load2 = function(files, callback) {
     var scope = this;
@@ -110,7 +111,8 @@ export default function	createWorld(camera,controls,scene,renderer,pointer,parti
         // axesHost.appendChild( renderer2.domElement );
         camera = new THREE.PerspectiveCamera( 60, host.clientWidth / host.clientHeight, 1, 10000 );
         // camera = new THREE.OrthographicCamera( host.clientWidth/-2,host.clientWidth/2,host.clientHeight/2,host.clientHeight/-2, 1, 10000 );
-        camera.position.set( 0, 1.7, 0 );
+        camera.position.set( 50,17,50 );
+
         // camera.up = new THREE.Vector3( 1, 0, 0 );
 
         // controls = new TrackballControls( camera, renderer.domElement );
@@ -443,5 +445,5 @@ export default function	createWorld(camera,controls,scene,renderer,pointer,parti
       // document.getElementById("three-map").addEventListener( 'click', onMouseMove, false );
 
       partials = {plane,pointer,sky,gridHelper};
-      return {camera,controls,scene,renderer,pointer,partials,loaders,onWindowResize}
-} 
+      return {plane,camera,controls,scene,renderer,pointer,partials,loaders,onWindowResize}
+}
