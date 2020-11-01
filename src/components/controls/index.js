@@ -7,60 +7,16 @@ import SideBar from "../_layout/SideBar";
 import FullscreenIcon from "@material-ui/icons/Fullscreen";
 import StreetviewIcon from "@material-ui/icons/Streetview";
 import CropFreeIcon from "@material-ui/icons/CropFree";
-
+import { DescriptiveDataListener } from "../../helpers/listeners";
 const Controls = props => {
   const sliderHelperRef = useRef();
   const containerRef = useRef();
   const fheight = useRef({
     height: null,
     movementY: null,
-    previousTouchY: null
+    previousTouchY: null,
+    moved: false
   });
-
-  const sliderOnMouseDown = () => {
-    fheight.current = {
-      height: null,
-      movementY: null,
-      previousTouchY: null
-    };
-    const resize = e => {
-      if (typeof e.movementY === "undefined") {
-        fheight.current.movementY =
-          e.touches[0].pageY -
-          (fheight.current.previousTouchY || e.touches[0].pageY);
-        fheight.current.previousTouchY = e.touches[0].pageY;
-      } else {
-        fheight.current.movementY = e.movementY;
-      }
-      fheight.current.height =
-        containerRef.current.offsetHeight - fheight.current.movementY;
-      containerRef.current.style.height = `${fheight.current.height}px`;
-    };
-
-    sliderHelperRef.current.style.height = "100%";
-    window.addEventListener("mousemove", resize);
-    window.addEventListener("touchmove", resize);
-    const mouseup = () => {
-      if (fheight.current.height < 200) {
-        containerRef.current.classList.add("transition");
-        if (fheight.current.movementY > 0) {
-          fheight.current.height = 0;
-        } else if (fheight.current.movementY < 0) {
-          fheight.current.height = 200;
-        }
-      }
-      containerRef.current.style.height = `${fheight.current.height}px`;
-
-      setTimeout(() => {
-        containerRef.current.classList.remove("transition");
-      }, 500);
-      window.removeEventListener("mousemove", resize);
-      window.removeEventListener("touchmove", resize);
-      sliderHelperRef.current.style.height = "38px";
-    };
-    window.addEventListener("mouseup", mouseup);
-    window.addEventListener("touchend", mouseup);
-  };
 
   // const handleScan = data => {
   //   if (data) {
@@ -144,15 +100,30 @@ const Controls = props => {
         >
           <div
             id="slider-helper"
-            onMouseDown={sliderOnMouseDown}
-            onTouchStart={sliderOnMouseDown}
+            onMouseDown={DescriptiveDataListener(
+              containerRef,
+              sliderHelperRef,
+              fheight
+            )}
+            onTouchStart={DescriptiveDataListener(
+              containerRef,
+              sliderHelperRef,
+              fheight
+            )}
             ref={elem => (sliderHelperRef.current = elem)}
           ></div>
           <div id="slider"></div>
-          <div
-            id="descriptive-data"
-            dangerouslySetInnerHTML={{ __html: props.descriptiveData }}
-          ></div>
+          {props.descriptiveData ? (
+            <div
+              id="descriptive-data"
+              dangerouslySetInnerHTML={{ __html: props.descriptiveData }}
+            ></div>
+          ) : (
+            <div id="descriptive-data" style={{ overflowY: "auto" }}>
+              <i className="mm-icons far fa-comment-dots"></i>
+              <p>Please select an object to reveal descriptive data</p>
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -41,6 +41,16 @@ const World = props => {
         const descriptiveData = uuid
           ? window.mergin_mode.world.filter(o => o.id == uuid)[0].description
           : null;
+        window["descriptive-data-container"].classList.add("transition");
+
+        if (!descriptiveData) {
+          window["descriptive-data-container"].style.height = "0%";
+        } else {
+          window["descriptive-data-container"].style.height = "33%";
+        }
+        setTimeout(() => {
+          window["descriptive-data-container"].classList.remove("transition");
+        }, 1000);
         props.setDescriptiveData(descriptiveData);
       }
     );

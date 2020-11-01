@@ -24,7 +24,10 @@ export default props => {
       right: theme.spacing(2),
       "& .MuiButtonBase-root.MuiFab-root.MuiSpeedDial-fab.MuiFab-primary": {
         width: 48,
-        height: 48
+        height: 48,
+        "& .MuiFab-label": {
+          display: "initial"
+        }
       }
     }
   }));
