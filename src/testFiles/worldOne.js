@@ -24,9 +24,24 @@ export default async () => {
     [{ url: process.env.PUBLIC_URL + "/white-tower.gltf" }],
     towerlocation
   );
-  console.log(model1, model2);
   window.mergin_mode.world = [
-    { id: model1, description: "This is the model 1" },
-    { id: model2, description: "This is the model 2" }
+    {
+      id: model2,
+      description: `<iframe 
+          style="
+            width: 100%;
+            height: 100%;
+            border:none;"
+          src="https://en.wikipedia.org/wiki/White_Tower_of_Thessaloniki"></iframe>`
+    },
+    {
+      id: model1,
+      description: `<iframe 
+          style="
+            width: 100%;
+            height: 100%;
+            border:none;"
+          src="https://en.wikipedia.org/wiki/Tree"></iframe>`
+    }
   ];
 };

@@ -13,7 +13,7 @@ export default props => {
       height: 380,
       transform: "translateZ(0px)",
       flexGrow: 1,
-      position: "absolute",
+      flex: 1,
       zIndex: 10,
       width: "100%",
       height: "100%"
@@ -21,7 +21,11 @@ export default props => {
     speedDial: {
       position: "absolute",
       bottom: theme.spacing(2),
-      right: theme.spacing(2)
+      right: theme.spacing(2),
+      "& .MuiButtonBase-root.MuiFab-root.MuiSpeedDial-fab.MuiFab-primary": {
+        width: 48,
+        height: 48
+      }
     }
   }));
 

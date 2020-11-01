@@ -209,7 +209,10 @@ export default function createWorld(
 
     const intersects = raycaster.intersectObjects(scene.children, true);
     const obj = getParentElement((intersects || [])[0]?.object);
-    if (!obj) return false;
+    if (!obj) {
+      selectModel(null);
+      return false;
+    }
     const material = new THREE.MeshPhongMaterial({
       color: "#b34f0b",
       side: THREE.DoubleSide
