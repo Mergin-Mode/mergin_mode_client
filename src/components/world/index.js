@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import { connect } from "react-redux";
 import createWorld from "../../helpers/createWorld";
+import readWorldData from "../../helpers/readWorldData";
 import { setDescriptiveData } from "../../actions";
 const World = props => {
   useEffect(() => {
@@ -55,7 +56,9 @@ const World = props => {
       }
     );
     window.mergin_mode = { ...window.mergin_mode, ...newWorld };
-    props.context();
+    (async function() {
+      await readWorldData(props.context);
+    })();
   }, []);
 
   return (
