@@ -59,13 +59,4 @@ function App() {
   );
 }
 
-// {modalData && (
-//           <Modal
-//             data={modalData}
-//             onClose={() => {
-//               setModalData(null);
-//               setAction("immerse");
-//             }}
-//           />
-//         )}
 export default App;

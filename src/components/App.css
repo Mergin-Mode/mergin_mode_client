@@ -8,6 +8,10 @@
                                   supported by Chrome, Edge, Opera and Firefox */
   box-sizing: border-box;
 }
+*:focus{
+  outline: none;
+  font-family: Ubuntu !important;
+}
 html,body{
   color:#313129;
 
@@ -55,6 +59,11 @@ html,body{
 .transition{
   transition: all .2s;
 }
+div[role=presentation] {
+  display: flex;
+  justify-content: center;
+  align-items:center;
+}
 #descriptive-data{
   position: relative;
   flex:1;
@@ -74,6 +83,9 @@ html,body{
   top: 0;
   left: 0;
   z-index: 2;
+}
+*:focus{
+  outline: none !important;
 }
 .mm-icons{
   font-size: 40px;
@@ -139,27 +151,37 @@ html,body{
 }
 #logo{
   position: absolute;
-  z-index: 2;
+  z-index: 1400;
   top: 0;
   left: 0;
 }
 .scan-tip{
-  color: white;
+  position: absolute;
+    height: 100%;
+    width: 100%;
+}
+.scan-tip section {
+  width:100%;
+  height: 100%
+}
+.scan-tip section section {
+  width:100%;
+  height: 100%;
+  position: unset !important;
+  padding-top:unset !important;
   display: flex;
   justify-content: center;
-  align-items:center;
-  max-width: 100%;
-  max-height: 100%;
-  width: 100vw;
-  height: 100vh;
-}
-@media screen and (orientation: landscape) {
- .scan-tip{
-    width: 100vh;
-    height: 100vw;;
-  }
+  align-items: center;
 }
 
-.scan-tip p {
-  position: absolute; 
+.scan-tip section section div {
+  position: unset !important;
+  border:none !important;
+  box-shadow: inset -11px 0px 0px -4px #323228, inset 13px 0px 0px -4px #323228 , 0px 13px 21px 10000px rgba(0,0,0,0.5) !important;
+  z-index: 1;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  max-height: 330px;
+  max-width: 330px;
 }

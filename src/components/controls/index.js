@@ -1,16 +1,18 @@
 import React, { useRef, useState, useEffect } from "react";
 import { connect } from "react-redux";
-import QrReader from "react-qr-reader";
 import ActionButton from "../_layout/ActionButton";
 import Modal from "../_layout/Modal";
 import SideBar from "../_layout/SideBar";
 import FullscreenIcon from "@material-ui/icons/Fullscreen";
 import StreetviewIcon from "@material-ui/icons/Streetview";
 import CropFreeIcon from "@material-ui/icons/CropFree";
+import QRModal from "../_layout/QRModal";
+import Button from "@material-ui/core/Button";
 import { DescriptiveDataListener } from "../../helpers/listeners";
 const Controls = props => {
   const sliderHelperRef = useRef();
   const containerRef = useRef();
+  const [modalData, setModalData] = useState(null);
   const fheight = useRef({
     height: null,
     movementY: null,
@@ -18,30 +20,17 @@ const Controls = props => {
     moved: false
   });
 
-  // const handleScan = data => {
-  //   if (data) {
-  //     const d = JSON.parse(data);
-  //     window.mergin_mode.camera.position.set(d.x, d.y, d.z);
-  //     setAction("immerse");
-  //     window.mergin_mode.controls.alphaOffset = (d.heading / 180) * Math.PI;
-  //     window.mergin_mode.controls.update();
-  //   }
-  // };
-
-  // const toggleFullscreen = () => {
-  //   if (!document.fullscreenElement) {
-  //     appRef.current.requestFullscreen().catch(err => {
-  //       modalData(
-  //         `Error attempting to enable full-screen mode: ${err.message} (${err.name})`
-  //       );
-  //     });
-  //   } else {
-  //     document.exitFullscreen();
-  //   }
-  // };
-  // const handleScanError = err => {
-  //   console.error(err);
-  // };
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      window.document.body.requestFullscreen().catch(err => {
+        alert(
+          `Error attempting to enable full-screen mode: ${err.message} (${err.name})`
+        );
+      });
+    } else {
+      document.exitFullscreen();
+    }
+  };
 
   return (
     <div id="controls">
@@ -52,44 +41,23 @@ const Controls = props => {
         src={process.env.PUBLIC_URL + "/logo-transparent.png"}
       />
 
-      {/*action === "scan" && (
-        <div className="scan-tip">
-          <QrReader
-            delay={300}
-            onError={handleScanError}
-            onScan={handleScan}
-            style={{ width: "100%" }}
-          />
-        </div>
-      )*/}
       <div id="actions-menu">
         <ActionButton
           actions={[
             {
               icon: (
-                <StreetviewIcon
-                  color="secondary"
-                  // onClick={() => setAction("immerse")}
-                />
-              ),
-              name: "Immerse"
-            },
-            {
-              icon: (
-                <CropFreeIcon
-                  color="secondary"
-                  // onClick={() => setAction("scan")}
-                />
+                <div
+                  onClick={() =>
+                    setModalData(<QRModal onClose={() => setModalData(null)} />)
+                  }
+                >
+                  <i style={{ fontSize: 18 }} className="fas fa-qrcode"></i>
+                </div>
               ),
               name: "QR Scan"
             },
             {
-              icon: (
-                <FullscreenIcon
-                  color="secondary"
-                  // onClick={() => toggleFullscreen()}
-                />
-              ),
+              icon: <CropFreeIcon onClick={() => toggleFullscreen()} />,
               name: "Full Screen"
             }
           ]}
@@ -98,7 +66,7 @@ const Controls = props => {
           id="descriptive-data-container"
           ref={elem => (containerRef.current = elem)}
         >
-          <div
+          <Button
             id="slider-helper"
             onMouseDown={DescriptiveDataListener(
               containerRef,
@@ -111,7 +79,7 @@ const Controls = props => {
               fheight
             )}
             ref={elem => (sliderHelperRef.current = elem)}
-          ></div>
+          ></Button>
           <div id="slider"></div>
           {props.descriptiveData ? (
             <div
@@ -125,6 +93,14 @@ const Controls = props => {
             </div>
           )}
         </div>
+        {modalData && (
+          <Modal
+            data={modalData}
+            onClose={() => {
+              setModalData(null);
+            }}
+          />
+        )}
       </div>
     </div>
   );

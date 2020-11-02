@@ -22,11 +22,17 @@ export default props => {
       position: "absolute",
       bottom: theme.spacing(2),
       right: theme.spacing(2),
+      "& .MuiSpeedDialAction-staticTooltip .MuiSpeedDialAction-staticTooltipLabel": {
+        whiteSpace: "nowrap"
+      },
       "& .MuiButtonBase-root.MuiFab-root.MuiSpeedDial-fab.MuiFab-primary": {
         width: 48,
         height: 48,
         "& .MuiFab-label": {
           display: "initial"
+        },
+        "&:focus": {
+          outline: "none"
         }
       }
     }

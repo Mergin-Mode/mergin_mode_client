@@ -22,6 +22,7 @@ export const DescriptiveDataListener = (
     window.removeEventListener("touchend", mouseup);
     setTimeout(() => {
       containerRef.current.classList.remove("transition");
+      sliderHelperRef.current.style.height = "48px";
     }, 500);
   };
   fheight.current = {
@@ -48,8 +49,6 @@ export const DescriptiveDataListener = (
   window.addEventListener("mousemove", resize);
   window.addEventListener("touchmove", resize);
   const mouseup = () => {
-    sliderHelperRef.current.style.height = "48px";
-
     if (!fheight.current.moved) {
       return sliderOnClick();
     }
@@ -77,6 +76,7 @@ export const DescriptiveDataListener = (
 
     setTimeout(() => {
       containerRef.current.classList.remove("transition");
+      sliderHelperRef.current.style.height = "48px";
     }, 500);
 
     window.removeEventListener("mousemove", resize);
