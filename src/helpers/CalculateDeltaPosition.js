@@ -1,11 +1,149 @@
-import { ThemeliodesProblima_1 } from "./ThemeliodiProblimata";
+import {
+  ThemeliodesProblima_1,
+  ThemeliodesProblima_2,
+  CalculateZ
+} from "./ThemeliodiProblimata";
+import { AnimationMixer } from "three";
 import { posZ } from "./computeZ";
 
-export const CalculateDeltaPosition = (Xa, Ya, Za, Gab, delta, dem) => {
-  const Sab = delta * 1.75; //distance in meters per second (50km/h)
+const gradToRad = 63.661977236758;
+export const CalculateTransformation = (timeDelta, model) => {
+  const Xa = Number(model.object.position.x.toFixed(4));
+  const Ya = Number(model.object.position.y.toFixed(4));
+  const currentAnimation = model.animations[model.runtimeInfo.animationIndex];
+
+  model.runtimeInfo.duration += timeDelta;
+  if (currentAnimation.duration) {
+    if (model.runtimeInfo.duration >= currentAnimation.duration / 1000) {
+      //check if animation has other path to animate
+      model.runtimeInfo.duration = 0;
+      if (model.animations.length - 1 > model.runtimeInfo.animationIndex) {
+        model.runtimeInfo.animationIndex++;
+        model.runtimeInfo.pathIndex = 0;
+        const mixer = new AnimationMixer(model.object);
+        mixer
+          .clipAction(
+            model.object.animations.filter(animation => {
+              return (
+                animation.name ==
+                model.animations[model.runtimeInfo.animationIndex].name
+              );
+            })[0]
+          )
+          .setDuration(1)
+          .play();
+        model.runtimeInfo.mixer = mixer;
+      }
+      // restart animation
+      else {
+        model.runtimeInfo.animationIndex = 0;
+        model.runtimeInfo.pathIndex = 0;
+        const mixer = new AnimationMixer(model.object);
+        mixer
+          .clipAction(
+            model.object.animations.filter(animation => {
+              return (
+                animation.name ==
+                model.animations[model.runtimeInfo.animationIndex].name
+              );
+            })[0]
+          )
+          .setDuration(1)
+          .play();
+        model.runtimeInfo.mixer = mixer;
+      }
+    }
+    return false;
+  }
+
+  const currentPath = currentAnimation.path[model.runtimeInfo.pathIndex];
+  const Xb = Number(currentPath[0].toFixed(4));
+  const Yb = Number(currentPath[1].toFixed(4));
+
+  const Sab = ((timeDelta * currentAnimation.speed) / 60 / 60) * 1000; //distance in meters per second (50km/h)
+  const start = currentAnimation.path[model.runtimeInfo.pathIndex - 1]
+    ? currentAnimation.path[model.runtimeInfo.pathIndex - 1]
+    : currentAnimation.path[model.runtimeInfo.pathIndex];
+  const Gab = Number(ThemeliodesProblima_2(start[0], start[1], Xb, Yb).Gab);
+
+  if (
+    (Gab <= 100 && (Xa >= Xb || Ya >= Yb)) ||
+    (Gab > 100 && Gab <= 200 && (Xa >= Xb || Ya <= Yb)) ||
+    (Gab > 200 && Gab <= 300 && (Xa <= Xb || Ya <= Yb)) ||
+    (Gab > 300 && (Xa <= Xb || Ya >= Yb))
+  ) {
+    //check if animation has other path to animate
+    if (currentAnimation.path.length - 1 > model.runtimeInfo.pathIndex) {
+      model.runtimeInfo.pathIndex++;
+      model.runtimeInfo.duration = 0;
+    }
+    //check if model has other animations
+    else if (model.animations.length - 1 > model.runtimeInfo.animationIndex) {
+      model.runtimeInfo.animationIndex++;
+      model.runtimeInfo.pathIndex = 0;
+      model.runtimeInfo.duration = 0;
+      const mixer = new AnimationMixer(model.object);
+      mixer
+        .clipAction(
+          model.object.animations.filter(animation => {
+            return (
+              animation.name ==
+              model.animations[model.runtimeInfo.animationIndex].name
+            );
+          })[0]
+        )
+        .setDuration(1)
+        .play();
+      model.runtimeInfo.mixer = mixer;
+    }
+    // restart animation
+    else {
+      model.runtimeInfo.animationIndex = 0;
+      model.runtimeInfo.pathIndex = 0;
+      model.runtimeInfo.duration = 0;
+      const mixer = new AnimationMixer(model.object);
+      mixer
+        .clipAction(
+          model.object.animations.filter(animation => {
+            return (
+              animation.name ==
+              model.animations[model.runtimeInfo.animationIndex].name
+            );
+          })[0]
+        )
+        .setDuration(1)
+        .play();
+      model.runtimeInfo.mixer = mixer;
+    }
+    const posXY = ThemeliodesProblima_1(Xa, Ya, Sab, Gab);
+    const newZ = CalculateZ(
+      { x: posXY.Xb, y: posXY.Yb, z: model.object.position.z },
+      window.mergin_mode.plane,
+      2
+    );
+    // const rotate = Gab ? Gab / gradToRad : 0;
+    // return {
+    //   rotation: [
+    //     model.rotation[0],
+    //     model.rotation[1] + rotate,
+    //     model.rotation[2]
+    //   ]
+    // };
+    return false;
+  }
+
   const posXY = ThemeliodesProblima_1(Xa, Ya, Sab, Gab);
-  const newZ = posZ(posXY.Xb, posXY.Yb, dem);
-  return { x: posXY.Xb, y: posXY.Yb, z: newZ };
+  const newZ = CalculateZ(
+    { x: posXY.Xb, y: posXY.Yb, z: model.object.position.z },
+    window.mergin_mode.plane,
+    2
+  );
+  const rotate = Gab ? Gab / gradToRad : 0;
+
+  return {
+    position: [posXY.Xb, posXY.Yb, newZ],
+    rotation: [model.rotation[0], model.rotation[1] - rotate, model.rotation[2]]
+  };
 };
 
 export const CalculateDeltaRotation = (

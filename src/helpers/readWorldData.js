@@ -1,6 +1,7 @@
 import { fromLonLat } from "ol/proj.js";
 import { loadGLTFModel, loadFBXModel } from "../helpers/loaders";
 import worldData from "../testFiles/worldOne.js";
+import { AnimationMixer } from "three";
 
 const loader = {
   gltf: loadGLTFModel,
@@ -40,7 +41,33 @@ export default async () => {
       .then(models => {
         models.forEach(model => {
           window.mergin_mode.world[model.referenceIndex].id = model.uuid;
+          window.mergin_mode.world[model.referenceIndex].object = model.object;
           window.mergin_mode.scene.add(model.object);
+
+          //check for animations and create the mixers
+          if (window.mergin_mode.world[model.referenceIndex].animations) {
+            const mixer = new AnimationMixer(model.object);
+            mixer
+              .clipAction(
+                window.mergin_mode.world[
+                  model.referenceIndex
+                ].object.animations.filter(animation => {
+                  return (
+                    animation.name ==
+                    window.mergin_mode.world[model.referenceIndex].animations[0]
+                      .name
+                  );
+                })[0]
+              )
+              .setDuration(1)
+              .play();
+            window.mergin_mode.world[model.referenceIndex].runtimeInfo = {
+              animationIndex: 0,
+              pathIndex: 0,
+              duration: 0,
+              mixer
+            };
+          }
         });
       })
       .catch(e => {

@@ -17,6 +17,10 @@ export const loadGLTFModel = (
       url,
       gltf => {
         gltf.scene.position.set(...position);
+        gltf.scene.scale.set(...scale);
+        gltf.scene.rotation.set(...rotation);
+        gltf.scene.animations = gltf.animations;
+
         resolve({ referenceIndex, uuid: gltf.scene.uuid, object: gltf.scene });
       },
       () => {},
@@ -47,6 +51,8 @@ export const loadFBXModel = (
           }
         });
         object.position.set(...position);
+        object.scale.set(...scale);
+        object.rotation.set(...rotation);
         resolve({ referenceIndex, uuid: object.uuid, object });
       },
       () => {},

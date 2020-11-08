@@ -4,7 +4,7 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { DeviceOrientationControls } from "three/examples/jsm/controls/DeviceOrientationControls.js";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader.js";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
-import { CalculateDeltaPosition } from "./CalculateDeltaPosition";
+import { CalculateTransformation } from "./CalculateDeltaPosition";
 import { calculateSab } from "./ThemeliodiProblimata";
 // var modelName = "models/gltf/" + model.name + ".glb";
 const degtorad = Math.PI / 180; // Degree-to-Radian conversion
@@ -115,6 +115,7 @@ export default function createWorld(
   );
   // camera = new THREE.OrthographicCamera( host.clientWidth / - 2, host.clientWidth / 2, host.clientHeight / 2, host.clientHeight / - 2, 1, 1000 );
   camera.position.set(50, 17, 50);
+  camera.up.set(0, 0, 1);
   if (mobileCheck()) {
     controls = new DeviceOrientationControls(camera);
   } else {
@@ -145,14 +146,15 @@ export default function createWorld(
 
   const plane = new THREE.Mesh(geometry, material);
   plane.position.set(0, 0, 0);
-
   plane.castShadow = false;
   plane.receiveShadow = false;
-  plane.geometry.rotateX(Math.PI / 2);
+  // plane.geometry.rotateX(Math.PI / 2);
 
   scene.add(plane);
 
   const gridHelper = new THREE.GridHelper(10000, 1000);
+  gridHelper.geometry.rotateX(Math.PI / 2);
+
   scene.add(gridHelper);
   const light = new THREE.AmbientLight(0x404040, 1); // soft white light
   scene.add(light);
@@ -203,13 +205,19 @@ export default function createWorld(
     }
     return getParentElement(object.parent);
   };
+  const moved = false;
+
   function onMouseClick(event) {
     if (window.mergin_mode.selected.object) {
-      window.mergin_mode.selected.object.traverse(child => {
-        if (child.isMesh) {
-          child.material = window.mergin_mode.selected.material[child.uuid];
-        }
-      });
+      scene.remove(window.mergin_mode.selected.objectHelper);
+      // window.mergin_mode.selected.object.traverse(child => {
+      //   if (child.isMesh) {
+      //     child.material.color.setHex(
+      //       window.mergin_mode.selected.material[child.uuid]
+      //     );
+      //     // child.material = window.mergin_mode.selected.material[child.uuid];
+      //   }
+      // });
       window.mergin_mode.selected.object = null;
       window.mergin_mode.selected.material = null;
     }
@@ -247,13 +255,21 @@ export default function createWorld(
     });
 
     window.mergin_mode.selected.object = obj;
-    window.mergin_mode.selected.material = {};
-    obj.traverse(child => {
-      if (child.isMesh) {
-        window.mergin_mode.selected.material[child.uuid] = child.material;
-        child.material = material;
-      }
-    });
+
+    window.mergin_mode.selected.objectHelper = new THREE.BoxHelper(obj);
+    window.mergin_mode.selected.objectHelper.material.color.set(0xffffff);
+    scene.add(window.mergin_mode.selected.objectHelper);
+
+    // obj.traverse(child => {
+    //   if (child.isMesh) {
+    //     window.mergin_mode.selected.material[
+    //       child.uuid
+    //     ] = child.material.color.getHex();
+
+    //     child.material.color.setHex(0xff0000);
+    //   }
+    // });
+    scene.add(window.mergin_mode.selected.objectHelper);
     selectModel(obj.uuid);
   }
 
@@ -276,9 +292,33 @@ export default function createWorld(
 
   function render() {
     renderer.render(scene, camera);
+    const delta = clock.getDelta();
+    window.mergin_mode.world.forEach(worldModel => {
+      if (worldModel.runtimeInfo && worldModel.runtimeInfo.mixer) {
+        worldModel.runtimeInfo.mixer.update(delta);
+      }
+    });
+
+    window.mergin_mode.world.forEach(model => {
+      if (model.animations && model.object) {
+        const transormation = CalculateTransformation(delta, model);
+        if (transormation) {
+          if (transormation.position) {
+            model.object.position.set(...transormation.position);
+          }
+          if (transormation.rotation) {
+            model.object.rotation.set(...transormation.rotation);
+          }
+        }
+      }
+    });
+    if ((window.mergin_mode.selected || {}).objectHelper) {
+      window.mergin_mode.selected.objectHelper.update();
+    }
   }
 
   window.addEventListener("resize", onWindowResize, false);
+
   document.getElementById("three-map").addEventListener("click", onMouseClick);
   document
     .getElementById("three-map")

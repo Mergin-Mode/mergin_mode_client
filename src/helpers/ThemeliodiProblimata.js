@@ -1,3 +1,4 @@
+import * as THREE from "three";
 const rad2Grad = 63.6619772367581; // 1 rad ~= 63 grads
 
 export const ThemeliodesProblima_1 = (Xa, Ya, Sab, Gab) => {
@@ -41,5 +42,14 @@ export const ThemeliodesProblima_2 = (Xa, Ya, Xb, Yb) => {
   } else if (DX === 0 && DY === 0) {
     Gab = 0;
   }
+
   return { Gab: Gab.toFixed(4), Sab: Sab.toFixed(4) };
+};
+
+export const CalculateZ = (point, targetReference, offset) => {
+  const origin = new THREE.Vector3(point.x, point.y, point.z + offset);
+
+  const raycaster = new THREE.Raycaster(origin, new THREE.Vector3(0, 0, -1));
+  const intersects = raycaster.intersectObject(targetReference, true);
+  return ((intersects[0] || {}).point || {}).z || 0;
 };
