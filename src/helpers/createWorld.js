@@ -105,6 +105,7 @@ export default function createWorld(
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setClearColor(0x000000, 0);
   renderer.setSize(host.clientWidth, host.clientHeight);
+  renderer.sortObjects = false;
 
   host.appendChild(renderer.domElement);
   camera = new THREE.PerspectiveCamera(

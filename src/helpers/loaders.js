@@ -28,6 +28,7 @@ export const loadGLTFModel = (
             color: 0x000000, // red (can also use a CSS color string here)
             blending: THREE[blending]
           });
+          gltf.scene.renderOrder = 999;
         }
         gltf.scene.traverse(child => {
           if (child.isMesh) {
@@ -36,6 +37,8 @@ export const loadGLTFModel = (
             if (blending) {
               // child.material = material;
               child.material.blending = THREE[blending];
+              child.renderOrder = 999;
+              // child.material.depthWrite = false;
             }
           }
         });
