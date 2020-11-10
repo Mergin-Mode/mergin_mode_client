@@ -9,7 +9,7 @@ import { posZ } from "./computeZ";
 const gradToRad = 63.661977236758;
 export const CalculateTransformation = (timeDelta, model) => {
   const Xa = Number(model.object.position.x.toFixed(4));
-  const Ya = Number(model.object.position.y.toFixed(4));
+  const Ya = Number(model.object.position.z.toFixed(4));
   const currentAnimation = model.animations[model.runtimeInfo.animationIndex];
 
   model.runtimeInfo.duration += timeDelta;
@@ -58,13 +58,13 @@ export const CalculateTransformation = (timeDelta, model) => {
 
   const currentPath = currentAnimation.path[model.runtimeInfo.pathIndex];
   const Xb = Number(currentPath[0].toFixed(4));
-  const Yb = Number(currentPath[1].toFixed(4));
+  const Yb = Number(currentPath[2].toFixed(4));
 
   const Sab = ((timeDelta * currentAnimation.speed) / 60 / 60) * 1000; //distance in meters per second (50km/h)
   const start = currentAnimation.path[model.runtimeInfo.pathIndex - 1]
     ? currentAnimation.path[model.runtimeInfo.pathIndex - 1]
     : currentAnimation.path[model.runtimeInfo.pathIndex];
-  const Gab = Number(ThemeliodesProblima_2(start[0], start[1], Xb, Yb).Gab);
+  const Gab = Number(ThemeliodesProblima_2(start[0], start[2], Xb, Yb).Gab);
 
   if (
     (Gab <= 100 && (Xa >= Xb || Ya >= Yb)) ||
@@ -117,7 +117,7 @@ export const CalculateTransformation = (timeDelta, model) => {
     }
     const posXY = ThemeliodesProblima_1(Xa, Ya, Sab, Gab);
     const newZ = CalculateZ(
-      { x: posXY.Xb, y: posXY.Yb, z: model.object.position.z },
+      { x: posXY.Xb, z: posXY.Yb, y: model.object.position.y },
       window.mergin_mode.plane,
       2
     );
@@ -134,15 +134,15 @@ export const CalculateTransformation = (timeDelta, model) => {
 
   const posXY = ThemeliodesProblima_1(Xa, Ya, Sab, Gab);
   const newZ = CalculateZ(
-    { x: posXY.Xb, y: posXY.Yb, z: model.object.position.z },
+    { x: posXY.Xb, z: posXY.Yb, y: model.object.position.y },
     window.mergin_mode.plane,
     2
   );
   const rotate = Gab ? Gab / gradToRad : 0;
 
   return {
-    position: [posXY.Xb, posXY.Yb, newZ],
-    rotation: [model.rotation[0], model.rotation[1] - rotate, model.rotation[2]]
+    position: [posXY.Xb, newZ, posXY.Yb],
+    rotation: [model.rotation[0], model.rotation[1] + rotate, model.rotation[2]]
   };
 };
 

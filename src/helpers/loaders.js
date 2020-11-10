@@ -1,10 +1,12 @@
+import * as THREE from "three";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
 export const loadGLTFModel = (
   file,
   position,
   rotation,
   scale,
-  referenceIndex
+  referenceIndex,
+  blending
 ) => {
   const { name, size, url } = file[0];
   const { scene, loaders } = window.mergin_mode;
@@ -20,7 +22,22 @@ export const loadGLTFModel = (
         gltf.scene.scale.set(...scale);
         gltf.scene.rotation.set(...rotation);
         gltf.scene.animations = gltf.animations;
-
+        let material;
+        if (blending) {
+          material = new THREE.MeshPhongMaterial({
+            color: 0x000000, // red (can also use a CSS color string here)
+            blending: THREE[blending]
+          });
+        }
+        gltf.scene.traverse(child => {
+          if (child.isMesh) {
+            child.castShadow = true;
+            child.receiveShadow = true;
+            if (blending) {
+              child.material = material;
+            }
+          }
+        });
         resolve({ referenceIndex, uuid: gltf.scene.uuid, object: gltf.scene });
       },
       () => {},
@@ -35,7 +52,8 @@ export const loadFBXModel = (
   position,
   rotation,
   scale,
-  referenceIndex
+  referenceIndex,
+  blending
 ) => {
   const { name, size, url } = file[0];
   const { scene, loaders } = window.mergin_mode;
@@ -48,6 +66,10 @@ export const loadFBXModel = (
           if (child.isMesh) {
             child.castShadow = true;
             child.receiveShadow = true;
+            if (blending) {
+              child.material.blending = THREE[blending];
+              child.material.needsUpdate = true;
+            }
           }
         });
         object.position.set(...position);

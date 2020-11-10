@@ -101,7 +101,7 @@ export default function createWorld(
   texture.magFilter = THREE.LinearFilter;
   texture.format = THREE.RGBFormat;
   scene.background = texture;
-  renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setClearColor(0x000000, 0);
   renderer.setSize(host.clientWidth, host.clientHeight);
@@ -115,7 +115,7 @@ export default function createWorld(
   );
   // camera = new THREE.OrthographicCamera( host.clientWidth / - 2, host.clientWidth / 2, host.clientHeight / 2, host.clientHeight / - 2, 1, 1000 );
   camera.position.set(50, 17, 50);
-  camera.up.set(0, 0, 1);
+  // camera.up.set(0, 0, 1);
   if (mobileCheck()) {
     controls = new DeviceOrientationControls(camera);
   } else {
@@ -148,33 +148,34 @@ export default function createWorld(
   plane.position.set(0, 0, 0);
   plane.castShadow = false;
   plane.receiveShadow = false;
-  // plane.geometry.rotateX(Math.PI / 2);
+  plane.geometry.rotateX(Math.PI / 2);
 
   scene.add(plane);
 
   const gridHelper = new THREE.GridHelper(10000, 1000);
-  gridHelper.geometry.rotateX(Math.PI / 2);
+  // gridHelper.geometry.rotateX(Math.PI / 2);
 
   scene.add(gridHelper);
-  const light = new THREE.AmbientLight(0x404040, 1); // soft white light
+  const light = new THREE.AmbientLight(0x404040, 3); // soft white light
+  light.channel = 123;
   scene.add(light);
 
-  const hemiLight = new THREE.HemisphereLight(0xffffff, 0xffffff, 1);
-  hemiLight.color.setHSL(0.6, 0.5, 0.75);
-  hemiLight.groundColor.setHSL(0.095, 0.5, 0.5);
-  hemiLight.position.set(0, 0, 50);
-  scene.add(hemiLight);
+  // const hemiLight = new THREE.HemisphereLight(0xffffff, 0xffffff, 1);
+  // hemiLight.color.setHSL(0.6, 0.5, 0.75);
+  // hemiLight.groundColor.setHSL(0.095, 0.5, 0.5);
+  // hemiLight.position.set(0, 0, 50);
+  // scene.add(hemiLight);
 
-  const dirLight = new THREE.DirectionalLight(0xffffff, 1);
-  window.dirLight = dirLight;
-  dirLight.position.set(1, -1, 1);
-  dirLight.position.multiplyScalar(50);
-  dirLight.name = "dirlight";
-  // dirLight.shadowCameraVisible = true;
+  // const dirLight = new THREE.DirectionalLight(0xffffff, 1);
+  // window.dirLight = dirLight;
+  // dirLight.position.set(1, -1, 1);
+  // dirLight.position.multiplyScalar(50);
+  // dirLight.name = "dirlight";
+  // // dirLight.shadowCameraVisible = true;
 
-  scene.add(dirLight);
+  // scene.add(dirLight);
 
-  dirLight.castShadow = false;
+  // dirLight.castShadow = false;
 
   pointer = new THREE.Mesh(
     new THREE.SphereGeometry(0.5, 32, 32),
@@ -190,7 +191,7 @@ export default function createWorld(
       side: THREE.DoubleSide
     })
   );
-  sky.rotation.set(Math.PI / 2, 0, 0);
+  // sky.rotation.set(Math.PI / 2, 0, 0);
   scene.add(sky);
 
   const raycaster = new THREE.Raycaster();

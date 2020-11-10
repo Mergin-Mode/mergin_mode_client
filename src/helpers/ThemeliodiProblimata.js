@@ -47,9 +47,9 @@ export const ThemeliodesProblima_2 = (Xa, Ya, Xb, Yb) => {
 };
 
 export const CalculateZ = (point, targetReference, offset) => {
-  const origin = new THREE.Vector3(point.x, point.y, point.z + offset);
+  const origin = new THREE.Vector3(point.x, point.y + offset, point.z);
 
-  const raycaster = new THREE.Raycaster(origin, new THREE.Vector3(0, 0, -1));
+  const raycaster = new THREE.Raycaster(origin, new THREE.Vector3(0, -1, 0));
   const intersects = raycaster.intersectObject(targetReference, true);
-  return ((intersects[0] || {}).point || {}).z || 0;
+  return ((intersects[0] || {}).point || {}).y || 0;
 };

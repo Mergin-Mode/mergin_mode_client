@@ -31,7 +31,8 @@ export default async () => {
             record.position,
             record.rotation,
             record.scale,
-            index
+            index,
+            record.blending
           )
         );
         window.mergin_mode.world.push(record);
