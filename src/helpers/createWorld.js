@@ -114,7 +114,7 @@ export default function createWorld(
     10000
   );
   // camera = new THREE.OrthographicCamera( host.clientWidth / - 2, host.clientWidth / 2, host.clientHeight / 2, host.clientHeight / - 2, 1, 1000 );
-  camera.position.set(50, 17, 50);
+  camera.position.set(18, 1.7, -20);
   // camera.up.set(0, 0, 1);
   if (mobileCheck()) {
     controls = new DeviceOrientationControls(camera);

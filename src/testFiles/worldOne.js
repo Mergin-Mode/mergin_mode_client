@@ -29,34 +29,41 @@ export default [
   {
     type: "model",
     url: process.env.PUBLIC_URL + "/Soldier.glb",
-    position: [0, 0, 30],
+    position: [0, 0, 10],
     rotation: [0, Math.PI, 0],
     scale: [1, 1, 1],
     animations: [
       {
         name: "Idle",
-        duration: 5000
+        duration: 5000,
+        path: [[0, 0, 10]]
       },
       {
-        name: "Walk",
+        name: "Run",
         path: [
-          [0, 0, 30],
-          [10, 0, 40],
-          [30, 0, 20],
-          [0, 0, 30]
+          [0, 0, 10],
+          [10, 0, 10],
+          [10, 0, -20],
+          [-20, 0, -20],
+          [-20, 0, 10],
+          [10, 0, 10],
+          [0, 0, 10]
         ],
-        speed: 6,
+        speed: 16,
         speedUnit: "km/h"
       },
       {
         name: "Run",
         path: [
-          [0, 0, 30],
-          [10, 0, 40],
-          [30, 0, 20],
-          [0, 0, 30]
+          [0, 0, 10],
+          [10, 0, 10],
+          [10, 0, -20],
+          [-20, 0, -20],
+          [-20, 0, 10],
+          [10, 0, 10],
+          [0, 0, 10]
         ],
-        speed: 12,
+        speed: 16,
         speedUnit: "km/h"
       }
     ],

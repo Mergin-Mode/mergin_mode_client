@@ -65,12 +65,11 @@ export const CalculateTransformation = (timeDelta, model) => {
     ? currentAnimation.path[model.runtimeInfo.pathIndex - 1]
     : currentAnimation.path[model.runtimeInfo.pathIndex];
   const Gab = Number(ThemeliodesProblima_2(start[0], start[2], Xb, Yb).Gab);
-
   if (
-    (Gab <= 100 && (Xa >= Xb || Ya >= Yb)) ||
-    (Gab > 100 && Gab <= 200 && (Xa >= Xb || Ya <= Yb)) ||
-    (Gab > 200 && Gab <= 300 && (Xa <= Xb || Ya <= Yb)) ||
-    (Gab > 300 && (Xa <= Xb || Ya >= Yb))
+    (Gab <= 100 && Xa >= Xb && Ya >= Yb) ||
+    (Gab > 100 && Gab <= 200 && Xa >= Xb && Ya <= Yb) ||
+    (Gab > 200 && Gab <= 300 && Xa <= Xb && Ya <= Yb) ||
+    (Gab > 300 && Xa <= Xb && Ya >= Yb)
   ) {
     //check if animation has other path to animate
     if (currentAnimation.path.length - 1 > model.runtimeInfo.pathIndex) {
@@ -115,20 +114,25 @@ export const CalculateTransformation = (timeDelta, model) => {
         .play();
       model.runtimeInfo.mixer = mixer;
     }
-    const posXY = ThemeliodesProblima_1(Xa, Ya, Sab, Gab);
+
+    const newPosition = model.animations[model.runtimeInfo.animationIndex].path[
+      model.runtimeInfo.pathIndex - 1
+    ]
+      ? model.animations[model.runtimeInfo.animationIndex].path[
+          model.runtimeInfo.pathIndex - 1
+        ]
+      : model.animations[model.runtimeInfo.animationIndex].path[
+          model.runtimeInfo.pathIndex
+        ];
     const newZ = CalculateZ(
-      { x: posXY.Xb, z: posXY.Yb, y: model.object.position.y },
+      { x: newPosition[0], z: newPosition[1], y: newPosition[2] },
       window.mergin_mode.plane,
       2
     );
     // const rotate = Gab ? Gab / gradToRad : 0;
-    // return {
-    //   rotation: [
-    //     model.rotation[0],
-    //     model.rotation[1] + rotate,
-    //     model.rotation[2]
-    //   ]
-    // };
+    return {
+      position: [newPosition[0], newZ, newPosition[2]]
+    };
     return false;
   }
 

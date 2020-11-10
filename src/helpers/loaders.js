@@ -34,7 +34,8 @@ export const loadGLTFModel = (
             child.castShadow = true;
             child.receiveShadow = true;
             if (blending) {
-              child.material = material;
+              // child.material = material;
+              child.material.blending = THREE[blending];
             }
           }
         });
