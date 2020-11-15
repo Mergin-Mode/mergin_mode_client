@@ -30,13 +30,15 @@ export const loadGLTFModel = (
           });
           gltf.scene.renderOrder = 999;
         }
+
         gltf.scene.traverse(child => {
           if (child.isMesh) {
             child.castShadow = true;
             child.receiveShadow = true;
+
             if (blending) {
-              // child.material = material;
-              child.material.blending = THREE[blending];
+              child.material = material;
+              // child.material.blending = THREE[blending];
               child.renderOrder = 999;
               // child.material.depthWrite = false;
             }

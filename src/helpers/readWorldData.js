@@ -48,6 +48,13 @@ export default async (context, selectModel) => {
           window.mergin_mode.world[model.referenceIndex].object = model.object;
           window.mergin_mode.scene.add(model.object);
 
+          model.object.traverse(child => {
+            if (child.isMesh) {
+              child.material.flatShading = false;
+              child.geometry.computeVertexNormals();
+              // child.material = window.mergin_mode.selected.material[child.uuid];
+            }
+          });
           //check for animations and create the mixers
           const actions =
             window.mergin_mode.world[model.referenceIndex].actions || {};
@@ -64,6 +71,27 @@ export default async (context, selectModel) => {
               .setDuration(1)
               .play();
             window.mergin_mode.world[model.referenceIndex].runtimeInfo = {
+              animationIndex: 0,
+              pathIndex: 0,
+              duration: 0,
+              mixer
+            };
+          }
+          if ((actions.onSelect || {}).animations) {
+            const mixer = new THREE.AnimationMixer(model.object);
+            mixer
+              .clipAction(
+                window.mergin_mode.world[
+                  model.referenceIndex
+                ].object.animations.filter(animation => {
+                  return animation.name == actions.onSelect.animations[0].name;
+                })[0]
+              )
+              .setDuration(1)
+              .play();
+            window.mergin_mode.world[
+              model.referenceIndex
+            ].selectedRuntimeInfo = {
               animationIndex: 0,
               pathIndex: 0,
               duration: 0,

@@ -14,6 +14,11 @@ export const CalculateTransformation = (timeDelta, model) => {
     window.mergin_mode.selected.object?.uuid == model.id
       ? model.actions.onSelect
       : model.actions.onLoad;
+  const runtimeInfo =
+    window.mergin_mode.selected.object?.uuid == model.id
+      ? model.selectedRuntimeInfo
+      : model.runtimeInfo;
+
   //if action is onSelect target camera
   if (model.actions.onSelect === action) {
     const Gab = Number(
@@ -31,60 +36,60 @@ export const CalculateTransformation = (timeDelta, model) => {
       model.rotation[2]
     );
   }
-  const currentAnimation = action.animations[model.runtimeInfo.animationIndex];
+  const currentAnimation = action.animations[runtimeInfo.animationIndex];
 
-  model.runtimeInfo.duration += timeDelta;
+  runtimeInfo.duration += timeDelta;
   if (currentAnimation.duration) {
-    if (model.runtimeInfo.duration >= currentAnimation.duration / 1000) {
+    if (runtimeInfo.duration >= currentAnimation.duration / 1000) {
       //check if animation has other path to animate
-      model.runtimeInfo.duration = 0;
-      if (action.animations.length - 1 > model.runtimeInfo.animationIndex) {
-        model.runtimeInfo.animationIndex++;
-        model.runtimeInfo.pathIndex = 0;
+      runtimeInfo.duration = 0;
+      if (action.animations.length - 1 > runtimeInfo.animationIndex) {
+        runtimeInfo.animationIndex++;
+        runtimeInfo.pathIndex = 0;
         const mixer = new AnimationMixer(model.object);
         mixer
           .clipAction(
             model.object.animations.filter(animation => {
               return (
                 animation.name ==
-                action.animations[model.runtimeInfo.animationIndex].name
+                action.animations[runtimeInfo.animationIndex].name
               );
             })[0]
           )
           .setDuration(1)
           .play();
-        model.runtimeInfo.mixer = mixer;
+        runtimeInfo.mixer = mixer;
       }
       // restart animation
       else {
-        model.runtimeInfo.animationIndex = 0;
-        model.runtimeInfo.pathIndex = 0;
+        runtimeInfo.animationIndex = 0;
+        runtimeInfo.pathIndex = 0;
         const mixer = new AnimationMixer(model.object);
         mixer
           .clipAction(
             model.object.animations.filter(animation => {
               return (
                 animation.name ==
-                action.animations[model.runtimeInfo.animationIndex].name
+                action.animations[runtimeInfo.animationIndex].name
               );
             })[0]
           )
           .setDuration(1)
           .play();
-        model.runtimeInfo.mixer = mixer;
+        runtimeInfo.mixer = mixer;
       }
     }
     return false;
   }
 
-  const currentPath = currentAnimation.path[model.runtimeInfo.pathIndex];
+  const currentPath = currentAnimation.path[runtimeInfo.pathIndex];
   const Xb = Number(currentPath[0].toFixed(4));
   const Yb = Number(currentPath[2].toFixed(4));
 
   const Sab = ((timeDelta * currentAnimation.speed) / 60 / 60) * 1000; //distance in meters per second (50km/h)
-  const start = currentAnimation.path[model.runtimeInfo.pathIndex - 1]
-    ? currentAnimation.path[model.runtimeInfo.pathIndex - 1]
-    : currentAnimation.path[model.runtimeInfo.pathIndex];
+  const start = currentAnimation.path[runtimeInfo.pathIndex - 1]
+    ? currentAnimation.path[runtimeInfo.pathIndex - 1]
+    : currentAnimation.path[runtimeInfo.pathIndex];
   const Gab = Number(ThemeliodesProblima_2(start[0], start[2], Xb, Yb).Gab);
   if (
     (Gab <= 100 && Xa >= Xb && Ya >= Yb) ||
@@ -93,65 +98,66 @@ export const CalculateTransformation = (timeDelta, model) => {
     (Gab > 300 && Xa <= Xb && Ya >= Yb)
   ) {
     //check if animation has other path to animate
-    if (currentAnimation.path.length - 1 > model.runtimeInfo.pathIndex) {
-      model.runtimeInfo.pathIndex++;
-      model.runtimeInfo.duration = 0;
+    if (currentAnimation.path.length - 1 > runtimeInfo.pathIndex) {
+      runtimeInfo.pathIndex++;
+      runtimeInfo.duration = 0;
     }
     //check if model has other animations
-    else if (action.animations.length - 1 > model.runtimeInfo.animationIndex) {
-      model.runtimeInfo.animationIndex++;
-      model.runtimeInfo.pathIndex = 0;
-      model.runtimeInfo.duration = 0;
+    else if (action.animations.length - 1 > runtimeInfo.animationIndex) {
+      runtimeInfo.animationIndex++;
+      runtimeInfo.pathIndex = 0;
+      runtimeInfo.duration = 0;
       const mixer = new AnimationMixer(model.object);
       mixer
         .clipAction(
           model.object.animations.filter(animation => {
             return (
               animation.name ==
-              action.animations[model.runtimeInfo.animationIndex].name
+              action.animations[runtimeInfo.animationIndex].name
             );
           })[0]
         )
         .setDuration(1)
         .play();
-      model.runtimeInfo.mixer = mixer;
+      runtimeInfo.mixer = mixer;
     }
     // restart animation
     else {
-      model.runtimeInfo.animationIndex = 0;
-      model.runtimeInfo.pathIndex = 0;
-      model.runtimeInfo.duration = 0;
+      runtimeInfo.animationIndex = 0;
+      runtimeInfo.pathIndex = 0;
+      runtimeInfo.duration = 0;
       const mixer = new AnimationMixer(model.object);
       mixer
         .clipAction(
           model.object.animations.filter(animation => {
             return (
               animation.name ==
-              action.animations[model.runtimeInfo.animationIndex].name
+              action.animations[runtimeInfo.animationIndex].name
             );
           })[0]
         )
         .setDuration(1)
         .play();
-      model.runtimeInfo.mixer = mixer;
+      runtimeInfo.mixer = mixer;
     }
 
-    const newPosition = action.animations[model.runtimeInfo.animationIndex]
-      .path[model.runtimeInfo.pathIndex - 1]
-      ? action.animations[model.runtimeInfo.animationIndex].path[
-          model.runtimeInfo.pathIndex - 1
+    const newPosition = action.animations[runtimeInfo.animationIndex].path[
+      runtimeInfo.pathIndex - 1
+    ]
+      ? action.animations[runtimeInfo.animationIndex].path[
+          runtimeInfo.pathIndex - 1
         ]
-      : action.animations[model.runtimeInfo.animationIndex].path[
-          model.runtimeInfo.pathIndex
+      : action.animations[runtimeInfo.animationIndex].path[
+          runtimeInfo.pathIndex
         ];
     const newZ = CalculateZ(
       { x: newPosition[0], z: newPosition[1], y: newPosition[2] },
-      window.mergin_mode.plane,
-      2
+      window.mergin_mode.world.filter(model => model.ground == true)[0].object,
+      1
     );
     // const rotate = Gab ? Gab / gradToRad : 0;
     return {
-      position: [newPosition[0], newZ, newPosition[2]]
+      position: newPosition
     };
     return false;
   }
@@ -159,11 +165,15 @@ export const CalculateTransformation = (timeDelta, model) => {
   const posXY = ThemeliodesProblima_1(Xa, Ya, Sab, Gab);
   const newZ = CalculateZ(
     { x: posXY.Xb, z: posXY.Yb, y: model.object.position.y },
-    window.mergin_mode.plane,
-    2
+    window.mergin_mode.world.filter(model => model.ground == true)[0].object,
+    1
   );
-  const rotate = Gab ? Gab / gradToRad : 0;
 
+  // if (Math.abs(newZ) - Math.abs(model.object.position.y) > 0.3) {
+  //   console.log(newZ.toFixed(2));
+  //   debugger;
+  // }
+  const rotate = Gab ? Gab / gradToRad : 0;
   return {
     position: [posXY.Xb, newZ, posXY.Yb],
     rotation: [model.rotation[0], model.rotation[1] + rotate, model.rotation[2]]

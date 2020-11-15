@@ -50,6 +50,10 @@ export const CalculateZ = (point, targetReference, offset) => {
   const origin = new THREE.Vector3(point.x, point.y + offset, point.z);
 
   const raycaster = new THREE.Raycaster(origin, new THREE.Vector3(0, -1, 0));
-  const intersects = raycaster.intersectObject(targetReference, true);
-  return ((intersects[0] || {}).point || {}).y || 0;
+  const intersects = raycaster.intersectObjects(targetReference.children, true);
+  const newY = ((intersects[0] || {}).point || {}).y;
+  // if (Math.abs(Math.abs(point.y) - Math.abs(newY)) > 0.3) {
+  //   debugger;
+  // }
+  return newY || 0;
 };

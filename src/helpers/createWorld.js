@@ -115,7 +115,7 @@ export default function createWorld(
     10000
   );
   // camera = new THREE.OrthographicCamera( host.clientWidth / - 2, host.clientWidth / 2, host.clientHeight / 2, host.clientHeight / - 2, 1, 1000 );
-  camera.position.set(18, 1.7, -20);
+  camera.position.set(-27.45, 1.7, 29.13);
   // camera.up.set(0, 0, 1);
   if (mobileCheck()) {
     controls = new DeviceOrientationControls(camera);
@@ -151,30 +151,30 @@ export default function createWorld(
   plane.receiveShadow = false;
   plane.geometry.rotateX(Math.PI / 2);
 
-  scene.add(plane);
+  // scene.add(plane);
 
   const gridHelper = new THREE.GridHelper(10000, 1000);
   // gridHelper.geometry.rotateX(Math.PI / 2);
 
   scene.add(gridHelper);
-  const light = new THREE.AmbientLight(0x404040, 1); // soft white light
+  const light = new THREE.AmbientLight(0xffffff, 2); // soft white light
   light.channel = 123;
   scene.add(light);
 
-  const hemiLight = new THREE.HemisphereLight(0xffffff, 0xffffff, 1);
-  hemiLight.color.setHSL(0.6, 0.5, 0.75);
-  hemiLight.groundColor.setHSL(0.095, 0.5, 0.5);
-  hemiLight.position.set(0, 0, 50);
-  scene.add(hemiLight);
+  // const hemiLight = new THREE.HemisphereLight(0xffffff, 0xffffff, 1);
+  // hemiLight.color.setHSL(0.6, 0.5, 0.75);
+  // hemiLight.groundColor.setHSL(0.095, 0.5, 0.5);
+  // hemiLight.position.set(0, 0, 50);
+  // scene.add(hemiLight);
 
-  const dirLight = new THREE.DirectionalLight(0xffffff, 1);
-  window.dirLight = dirLight;
-  dirLight.position.set(1, -1, 1);
-  dirLight.position.multiplyScalar(50);
-  dirLight.name = "dirlight";
+  // const dirLight = new THREE.DirectionalLight(0xffffff, 1);
+  // window.dirLight = dirLight;
+  // dirLight.position.set(1, -1, 1);
+  // dirLight.position.multiplyScalar(50);
+  // dirLight.name = "dirlight";
   // dirLight.shadowCameraVisible = true;
 
-  scene.add(dirLight);
+  // scene.add(dirLight);
 
   // dirLight.castShadow = false;
 
@@ -245,7 +245,13 @@ export default function createWorld(
     for (const record of intersects) {
       obj = getParentElement(record?.object);
       if (obj) {
-        break;
+        //check if obj is selectable
+        const referenceObj = window.mergin_mode.world.filter(
+          model => model.id == obj.uuid
+        )[0];
+        if (referenceObj.selectable !== false) {
+          break;
+        }
       }
     }
 
@@ -277,7 +283,7 @@ export default function createWorld(
     const model = window.mergin_mode.world.filter(
       model => model.id == obj.uuid
     )[0];
-    const runtimeInfo = model.runtimeInfo;
+    const runtimeInfo = model.selectedRuntimeInfo;
 
     if (runtimeInfo) {
       runtimeInfo.animationIndex = 0;
@@ -290,7 +296,7 @@ export default function createWorld(
             return (
               animation.name ==
               model.actions.onSelect.animations[
-                model.runtimeInfo.animationIndex
+                model.selectedRuntimeInfo.animationIndex
               ].name
             );
           })[0]
@@ -310,22 +316,27 @@ export default function createWorld(
   }
 
   function animate() {
-    setTimeout(function() {
-      requestAnimationFrame(animate);
-      if (window.mergin_mode.scene?.visible !== false) {
-        controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
-        render();
-      }
-    }, 60);
+    requestAnimationFrame(animate);
+    if (window.mergin_mode.scene?.visible !== false) {
+      controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
+      render();
+    }
   }
   animate();
 
   function render() {
     renderer.render(scene, camera);
+    if (!window.mergin_mode.world) {
+      return true;
+    }
     const delta = clock.getDelta();
     window.mergin_mode.world.forEach(worldModel => {
-      if (worldModel.runtimeInfo && worldModel.runtimeInfo.mixer) {
-        worldModel.runtimeInfo.mixer.update(delta);
+      const runtimeInfo =
+        window.mergin_mode.selected.object?.uuid == worldModel.id
+          ? worldModel.selectedRuntimeInfo
+          : worldModel.runtimeInfo;
+      if (runtimeInfo) {
+        runtimeInfo.mixer.update(delta);
       }
     });
 
@@ -375,6 +386,33 @@ export default function createWorld(
     sky,
     gridHelper
   };
+  // document.getElementById("three-map").addEventListener("mousedown", event => {
+  //   if (event.which !== 1) return false;
+  //   const mouse = new THREE.Vector2();
+  //   const raycaster = new THREE.Raycaster();
+  //   const rect = renderer.domElement.getBoundingClientRect();
+  //   mouse.x =
+  //     (((event.clientX || event.changedTouches[0].clientX) - rect.left) /
+  //       rect.width) *
+  //       2 -
+  //     1;
+  //   mouse.y =
+  //     -(
+  //       ((event.clientY || event.changedTouches[0].clientY) - rect.top) /
+  //       rect.height
+  //     ) *
+  //       2 +
+  //     1;
+
+  //   raycaster.setFromCamera(mouse, camera);
+  //   const intersects = raycaster.intersectObjects(scene.children, true);
+  //   window.positions = window.positions || [];
+  //   window.positions.push([
+  //     intersects[0].point.x.toFixed(2) - 0,
+  //     intersects[0].point.y.toFixed(2) - 0,
+  //     intersects[0].point.z.toFixed(2) - 0
+  //   ]);
+  // });
   return {
     plane,
     camera,
