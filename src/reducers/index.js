@@ -18,6 +18,9 @@ window.mergin_mode = {
     object: null,
     material: null
   },
+  listeners: {
+    mouseMoved: false
+  },
   onWindowResize: () => {}
 };
 

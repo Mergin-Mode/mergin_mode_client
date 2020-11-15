@@ -6,6 +6,7 @@ export default [
     position: [0, 0, 0],
     rotation: [0, 0, 0],
     scale: [1, 1, 1],
+    actions: [],
     description: `<iframe 
           style="
             width: 100%;
@@ -32,41 +33,45 @@ export default [
     position: [0, 0, 10],
     rotation: [0, Math.PI, 0],
     scale: [1, 1, 1],
-    animations: [
-      {
-        name: "Idle",
-        duration: 5000,
-        path: [[0, 0, 10]]
-      },
-      {
-        name: "Run",
-        path: [
-          [0, 0, 10],
-          [10, 0, 10],
-          [10, 0, -20],
-          [-20, 0, -20],
-          [-20, 0, 10],
-          [10, 0, 10],
-          [0, 0, 10]
-        ],
-        speed: 16,
-        speedUnit: "km/h"
-      },
-      {
-        name: "Run",
-        path: [
-          [0, 0, 10],
-          [10, 0, 10],
-          [10, 0, -20],
-          [-20, 0, -20],
-          [-20, 0, 10],
-          [10, 0, 10],
-          [0, 0, 10]
-        ],
-        speed: 16,
-        speedUnit: "km/h"
+    actions: {
+      onLoad: {
+        animations: [
+          {
+            name: "Idle",
+            duration: 5000,
+            path: [[0, 0, 10]]
+          },
+          {
+            name: "Run",
+            path: [
+              [0, 0, 10],
+              [10, 0, 10],
+              [10, 0, -20],
+              [-20, 0, -20],
+              [-20, 0, 10],
+              [10, 0, 10],
+              [0, 0, 10]
+            ],
+            speed: 16,
+            speedUnit: "km/h"
+          },
+          {
+            name: "Run",
+            path: [
+              [0, 0, 10],
+              [10, 0, 10],
+              [10, 0, -20],
+              [-20, 0, -20],
+              [-20, 0, 10],
+              [10, 0, 10],
+              [0, 0, 10]
+            ],
+            speed: 16,
+            speedUnit: "km/h"
+          }
+        ]
       }
-    ],
+    },
     description: `<iframe 
           style="
             width: 100%;

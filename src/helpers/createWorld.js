@@ -157,24 +157,24 @@ export default function createWorld(
   // gridHelper.geometry.rotateX(Math.PI / 2);
 
   scene.add(gridHelper);
-  const light = new THREE.AmbientLight(0x404040, 3); // soft white light
+  const light = new THREE.AmbientLight(0x404040, 1); // soft white light
   light.channel = 123;
   scene.add(light);
 
-  // const hemiLight = new THREE.HemisphereLight(0xffffff, 0xffffff, 1);
-  // hemiLight.color.setHSL(0.6, 0.5, 0.75);
-  // hemiLight.groundColor.setHSL(0.095, 0.5, 0.5);
-  // hemiLight.position.set(0, 0, 50);
-  // scene.add(hemiLight);
+  const hemiLight = new THREE.HemisphereLight(0xffffff, 0xffffff, 1);
+  hemiLight.color.setHSL(0.6, 0.5, 0.75);
+  hemiLight.groundColor.setHSL(0.095, 0.5, 0.5);
+  hemiLight.position.set(0, 0, 50);
+  scene.add(hemiLight);
 
-  // const dirLight = new THREE.DirectionalLight(0xffffff, 1);
-  // window.dirLight = dirLight;
-  // dirLight.position.set(1, -1, 1);
-  // dirLight.position.multiplyScalar(50);
-  // dirLight.name = "dirlight";
-  // // dirLight.shadowCameraVisible = true;
+  const dirLight = new THREE.DirectionalLight(0xffffff, 1);
+  window.dirLight = dirLight;
+  dirLight.position.set(1, -1, 1);
+  dirLight.position.multiplyScalar(50);
+  dirLight.name = "dirlight";
+  // dirLight.shadowCameraVisible = true;
 
-  // scene.add(dirLight);
+  scene.add(dirLight);
 
   // dirLight.castShadow = false;
 
@@ -210,6 +210,8 @@ export default function createWorld(
   const moved = false;
 
   function onMouseClick(event) {
+    if (window.mergin_mode.listeners.mouseMoved) return true;
+
     if (window.mergin_mode.selected.object) {
       scene.remove(window.mergin_mode.selected.objectHelper);
       // window.mergin_mode.selected.object.traverse(child => {
@@ -302,7 +304,7 @@ export default function createWorld(
     });
 
     window.mergin_mode.world.forEach(model => {
-      if (model.animations && model.object) {
+      if (model.actions?.onLoad?.animations && model.object) {
         const transormation = CalculateTransformation(delta, model);
         if (transormation) {
           if (transormation.position) {
@@ -321,12 +323,32 @@ export default function createWorld(
 
   window.addEventListener("resize", onWindowResize, false);
 
-  document.getElementById("three-map").addEventListener("click", onMouseClick);
-  document
-    .getElementById("three-map")
-    .addEventListener("touchend", onMouseClick, false);
+  document.getElementById("three-map").addEventListener("mousedown", () => {
+    const onMove = () => {
+      window.mergin_mode.listeners.mouseMoved = true;
+    };
 
-  partials = { plane, pointer, sky, gridHelper };
+    const onUp = e => {
+      if (!window.mergin_mode.listeners.mouseMoved) {
+        onMouseClick(e);
+      }
+      window.mergin_mode.listeners.mouseMoved = false;
+      document.getElementById("three-map").removeEventListener("mouseup", onUp);
+      document
+        .getElementById("three-map")
+        .removeEventListener("mousemove", onMove);
+    };
+
+    document.getElementById("three-map").addEventListener("mousemove", onMove);
+    document.getElementById("three-map").addEventListener("mouseup", onUp);
+  });
+
+  document.getElementById("three-map").partials = {
+    plane,
+    pointer,
+    sky,
+    gridHelper
+  };
   return {
     plane,
     camera,

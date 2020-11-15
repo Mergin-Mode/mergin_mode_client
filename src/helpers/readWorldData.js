@@ -1,14 +1,15 @@
 import { fromLonLat } from "ol/proj.js";
 import { loadGLTFModel, loadFBXModel } from "../helpers/loaders";
 import worldData from "../testFiles/worldOne.js";
-import { AnimationMixer } from "three";
+import * as THREE from "three";
+import { Interaction } from "three.interaction";
 
 const loader = {
   gltf: loadGLTFModel,
   glb: loadGLTFModel,
   fbx: loadFBXModel
 };
-export default async () => {
+export default async (context, selectModel) => {
   // const towerlocationConvert = fromLonLat([40.626374, 22.948324, 15.25]);
   // const treelocationConvert = fromLonLat([40.62626, 22.947929, 15.25]);
   // const userConvert = fromLonLat([40.626288, 22.947957, 15.25]);
@@ -21,6 +22,10 @@ export default async () => {
       .trim();
   }
   const readWorldData = data => {
+    //initialize interactions
+    const { renderer, scene, camera } = window.mergin_mode;
+    new Interaction(renderer, scene, camera);
+
     const loadings = [];
     window.mergin_mode.world = [];
     for (const [index, record] of data.entries()) {
@@ -46,18 +51,16 @@ export default async () => {
           window.mergin_mode.scene.add(model.object);
 
           //check for animations and create the mixers
-          if (window.mergin_mode.world[model.referenceIndex].animations) {
-            const mixer = new AnimationMixer(model.object);
+          const actions =
+            window.mergin_mode.world[model.referenceIndex].actions || {};
+          if ((actions.onLoad || {}).animations) {
+            const mixer = new THREE.AnimationMixer(model.object);
             mixer
               .clipAction(
                 window.mergin_mode.world[
                   model.referenceIndex
                 ].object.animations.filter(animation => {
-                  return (
-                    animation.name ==
-                    window.mergin_mode.world[model.referenceIndex].animations[0]
-                      .name
-                  );
+                  return animation.name == actions.onLoad.animations[0].name;
                 })[0]
               )
               .setDuration(1)

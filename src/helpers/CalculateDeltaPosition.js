@@ -8,16 +8,21 @@ import { posZ } from "./computeZ";
 
 const gradToRad = 63.661977236758;
 export const CalculateTransformation = (timeDelta, model) => {
+  console.log("in");
   const Xa = Number(model.object.position.x.toFixed(4));
   const Ya = Number(model.object.position.z.toFixed(4));
-  const currentAnimation = model.animations[model.runtimeInfo.animationIndex];
+  const currentAnimation =
+    model.actions.onLoad.animations[model.runtimeInfo.animationIndex];
 
   model.runtimeInfo.duration += timeDelta;
   if (currentAnimation.duration) {
     if (model.runtimeInfo.duration >= currentAnimation.duration / 1000) {
       //check if animation has other path to animate
       model.runtimeInfo.duration = 0;
-      if (model.animations.length - 1 > model.runtimeInfo.animationIndex) {
+      if (
+        model.actions.onLoad.animations.length - 1 >
+        model.runtimeInfo.animationIndex
+      ) {
         model.runtimeInfo.animationIndex++;
         model.runtimeInfo.pathIndex = 0;
         const mixer = new AnimationMixer(model.object);
@@ -26,7 +31,9 @@ export const CalculateTransformation = (timeDelta, model) => {
             model.object.animations.filter(animation => {
               return (
                 animation.name ==
-                model.animations[model.runtimeInfo.animationIndex].name
+                model.actions.onLoad.animations[
+                  model.runtimeInfo.animationIndex
+                ].name
               );
             })[0]
           )
@@ -44,7 +51,9 @@ export const CalculateTransformation = (timeDelta, model) => {
             model.object.animations.filter(animation => {
               return (
                 animation.name ==
-                model.animations[model.runtimeInfo.animationIndex].name
+                model.actions.onLoad.animations[
+                  model.runtimeInfo.animationIndex
+                ].name
               );
             })[0]
           )
@@ -77,7 +86,10 @@ export const CalculateTransformation = (timeDelta, model) => {
       model.runtimeInfo.duration = 0;
     }
     //check if model has other animations
-    else if (model.animations.length - 1 > model.runtimeInfo.animationIndex) {
+    else if (
+      model.actions.onLoad.animations.length - 1 >
+      model.runtimeInfo.animationIndex
+    ) {
       model.runtimeInfo.animationIndex++;
       model.runtimeInfo.pathIndex = 0;
       model.runtimeInfo.duration = 0;
@@ -87,7 +99,8 @@ export const CalculateTransformation = (timeDelta, model) => {
           model.object.animations.filter(animation => {
             return (
               animation.name ==
-              model.animations[model.runtimeInfo.animationIndex].name
+              model.actions.onLoad.animations[model.runtimeInfo.animationIndex]
+                .name
             );
           })[0]
         )
@@ -106,7 +119,8 @@ export const CalculateTransformation = (timeDelta, model) => {
           model.object.animations.filter(animation => {
             return (
               animation.name ==
-              model.animations[model.runtimeInfo.animationIndex].name
+              model.actions.onLoad.animations[model.runtimeInfo.animationIndex]
+                .name
             );
           })[0]
         )
@@ -115,13 +129,13 @@ export const CalculateTransformation = (timeDelta, model) => {
       model.runtimeInfo.mixer = mixer;
     }
 
-    const newPosition = model.animations[model.runtimeInfo.animationIndex].path[
-      model.runtimeInfo.pathIndex - 1
-    ]
-      ? model.animations[model.runtimeInfo.animationIndex].path[
+    const newPosition = model.actions.onLoad.animations[
+      model.runtimeInfo.animationIndex
+    ].path[model.runtimeInfo.pathIndex - 1]
+      ? model.actions.onLoad.animations[model.runtimeInfo.animationIndex].path[
           model.runtimeInfo.pathIndex - 1
         ]
-      : model.animations[model.runtimeInfo.animationIndex].path[
+      : model.actions.onLoad.animations[model.runtimeInfo.animationIndex].path[
           model.runtimeInfo.pathIndex
         ];
     const newZ = CalculateZ(
