@@ -8,21 +8,37 @@ import { posZ } from "./computeZ";
 
 const gradToRad = 63.661977236758;
 export const CalculateTransformation = (timeDelta, model) => {
-  console.log("in");
   const Xa = Number(model.object.position.x.toFixed(4));
   const Ya = Number(model.object.position.z.toFixed(4));
-  const currentAnimation =
-    model.actions.onLoad.animations[model.runtimeInfo.animationIndex];
+  const action =
+    window.mergin_mode.selected.object?.uuid == model.id
+      ? model.actions.onSelect
+      : model.actions.onLoad;
+  //if action is onSelect target camera
+  if (model.actions.onSelect === action) {
+    const Gab = Number(
+      ThemeliodesProblima_2(
+        model.object.position.x,
+        model.object.position.z,
+        window.mergin_mode.camera.position.x,
+        window.mergin_mode.camera.position.z
+      ).Gab
+    );
+    const rotate = Gab ? Gab / gradToRad : 0;
+    model.object.rotation.set(
+      model.rotation[0],
+      model.rotation[1] + rotate,
+      model.rotation[2]
+    );
+  }
+  const currentAnimation = action.animations[model.runtimeInfo.animationIndex];
 
   model.runtimeInfo.duration += timeDelta;
   if (currentAnimation.duration) {
     if (model.runtimeInfo.duration >= currentAnimation.duration / 1000) {
       //check if animation has other path to animate
       model.runtimeInfo.duration = 0;
-      if (
-        model.actions.onLoad.animations.length - 1 >
-        model.runtimeInfo.animationIndex
-      ) {
+      if (action.animations.length - 1 > model.runtimeInfo.animationIndex) {
         model.runtimeInfo.animationIndex++;
         model.runtimeInfo.pathIndex = 0;
         const mixer = new AnimationMixer(model.object);
@@ -31,9 +47,7 @@ export const CalculateTransformation = (timeDelta, model) => {
             model.object.animations.filter(animation => {
               return (
                 animation.name ==
-                model.actions.onLoad.animations[
-                  model.runtimeInfo.animationIndex
-                ].name
+                action.animations[model.runtimeInfo.animationIndex].name
               );
             })[0]
           )
@@ -51,9 +65,7 @@ export const CalculateTransformation = (timeDelta, model) => {
             model.object.animations.filter(animation => {
               return (
                 animation.name ==
-                model.actions.onLoad.animations[
-                  model.runtimeInfo.animationIndex
-                ].name
+                action.animations[model.runtimeInfo.animationIndex].name
               );
             })[0]
           )
@@ -86,10 +98,7 @@ export const CalculateTransformation = (timeDelta, model) => {
       model.runtimeInfo.duration = 0;
     }
     //check if model has other animations
-    else if (
-      model.actions.onLoad.animations.length - 1 >
-      model.runtimeInfo.animationIndex
-    ) {
+    else if (action.animations.length - 1 > model.runtimeInfo.animationIndex) {
       model.runtimeInfo.animationIndex++;
       model.runtimeInfo.pathIndex = 0;
       model.runtimeInfo.duration = 0;
@@ -99,8 +108,7 @@ export const CalculateTransformation = (timeDelta, model) => {
           model.object.animations.filter(animation => {
             return (
               animation.name ==
-              model.actions.onLoad.animations[model.runtimeInfo.animationIndex]
-                .name
+              action.animations[model.runtimeInfo.animationIndex].name
             );
           })[0]
         )
@@ -119,8 +127,7 @@ export const CalculateTransformation = (timeDelta, model) => {
           model.object.animations.filter(animation => {
             return (
               animation.name ==
-              model.actions.onLoad.animations[model.runtimeInfo.animationIndex]
-                .name
+              action.animations[model.runtimeInfo.animationIndex].name
             );
           })[0]
         )
@@ -129,13 +136,12 @@ export const CalculateTransformation = (timeDelta, model) => {
       model.runtimeInfo.mixer = mixer;
     }
 
-    const newPosition = model.actions.onLoad.animations[
-      model.runtimeInfo.animationIndex
-    ].path[model.runtimeInfo.pathIndex - 1]
-      ? model.actions.onLoad.animations[model.runtimeInfo.animationIndex].path[
+    const newPosition = action.animations[model.runtimeInfo.animationIndex]
+      .path[model.runtimeInfo.pathIndex - 1]
+      ? action.animations[model.runtimeInfo.animationIndex].path[
           model.runtimeInfo.pathIndex - 1
         ]
-      : model.actions.onLoad.animations[model.runtimeInfo.animationIndex].path[
+      : action.animations[model.runtimeInfo.animationIndex].path[
           model.runtimeInfo.pathIndex
         ];
     const newZ = CalculateZ(

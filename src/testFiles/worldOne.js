@@ -42,7 +42,7 @@ export default [
             path: [[0, 0, 10]]
           },
           {
-            name: "Run",
+            name: "Walk",
             path: [
               [0, 0, 10],
               [10, 0, 10],
@@ -52,11 +52,11 @@ export default [
               [10, 0, 10],
               [0, 0, 10]
             ],
-            speed: 16,
+            speed: 6,
             speedUnit: "km/h"
           },
           {
-            name: "Run",
+            name: "Walk",
             path: [
               [0, 0, 10],
               [10, 0, 10],
@@ -66,8 +66,18 @@ export default [
               [10, 0, 10],
               [0, 0, 10]
             ],
-            speed: 16,
+            speed: 6,
             speedUnit: "km/h"
+          }
+        ]
+      },
+      onSelect: {
+        animations: [
+          {
+            name: "Idle",
+            duration: Infinity,
+            path: [[10, 0, 10]],
+            lookAt: "camera"
           }
         ]
       }
@@ -77,6 +87,6 @@ export default [
             width: 100%;
             height: 100%;
             border:none;"
-          src="https://en.wikipedia.org/wiki/Alexander_the_Great"></iframe>`
+          src="${process.env.PUBLIC_URL}/templates/soldier.html"></iframe>`
   }
 ];

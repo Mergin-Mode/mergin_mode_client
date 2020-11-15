@@ -2,7 +2,6 @@ import { fromLonLat } from "ol/proj.js";
 import { loadGLTFModel, loadFBXModel } from "../helpers/loaders";
 import worldData from "../testFiles/worldOne.js";
 import * as THREE from "three";
-import { Interaction } from "three.interaction";
 
 const loader = {
   gltf: loadGLTFModel,
@@ -24,7 +23,6 @@ export default async (context, selectModel) => {
   const readWorldData = data => {
     //initialize interactions
     const { renderer, scene, camera } = window.mergin_mode;
-    new Interaction(renderer, scene, camera);
 
     const loadings = [];
     window.mergin_mode.world = [];

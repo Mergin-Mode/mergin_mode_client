@@ -122,7 +122,7 @@ export default function createWorld(
   } else {
     controls = new OrbitControls(camera, renderer.domElement);
   }
-  controls.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
+  controls.enableDamping = false; // an animation loop is required when either damping or auto-rotation are enabled
   controls.dampingFactor = 0.05;
   controls.screenSpacePanning = false;
   controls.minDistance = 1;
@@ -274,6 +274,32 @@ export default function createWorld(
     //   }
     // });
     scene.add(window.mergin_mode.selected.objectHelper);
+    const model = window.mergin_mode.world.filter(
+      model => model.id == obj.uuid
+    )[0];
+    const runtimeInfo = model.runtimeInfo;
+
+    if (runtimeInfo) {
+      runtimeInfo.animationIndex = 0;
+      runtimeInfo.pathIndex = 0;
+      runtimeInfo.duration = 0;
+      const mixer = new THREE.AnimationMixer(obj);
+      mixer
+        .clipAction(
+          obj.animations.filter(animation => {
+            return (
+              animation.name ==
+              model.actions.onSelect.animations[
+                model.runtimeInfo.animationIndex
+              ].name
+            );
+          })[0]
+        )
+        .setDuration(1)
+        .play();
+      runtimeInfo.mixer = mixer;
+    }
+
     selectModel(obj.uuid);
   }
 
