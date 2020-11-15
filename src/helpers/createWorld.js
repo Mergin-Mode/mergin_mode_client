@@ -6,6 +6,8 @@ import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader.js";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { CalculateTransformation } from "./CalculateDeltaPosition";
 import { calculateSab } from "./ThemeliodiProblimata";
+
+import { VRButton } from "three/examples/jsm/webxr/VRButton.js";
 // var modelName = "models/gltf/" + model.name + ".glb";
 const degtorad = Math.PI / 180; // Degree-to-Radian conversion
 
@@ -100,10 +102,10 @@ export default function createWorld(
   texture.minFilter = THREE.LinearFilter;
   texture.magFilter = THREE.LinearFilter;
   texture.format = THREE.RGBFormat;
-  scene.background = texture;
+
   renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.xr.enabled = true;
   renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setClearColor(0x000000, 0);
   renderer.setSize(host.clientWidth, host.clientHeight);
   renderer.sortObjects = false;
 
@@ -114,8 +116,29 @@ export default function createWorld(
     1,
     10000
   );
-  // camera = new THREE.OrthographicCamera( host.clientWidth / - 2, host.clientWidth / 2, host.clientHeight / 2, host.clientHeight / - 2, 1, 1000 );
-  camera.position.set(-27.45, 1.7, 29.13);
+  window.mergin_mode.realities = {
+    virtual: () => {
+      renderer.setClearColor("#4285f4", 1);
+      //remove mixed objects
+      // window.mergin_mode.world
+      scene.background = undefined;
+      scene.position.set(0, 0, 0);
+      camera.position.set(-15.08, 1.7, 52.64);
+    },
+    augmented: () => {
+      scene.background = texture;
+      renderer.setClearColor(0x000000, 0);
+      scene.position.set(+15.08, -1.7, -52.64);
+      camera.position.set(0, 0, 0);
+    },
+    mixed: () => {
+      scene.background = texture;
+      renderer.setClearColor(0x000000, 0);
+      scene.position.set(+15.08, -1.7, -52.64);
+      camera.position.set(0, 0, 0);
+    }
+  };
+  window.mergin_mode.realities.virtual();
   // camera.up.set(0, 0, 1);
   if (mobileCheck()) {
     controls = new DeviceOrientationControls(camera);
@@ -316,11 +339,13 @@ export default function createWorld(
   }
 
   function animate() {
-    requestAnimationFrame(animate);
-    if (window.mergin_mode.scene?.visible !== false) {
-      controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
+    // requestAnimationFrame(animate);
+    renderer.setAnimationLoop(function() {
+      if (controls.autoRotate) {
+        controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
+      }
       render();
-    }
+    });
   }
   animate();
 
@@ -331,12 +356,14 @@ export default function createWorld(
     }
     const delta = clock.getDelta();
     window.mergin_mode.world.forEach(worldModel => {
-      const runtimeInfo =
-        window.mergin_mode.selected.object?.uuid == worldModel.id
-          ? worldModel.selectedRuntimeInfo
-          : worldModel.runtimeInfo;
-      if (runtimeInfo) {
-        runtimeInfo.mixer.update(delta);
+      if (worldModel.actions) {
+        const runtimeInfo =
+          window.mergin_mode.selected.object?.uuid == worldModel.id
+            ? worldModel.selectedRuntimeInfo
+            : worldModel.runtimeInfo;
+        if (runtimeInfo) {
+          runtimeInfo.mixer.update(delta);
+        }
       }
     });
 
@@ -353,8 +380,11 @@ export default function createWorld(
         }
       }
     });
-    if ((window.mergin_mode.selected || {}).objectHelper) {
+    if (window.mergin_mode.selected.object) {
       window.mergin_mode.selected.objectHelper.update();
+      // window.mergin_mode.selected.objectHelper.position.set(
+      //   window.mergin_mode.selected.object.position
+      // );
     }
   }
 
@@ -380,12 +410,14 @@ export default function createWorld(
     document.getElementById("three-map").addEventListener("mouseup", onUp);
   });
 
-  document.getElementById("three-map").partials = {
-    plane,
-    pointer,
-    sky,
-    gridHelper
-  };
+  // document.getElementById("three-map").partials = {
+  //   plane,
+  //   pointer,
+  //   sky,
+  //   gridHelper
+  // };
+  document.body.appendChild(VRButton.createButton(renderer));
+
   // document.getElementById("three-map").addEventListener("mousedown", event => {
   //   if (event.which !== 1) return false;
   //   const mouse = new THREE.Vector2();

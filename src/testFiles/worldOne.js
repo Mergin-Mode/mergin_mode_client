@@ -7,7 +7,7 @@ export default [
     rotation: [0, 0, 0],
     scale: [0.8, 0.8, 0.8],
     actions: [],
-    description: `<iframe 
+    description: `<iframe
           style="
             width: 100%;
             height: 100%;
@@ -20,7 +20,7 @@ export default [
     position: [0, 0, 20],
     rotation: [0, 0, 0],
     scale: [0.1, 0.1, 0.1],
-    description: `<iframe 
+    description: `<iframe
           style="
             width: 100%;
             height: 100%;

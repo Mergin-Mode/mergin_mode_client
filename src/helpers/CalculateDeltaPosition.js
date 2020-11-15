@@ -153,7 +153,7 @@ export const CalculateTransformation = (timeDelta, model) => {
     const newZ = CalculateZ(
       { x: newPosition[0], z: newPosition[1], y: newPosition[2] },
       window.mergin_mode.world.filter(model => model.ground == true)[0].object,
-      1
+      3
     );
     // const rotate = Gab ? Gab / gradToRad : 0;
     return {
@@ -166,7 +166,7 @@ export const CalculateTransformation = (timeDelta, model) => {
   const newZ = CalculateZ(
     { x: posXY.Xb, z: posXY.Yb, y: model.object.position.y },
     window.mergin_mode.world.filter(model => model.ground == true)[0].object,
-    1
+    3
   );
 
   // if (Math.abs(newZ) - Math.abs(model.object.position.y) > 0.3) {
