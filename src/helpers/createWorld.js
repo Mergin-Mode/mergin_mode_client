@@ -7,7 +7,7 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { CalculateTransformation } from "./CalculateDeltaPosition";
 import { calculateSab } from "./ThemeliodiProblimata";
 
-import { VRButton } from "three/examples/jsm/webxr/VRButton.js";
+import { VRButton } from "../components/_layout/VRButton.js";
 // var modelName = "models/gltf/" + model.name + ".glb";
 const degtorad = Math.PI / 180; // Degree-to-Radian conversion
 
@@ -122,8 +122,13 @@ export default function createWorld(
       //remove mixed objects
       // window.mergin_mode.world
       scene.background = undefined;
-      scene.position.set(0, 0, 0);
-      camera.position.set(-15.08, 1.7, 52.64);
+      if (!mobileCheck()) {
+        scene.position.set(0, 0, 0);
+        camera.position.set(-15.08, 1.7, 52.64);
+      } else {
+        scene.position.set(+15.08, -1.7, -52.64);
+        camera.position.set(0, 0, 0);
+      }
     },
     augmented: () => {
       scene.background = texture;
@@ -341,9 +346,9 @@ export default function createWorld(
   function animate() {
     // requestAnimationFrame(animate);
     renderer.setAnimationLoop(function() {
-      if (controls.autoRotate) {
-        controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
-      }
+      // if (controls.autoRotate) {
+      controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
+      // }
       render();
     });
   }
@@ -416,7 +421,8 @@ export default function createWorld(
   //   sky,
   //   gridHelper
   // };
-  document.body.appendChild(VRButton.createButton(renderer));
+  VRButton.createButton(renderer, window.vrh);
+  VRButton.createButton(renderer, window.mrh);
 
   // document.getElementById("three-map").addEventListener("mousedown", event => {
   //   if (event.which !== 1) return false;

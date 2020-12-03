@@ -104,5 +104,5 @@ export default async (context, selectModel) => {
         console.error(e);
       });
   };
-  readWorldData(worldData);
+  readWorldData(worldData.content);
 };

@@ -59,9 +59,61 @@ const Controls = props => {
             {
               icon: <CropFreeIcon onClick={() => toggleFullscreen()} />,
               name: "Full Screen"
+            },
+            {
+              icon: (
+                <span
+                  onClick={() => {
+                    window.mergin_mode.realities.virtual();
+                  }}
+                >
+                  VR
+                </span>
+              ),
+              name: "Virtual Reality"
+            },
+            {
+              icon: (
+                <span
+                  onClick={() => {
+                    window.mergin_mode.realities.mixed();
+                  }}
+                >
+                  MR
+                </span>
+              ),
+              name: "Mixed Reality"
+            },
+            {
+              icon: (
+                <span
+                  onClick={() => {
+                    window.mergin_mode.realities.mixed();
+                  }}
+                  id="vrh"
+                >
+                  VRH
+                </span>
+              ),
+              name: "VR Headset"
+            },
+            {
+              icon: (
+                <span
+                  onClick={() => {
+                    window.mergin_mode.realities.mixed();
+                  }}
+                  id="mrh"
+                >
+                  MRH
+                </span>
+              ),
+              name: "MR Headset"
             }
           ]}
         />
+        <div id="available-worlds"></div>
+
         <div
           id="descriptive-data-container"
           ref={elem => (containerRef.current = elem)}

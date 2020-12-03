@@ -48,11 +48,10 @@ function App() {
   //   window.mergin_mode.scene.needsUpdate = true;
   //   mainRef.current.style.display = check ? "block" : "none";
   // }, [action]);
-
   return (
     <ThemeProvider theme={theme}>
       <div className="App">
-        <World context={world} />
+        <World context={world.content} />
         <Controls />
       </div>
     </ThemeProvider>
