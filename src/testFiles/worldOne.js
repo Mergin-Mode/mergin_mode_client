@@ -3,19 +3,20 @@ export default {
   description: "A simple overview of the area near the tower of thessaloniki.",
   content: [
     {
+      refId: "white_tower",
       type: "model",
       url: process.env.PUBLIC_URL + "/white-tower.gltf",
-      blending: "AdditiveBlending",
       position: [0, 0, 0],
       rotation: [0, 0, 0],
-      scale: [0.8, 0.8, 0.8],
+      scale: [1.1, 1.1, 1.1],
+      visible: false,
       actions: [],
       description: `<iframe
           style="
             width: 100%;
             height: 100%;
             border:none;"
-          src="https://en.wikipedia.org/wiki/White_Tower_of_Thessaloniki"></iframe>`
+          src="${process.env.PUBLIC_URL}/templates/white-tower.html"></iframe>`
     },
     // {
     //   type: "model",

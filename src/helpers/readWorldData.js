@@ -47,9 +47,19 @@ export default async (context, selectModel) => {
           window.mergin_mode.world[model.referenceIndex].id = model.uuid;
           window.mergin_mode.world[model.referenceIndex].object = model.object;
           window.mergin_mode.scene.add(model.object);
-
+          // if (window.mergin_mode.world[model.referenceIndex].visible == false) {
+          //   model.object.visible = false;
+          // }
           model.object.traverse(child => {
             if (child.isMesh) {
+              if (
+                window.mergin_mode.world[model.referenceIndex].visible == false
+              ) {
+                child.material.opacity = 0;
+                child.material.transparent = true;
+              }
+              //hide model visibility is set to false
+
               child.material.flatShading = false;
               child.geometry.computeVertexNormals();
               // child.material = window.mergin_mode.selected.material[child.uuid];
