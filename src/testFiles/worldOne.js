@@ -1,4 +1,5 @@
 export default {
+  id: "006cb9aE-F316",
   name: "White Tower Of Thessaloniki",
   description: "A simple overview of the area near the tower of thessaloniki.",
   content: [
