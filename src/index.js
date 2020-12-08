@@ -10,7 +10,11 @@ import { createLogger } from "redux-logger";
 import thunkMiddleware from "redux-thunk";
 
 import reducer from "./reducers";
-
+// import { fromLonLat } from "ol/proj.js";
+// const towerlocationConvert = fromLonLat([40.626374, 22.948324, 15.25]);
+// const treelocationConvert = fromLonLat([40.62626, 22.947929, 15.25]);
+// const userConvert = fromLonLat([40.626288, 22.947957, 15.25]);
+//
 const rootElement = document.getElementById("root");
 
 const loggerMiddleware = createLogger({

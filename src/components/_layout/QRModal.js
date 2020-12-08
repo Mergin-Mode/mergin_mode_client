@@ -1,13 +1,26 @@
 import React, { useRef, useState, useEffect } from "react";
 import Button from "@material-ui/core/Button";
 import QrReader from "react-qr-reader";
+import readWorldData from "../../helpers/readWorldData";
+
 export default props => {
+  const [state, setState] = React.useState(true);
+
   const handleScan = data => {
+    console.log(data);
     if (data) {
-      const d = JSON.parse(data);
-      window.mergin_mode.camera.position.set(d.x, d.y, d.z);
-      window.mergin_mode.controls.alphaOffset = (d.heading / 180) * Math.PI;
-      window.mergin_mode.controls.update();
+      if (state) {
+        console.log("in");
+        setState(false);
+        (async function() {
+          await readWorldData();
+          props.onClose();
+        })();
+      }
+      // const d = JSON.parse(data);
+      // window.mergin_mode.camera.position.set(d.x, d.y, d.z);
+      // window.mergin_mode.controls.alphaOffset = (d.heading / 180) * Math.PI;
+      // window.mergin_mode.controls.update();
     }
   };
   const handleScanError = err => {
