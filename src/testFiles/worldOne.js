@@ -155,6 +155,8 @@ export default {
     authors: [
       { firstName: "Konstantinos", lastName: "Evanggelidis" },
       { firstName: "Theofilos", lastName: "Papadopoulos" }
-    ]
+    ],
+    thumbnail: `${process.env.PUBLIC_URL}/worldOne-Thumbnail.png`,
+    coordinates: []
   }
 };

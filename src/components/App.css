@@ -191,6 +191,45 @@ div[role=presentation] {
   height:150px;
   background: rgba(0,0,0,.2);
   position: absolute;
-  bottom: 40px;
+  bottom: 50px;
   left: 0;
+  display:flex;
+  padding: 15px;
+  align-items: center;
+}
+
+.world-item{
+  position: relative;
+  cursor: pointer;
+  pointer-events: auto;
+  width: 150px;
+  height: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  background: rgb(0 0 0 / .6);
+  color: white;
+  border-radius: 20px;
+  padding: 10px;
+  border: 2px solid white;
+}
+.world-item p{
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.world-item:hover{
+  background: rgba(0,0,0,.5) !important;
+}
+.world-item *{
+  pointer-events: none;
+}
+
+.world-item img {
+  object-fit: cover;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
 }
