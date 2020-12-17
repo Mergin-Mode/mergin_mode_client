@@ -184,7 +184,7 @@ export default function createWorld(
 
   // scene.add(plane);
 
-  const gridHelper = new THREE.GridHelper(1000000, 1000);
+  const gridHelper = new THREE.GridHelper(1000, 100);
   // gridHelper.geometry.rotateX(Math.PI / 2);
 
   scene.add(gridHelper);
@@ -374,8 +374,6 @@ export default function createWorld(
         }
       }
     });
-    if (window.mergin_mode.world[3]?.object?.position)
-      console.log(window.mergin_mode.world[4].object.position);
     window.mergin_mode.world.forEach(model => {
       if (model.actions?.onLoad?.animations && model.object) {
         const transormation = CalculateTransformation(delta, model);
