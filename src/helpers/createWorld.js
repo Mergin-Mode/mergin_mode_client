@@ -103,7 +103,10 @@ export default function createWorld(
   texture.magFilter = THREE.LinearFilter;
   texture.format = THREE.RGBFormat;
 
-  renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer = new THREE.WebGLRenderer({
+    antialias: true,
+    logarithmicDepthBuffer: true
+  });
   renderer.xr.enabled = true;
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(host.clientWidth, host.clientHeight);
@@ -114,7 +117,7 @@ export default function createWorld(
     60,
     host.clientWidth / host.clientHeight,
     1,
-    10000
+    1000000
   );
   window.mergin_mode.realities = {
     virtual: () => {
@@ -124,23 +127,39 @@ export default function createWorld(
       scene.background = undefined;
       if (!mobileCheck()) {
         scene.position.set(0, 0, 0);
-        camera.position.set(-15.08, 1.7, 52.64);
+        camera.position.set(
+          window.mergin_mode.center[0] - 15.08,
+          window.mergin_mode.center[1] + 1.7,
+          window.mergin_mode.center[2] + 52.64
+        );
       } else {
-        scene.position.set(+15.08, -1.7, -52.64);
-        camera.position.set(0, 0, 0);
+        scene.position.set(0, 0, 0);
+        camera.position.set(
+          window.mergin_mode.center[0] - 15.08,
+          window.mergin_mode.center[1] + 1.7,
+          window.mergin_mode.center[2] + 52.64
+        );
       }
     },
     augmented: () => {
       scene.background = texture;
       renderer.setClearColor(0x000000, 0);
-      scene.position.set(+15.08, -1.7, -52.64);
-      camera.position.set(0, 0, 0);
+      scene.position.set(0, 0, 0);
+      camera.position.set(
+        window.mergin_mode.center[0] - 15.08,
+        window.mergin_mode.center[1] + 1.7,
+        window.mergin_mode.center[2] + 52.64
+      );
     },
     mixed: () => {
       scene.background = texture;
       renderer.setClearColor(0x000000, 0);
-      scene.position.set(+15.08, -1.7, -52.64);
-      camera.position.set(0, 0, 0);
+      scene.position.set(0, 0, 0);
+      camera.position.set(
+        window.mergin_mode.center[0] - 15.08,
+        window.mergin_mode.center[1] + 1.7,
+        window.mergin_mode.center[2] + 52.64
+      );
     }
   };
   window.mergin_mode.realities.virtual();
@@ -154,7 +173,7 @@ export default function createWorld(
   controls.dampingFactor = 0.05;
   controls.screenSpacePanning = false;
   controls.minDistance = 1;
-  controls.maxDistance = 1000;
+  controls.maxDistance = 1000000;
   // controls.maxPolarAngle = Math.PI / 2;
   controls.rotateSpeed = 0.8;
   controls.panSpeed = 0.8;
@@ -181,7 +200,7 @@ export default function createWorld(
 
   // scene.add(plane);
 
-  const gridHelper = new THREE.GridHelper(10000, 1000);
+  const gridHelper = new THREE.GridHelper(1000000, 1000);
   // gridHelper.geometry.rotateX(Math.PI / 2);
 
   scene.add(gridHelper);

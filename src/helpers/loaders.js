@@ -33,8 +33,8 @@ export const loadGLTFModel = (
 
         gltf.scene.traverse(child => {
           if (child.isMesh) {
-            child.castShadow = true;
-            child.receiveShadow = true;
+            // child.castShadow = true;
+            // child.receiveShadow = true;
 
             if (blending) {
               child.material = material;
@@ -70,8 +70,8 @@ export const loadFBXModel = (
       object => {
         object.traverse(child => {
           if (child.isMesh) {
-            child.castShadow = true;
-            child.receiveShadow = true;
+            // child.castShadow = true;
+            // child.receiveShadow = true;
             if (blending) {
               child.material.blending = THREE[blending];
               child.material.needsUpdate = true;

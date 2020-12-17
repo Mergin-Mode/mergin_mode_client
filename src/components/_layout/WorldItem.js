@@ -15,10 +15,9 @@ export default function WorldItem(props) {
             className="world-item"
             onClick={() => {
               if (state) {
-                console.log("in");
                 setState(false);
                 (async function() {
-                  await readWorldData();
+                  await readWorldData(item.id);
                 })();
               }
             }}

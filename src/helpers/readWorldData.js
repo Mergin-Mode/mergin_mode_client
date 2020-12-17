@@ -1,15 +1,17 @@
 import { fromLonLat } from "ol/proj.js";
 import { loadGLTFModel, loadFBXModel } from "../helpers/loaders";
-import worldData from "../testFiles/worldOne.js";
+import worldDataOne from "../testFiles/worldOne.js";
+import worldDataTwo from "../testFiles/worldTwo.js";
 import * as THREE from "three";
 
+const worlds = [worldDataOne, worldDataTwo];
 const loader = {
   gltf: loadGLTFModel,
   glb: loadGLTFModel,
   fbx: loadFBXModel
 };
-export default async (context, selectModel) => {
-  // const towerlocationConvert = fromLonLat([40.626374, 22.948324, 15.25]);
+export default async worldId => {
+  const towerlocationConvert = fromLonLat([40.626374, 22.948324, 15.25]);
   // const treelocationConvert = fromLonLat([40.62626, 22.947929, 15.25]);
   // const userConvert = fromLonLat([40.626288, 22.947957, 15.25]);
 
@@ -20,7 +22,8 @@ export default async (context, selectModel) => {
       .pop()
       .trim();
   }
-  const readWorldData = data => {
+  const readWorldData = world => {
+    const data = world.content;
     //initialize interactions
     const { renderer, scene, camera } = window.mergin_mode;
 
@@ -108,11 +111,14 @@ export default async (context, selectModel) => {
               mixer
             };
           }
+          window.mergin_mode.center = world.meta.coordinates;
+          window.mergin_mode.controls.target.set(...window.mergin_mode.center);
+          window.mergin_mode.realities.virtual();
         });
       })
       .catch(e => {
         console.error(e);
       });
   };
-  readWorldData(worldData.content);
+  readWorldData(worlds.filter(w => w.id == worldId)[0]);
 };

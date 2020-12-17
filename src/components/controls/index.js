@@ -11,7 +11,9 @@ import QRModal from "../_layout/QRModal";
 import Button from "@material-ui/core/Button";
 import { DescriptiveDataListener } from "../../helpers/listeners";
 
-import worldData from "../../testFiles/worldOne.js";
+import worldDataOne from "../../testFiles/worldOne.js";
+import worldDataTwo from "../../testFiles/worldTwo.js";
+const worlds = [worldDataOne, worldDataTwo];
 const Controls = props => {
   const sliderHelperRef = useRef();
   const containerRef = useRef();
@@ -116,7 +118,9 @@ const Controls = props => {
           ]}
         />
         <div id="available-worlds">
-          <WorldItem items={[worldData]} />
+          {worlds.map(w => (
+            <WorldItem items={[w]} />
+          ))}
         </div>
 
         <div

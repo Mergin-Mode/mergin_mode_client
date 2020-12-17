@@ -21,6 +21,7 @@ window.mergin_mode = {
   listeners: {
     mouseMoved: false
   },
+  center: [0, 0, 0],
   onWindowResize: () => {}
 };
 
