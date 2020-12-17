@@ -75,15 +75,16 @@ export default async worldId => {
             window.mergin_mode.world[model.referenceIndex].actions || {};
           if ((actions.onLoad || {}).animations) {
             const mixer = new THREE.AnimationMixer(model.object);
+            const theAnimation = window.mergin_mode.world[
+              model.referenceIndex
+            ].object.animations.filter(animation => {
+              return animation.name == actions.onLoad.animations[0].name;
+            })[0];
             mixer
-              .clipAction(
-                window.mergin_mode.world[
-                  model.referenceIndex
-                ].object.animations.filter(animation => {
-                  return animation.name == actions.onLoad.animations[0].name;
-                })[0]
+              .clipAction(theAnimation)
+              .setDuration(
+                (actions.onLoad.animations[0].singleLoopDuration || 1000) / 1000
               )
-              .setDuration(1)
               .play();
             window.mergin_mode.world[model.referenceIndex].runtimeInfo = {
               animationIndex: 0,
@@ -94,15 +95,17 @@ export default async worldId => {
           }
           if ((actions.onSelect || {}).animations) {
             const mixer = new THREE.AnimationMixer(model.object);
+            const theAnimation = window.mergin_mode.world[
+              model.referenceIndex
+            ].object.animations.filter(animation => {
+              return animation.name == actions.onSelect.animations[0].name;
+            })[0];
             mixer
-              .clipAction(
-                window.mergin_mode.world[
-                  model.referenceIndex
-                ].object.animations.filter(animation => {
-                  return animation.name == actions.onSelect.animations[0].name;
-                })[0]
+              .clipAction(theAnimation)
+              .setDuration(
+                (actions.onSelect.animations[0].singleLoopDuration || 1000) /
+                  1000
               )
-              .setDuration(1)
               .play();
             window.mergin_mode.world[
               model.referenceIndex

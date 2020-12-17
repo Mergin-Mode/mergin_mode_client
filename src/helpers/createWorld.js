@@ -332,7 +332,11 @@ export default function createWorld(
             );
           })[0]
         )
-        .setDuration(1)
+        .setDuration(
+          (model.actions.onSelect.animations[
+            model.selectedRuntimeInfo.animationIndex
+          ].singleLoopDuration || 1000) / 1000
+        )
         .play();
       runtimeInfo.mixer = mixer;
     }
@@ -375,7 +379,11 @@ export default function createWorld(
       }
     });
     window.mergin_mode.world.forEach(model => {
-      if (model.actions?.onLoad?.animations && model.object) {
+      if (
+        model.runtimeInfo &&
+        model.actions?.onLoad?.animations &&
+        model.object
+      ) {
         const transormation = CalculateTransformation(delta, model);
         if (transormation) {
           if (transormation.position) {

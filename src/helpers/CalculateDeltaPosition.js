@@ -36,6 +36,7 @@ export const CalculateTransformation = (timeDelta, model) => {
       model.rotation[2]
     );
   }
+
   const currentAnimation = action.animations[runtimeInfo.animationIndex];
 
   runtimeInfo.duration += timeDelta;
