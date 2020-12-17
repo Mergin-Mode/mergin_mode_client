@@ -23,6 +23,8 @@ export default async worldId => {
       .trim();
   }
   const readWorldData = world => {
+    window.mergin_mode.center = world.meta.coordinates;
+
     const data = world.content;
     //initialize interactions
     const { renderer, scene, camera } = window.mergin_mode;
@@ -111,9 +113,6 @@ export default async worldId => {
               mixer
             };
           }
-          window.mergin_mode.center = world.meta.coordinates;
-          window.mergin_mode.controls.target.set(...window.mergin_mode.center);
-          window.mergin_mode.realities.virtual();
         });
       })
       .catch(e => {

@@ -127,39 +127,23 @@ export default function createWorld(
       scene.background = undefined;
       if (!mobileCheck()) {
         scene.position.set(0, 0, 0);
-        camera.position.set(
-          window.mergin_mode.center[0] - 15.08,
-          window.mergin_mode.center[1] + 1.7,
-          window.mergin_mode.center[2] + 52.64
-        );
+        camera.position.set(-15.08, +1.7, +52.64);
       } else {
         scene.position.set(0, 0, 0);
-        camera.position.set(
-          window.mergin_mode.center[0] - 15.08,
-          window.mergin_mode.center[1] + 1.7,
-          window.mergin_mode.center[2] + 52.64
-        );
+        camera.position.set(-15.08, +1.7, +52.64);
       }
     },
     augmented: () => {
       scene.background = texture;
       renderer.setClearColor(0x000000, 0);
       scene.position.set(0, 0, 0);
-      camera.position.set(
-        window.mergin_mode.center[0] - 15.08,
-        window.mergin_mode.center[1] + 1.7,
-        window.mergin_mode.center[2] + 52.64
-      );
+      camera.position.set(-15.08, +1.7, +52.64);
     },
     mixed: () => {
       scene.background = texture;
       renderer.setClearColor(0x000000, 0);
       scene.position.set(0, 0, 0);
-      camera.position.set(
-        window.mergin_mode.center[0] - 15.08,
-        window.mergin_mode.center[1] + 1.7,
-        window.mergin_mode.center[2] + 52.64
-      );
+      camera.position.set(-15.08, +1.7, +52.64);
     }
   };
   window.mergin_mode.realities.virtual();
@@ -390,7 +374,8 @@ export default function createWorld(
         }
       }
     });
-
+    if (window.mergin_mode.world[3]?.object?.position)
+      console.log(window.mergin_mode.world[4].object.position);
     window.mergin_mode.world.forEach(model => {
       if (model.actions?.onLoad?.animations && model.object) {
         const transormation = CalculateTransformation(delta, model);

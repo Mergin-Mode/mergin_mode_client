@@ -83,14 +83,21 @@ export const CalculateTransformation = (timeDelta, model) => {
   }
 
   const currentPath = currentAnimation.path[runtimeInfo.pathIndex];
-  const Xb = Number(currentPath[0].toFixed(4));
-  const Yb = Number(currentPath[2].toFixed(4));
+  const Xb = Number((currentPath[0] - window.mergin_mode.center[0]).toFixed(4));
+  const Yb = Number((currentPath[2] - window.mergin_mode.center[2]).toFixed(4));
 
   const Sab = ((timeDelta * currentAnimation.speed) / 60 / 60) * 1000; //distance in meters per second (50km/h)
   const start = currentAnimation.path[runtimeInfo.pathIndex - 1]
     ? currentAnimation.path[runtimeInfo.pathIndex - 1]
     : currentAnimation.path[runtimeInfo.pathIndex];
-  const Gab = Number(ThemeliodesProblima_2(start[0], start[2], Xb, Yb).Gab);
+  const Gab = Number(
+    ThemeliodesProblima_2(
+      start[0] - window.mergin_mode.center[0],
+      start[2] - window.mergin_mode.center[2],
+      Xb,
+      Yb
+    ).Gab
+  );
   if (
     (Gab <= 100 && Xa >= Xb && Ya >= Yb) ||
     (Gab > 100 && Gab <= 200 && Xa >= Xb && Ya <= Yb) ||
@@ -157,9 +164,11 @@ export const CalculateTransformation = (timeDelta, model) => {
     );
     // const rotate = Gab ? Gab / gradToRad : 0;
     return {
-      position: newPosition
+      position: newPosition.reduce(
+        (a, b, i) => [...a, b - window.mergin_mode.center[i]],
+        []
+      )
     };
-    return false;
   }
 
   const posXY = ThemeliodesProblima_1(Xa, Ya, Sab, Gab);

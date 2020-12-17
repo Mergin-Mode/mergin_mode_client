@@ -119,7 +119,7 @@ const Controls = props => {
         />
         <div id="available-worlds">
           {worlds.map(w => (
-            <WorldItem items={[w]} />
+            <WorldItem key={`p-${w.id}`} item={w} />
           ))}
         </div>
 

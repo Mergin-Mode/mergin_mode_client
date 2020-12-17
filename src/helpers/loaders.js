@@ -18,7 +18,12 @@ export const loadGLTFModel = (
     loader.load(
       url,
       gltf => {
-        gltf.scene.position.set(...position);
+        gltf.scene.position.set(
+          ...position.reduce(
+            (a, b, i) => [...a, b - window.mergin_mode.center[i]],
+            []
+          )
+        );
         gltf.scene.scale.set(...scale);
         gltf.scene.rotation.set(...rotation);
         gltf.scene.animations = gltf.animations;
@@ -78,7 +83,12 @@ export const loadFBXModel = (
             }
           }
         });
-        object.position.set(...position);
+        object.position.set(
+          ...position.reduce(
+            (a, b, i) => [...a, b - window.mergin_mode.center[i]],
+            []
+          )
+        );
         object.scale.set(...scale);
         object.rotation.set(...rotation);
         resolve({ referenceIndex, uuid: object.uuid, object });

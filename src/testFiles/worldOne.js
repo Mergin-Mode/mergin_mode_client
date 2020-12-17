@@ -19,19 +19,19 @@ export default {
             border:none;"
           src="${process.env.PUBLIC_URL}/templates/white-tower.html"></iframe>`
     },
-    // {
-    //   type: "model",
-    //   url: process.env.PUBLIC_URL + "/tree-green.fbx",
-    //   position: [0, 0, 20],
-    //   rotation: [0, 0, 0],
-    //   scale: [0.1, 0.1, 0.1],
-    //   description: `<iframe
-    //         style="
-    //           width: 100%;
-    //           height: 100%;
-    //           border:none;"
-    //         src="https://en.wikipedia.org/wiki/Tree"></iframe>`
-    // },
+    {
+      type: "model",
+      url: process.env.PUBLIC_URL + "/tree-green.fbx",
+      rotation: [0, 0, 0],
+      position: [4522507.2664, 15.25, 2625790.4946],
+      scale: [0.1, 0.1, 0.1],
+      description: `<iframe
+            style="
+              width: 100%;
+              height: 100%;
+              border:none;"
+            src="https://en.wikipedia.org/wiki/Tree"></iframe>`
+    },
     {
       type: "model",
       ground: true,
