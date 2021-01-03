@@ -4,7 +4,6 @@ import readWorldData from "../../helpers/readWorldData";
 
 export default function WorldItem(props) {
   const [state, setState] = React.useState(true);
-  console.log(props.item.id);
   return (
     <React.Fragment>
       <div

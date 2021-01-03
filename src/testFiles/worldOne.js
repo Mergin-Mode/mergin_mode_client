@@ -38,7 +38,7 @@ export default {
       selectable: false,
       url: process.env.PUBLIC_URL + "/white-tower-area.gltf",
       position: [4522507.2664, 15.25, 2625770.4946],
-      rotation: [0, 0, 0],
+      rotation: [0, -Math.PI / 2, 0],
       scale: [1, 1, 1],
       description: ``
     },

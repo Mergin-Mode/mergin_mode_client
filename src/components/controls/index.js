@@ -10,7 +10,7 @@ import CropFreeIcon from "@material-ui/icons/CropFree";
 import QRModal from "../_layout/QRModal";
 import Button from "@material-ui/core/Button";
 import { DescriptiveDataListener } from "../../helpers/listeners";
-
+import * as THREE from "three";
 import worldDataOne from "../../testFiles/worldOne.js";
 import worldDataTwo from "../../testFiles/worldTwo.js";
 const worlds = [worldDataOne, worldDataTwo];
@@ -18,12 +18,19 @@ const Controls = props => {
   const sliderHelperRef = useRef();
   const containerRef = useRef();
   const [modalData, setModalData] = useState(null);
+  const [infoState, setInfoState] = useState({
+    position: { x: 0, y: 0, z: 0 },
+    heading: [0]
+  });
+
   const fheight = useRef({
     height: null,
     movementY: null,
     previousTouchY: null,
     moved: false
   });
+
+  const [showInfo, setShowInfo] = useState(false);
 
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
@@ -36,7 +43,32 @@ const Controls = props => {
       document.exitFullscreen();
     }
   };
+  React.useEffect(() => {
+    if (typeof window.mergin_mode.controls.alphaOffset !== "undefined") {
+      window.mergin_mode.controls.alphaOffset = -Math.PI / 2;
+    }
 
+    setInterval(() => {
+      const { x, y, z } = window.mergin_mode.camera.position;
+      const dir = new THREE.Vector3();
+      const sph = new THREE.Spherical();
+      window.mergin_mode.camera.getWorldDirection(dir);
+
+      sph.setFromVector3(dir);
+      let heading = (360 - THREE.Math.radToDeg(sph.theta) - 180).toFixed(0);
+      if (heading == 360) {
+        heading = 0;
+      }
+      setInfoState({
+        position: {
+          x: x.toFixed(2) + "m",
+          y: z.toFixed(2) + "m",
+          z: y.toFixed(2) + "m"
+        },
+        heading: heading + "deg"
+      });
+    }, 1000);
+  }, []);
   return (
     <div id="controls">
       <img
@@ -53,7 +85,18 @@ const Controls = props => {
               icon: (
                 <div
                   onClick={() =>
-                    setModalData(<QRModal onClose={() => setModalData(null)} />)
+                    setModalData(
+                      <QRModal
+                        onClose={data => {
+                          setModalData(null);
+                          setInfoState({
+                            ...infoState,
+                            position: data.position,
+                            heading: data.heading
+                          });
+                        }}
+                      />
+                    )
                   }
                 >
                   <i style={{ fontSize: 18 }} className="fas fa-qrcode"></i>
@@ -114,9 +157,33 @@ const Controls = props => {
                 </span>
               ),
               name: "MR Headset"
+            },
+            {
+              icon: (
+                <span
+                  onClick={() => {
+                    setShowInfo(true);
+                  }}
+                  id="shi"
+                >
+                  Show/Hide Info
+                </span>
+              ),
+              name: "Show/Hide Info"
             }
           ]}
         />
+        <div id="info-panel">
+          <div className="info-group">
+            <label>Position</label>
+            <div>{JSON.stringify(infoState.position)}</div>
+          </div>
+          <div className="info-group">
+            <label>Heading</label>
+            <div>{infoState.heading}</div>
+          </div>
+        </div>
+
         <div id="available-worlds">
           {worlds.map(w => (
             <WorldItem key={`p-${w.id}`} item={w} />

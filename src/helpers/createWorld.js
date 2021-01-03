@@ -125,13 +125,13 @@ export default function createWorld(
       //remove mixed objects
       // window.mergin_mode.world
       scene.background = undefined;
-      if (!mobileCheck()) {
-        scene.position.set(0, 0, 0);
-        camera.position.set(-15.08, +1.7, +52.64);
-      } else {
-        scene.position.set(0, 0, 0);
-        camera.position.set(-15.08, +1.7, +52.64);
-      }
+      // if (!mobileCheck()) {
+      scene.position.set(0, 0, 0);
+      camera.position.set(-15.08, +1.7, +52.64);
+      // } else {
+      //   camera.position.set(0, 0, 0);
+      //   scene.position.set(0, 0, 0);
+      // }
     },
     augmented: () => {
       scene.background = texture;
