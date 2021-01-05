@@ -2,30 +2,70 @@ import React, { useRef, useState, useEffect } from "react";
 import Button from "@material-ui/core/Button";
 import QrReader from "react-qr-reader";
 import readWorldData from "../../helpers/readWorldData";
+import * as THREE from "three";
 
 export default props => {
   const [state, setState] = React.useState(true);
 
   const handleScan = data => {
-    console.log(data);
+    //case scan data
     if (data) {
-      if (state) {
-        console.log("in");
-        setState(false);
-        (async function() {
-          await readWorldData();
-          props.onClose();
-        })();
+      const d = JSON.parse(data);
+      const w = window.mergin_mode.worlds.filter(w => w.id == d.id)[0];
+      //case the world matches
+      if (w) {
+        if (
+          window.mergin_mode.currentWorldId &&
+          w.id !== window.mergin_mode.currentWorldId
+        ) {
+          window.mergin_mode.world[window.mergin_mode.currentWorldId].map(o => {
+            if (o.object) {
+              o.object.visible = false;
+            }
+          });
+        }
+        window.mergin_mode.currentWorldId = w.id;
+        window.mergin_mode.center = w.meta.coordinates;
+        if (window.mergin_mode.world.hasOwnProperty(w.id)) {
+          window.mergin_mode.world[window.mergin_mode.currentWorldId].map(o => {
+            if (o.object) {
+              o.object.visible = true;
+            }
+          });
+        } else {
+          (async function() {
+            await readWorldData(w.id);
+          })();
+        }
+
+        window.mergin_mode.camera.position.set(
+          d.position.x - window.mergin_mode.center[0],
+          d.position.z - window.mergin_mode.center[1],
+          d.position.y - window.mergin_mode.center[2]
+        );
+
+        const dir = new THREE.Vector3();
+        const sph = new THREE.Spherical();
+        window.mergin_mode.camera.getWorldDirection(dir);
+
+        sph.setFromVector3(dir);
+        let heading = (360 - THREE.Math.radToDeg(sph.theta) - 180).toFixed(0);
+        if (heading == 360) {
+          heading = 0;
+        }
+
+        if (heading != d.heading) {
+          window.mergin_mode.controls.alphaOffset = Number(
+            (((d.heading - heading) * Math.PI) / 180).toFixed(4)
+          );
+        }
+        debugger;
+        window.mergin_mode.controls.update();
+        props.onClose();
       }
-      // const d = JSON.parse(data);
-      // window.mergin_mode.camera.position.set(d.x, d.y, d.z);
-      // window.mergin_mode.controls.alphaOffset = (d.heading / 180) * Math.PI;
-      // window.mergin_mode.controls.update();
     }
   };
-  const handleScanError = err => {
-    console.error(err);
-  };
+  const handleScanError = err => {};
   return (
     <React.Fragment>
       <div

@@ -11,9 +11,7 @@ import QRModal from "../_layout/QRModal";
 import Button from "@material-ui/core/Button";
 import { DescriptiveDataListener } from "../../helpers/listeners";
 import * as THREE from "three";
-import worldDataOne from "../../testFiles/worldOne.js";
-import worldDataTwo from "../../testFiles/worldTwo.js";
-const worlds = [worldDataOne, worldDataTwo];
+
 const Controls = props => {
   const sliderHelperRef = useRef();
   const containerRef = useRef();
@@ -30,7 +28,7 @@ const Controls = props => {
     moved: false
   });
 
-  const [showInfo, setShowInfo] = useState(false);
+  const [showInfo, setShowInfo] = useState(true);
 
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
@@ -44,11 +42,12 @@ const Controls = props => {
     }
   };
   React.useEffect(() => {
-    if (typeof window.mergin_mode.controls.alphaOffset !== "undefined") {
-      window.mergin_mode.controls.alphaOffset = -Math.PI / 2;
-    }
+    // if (typeof window.mergin_mode.controls.alphaOffset !== "undefined") {
+    //   window.mergin_mode.controls.alphaOffset = -Math.PI / 2;
+    // }
 
     setInterval(() => {
+      if (!window.mergin_mode.camera.position) return false;
       const { x, y, z } = window.mergin_mode.camera.position;
       const dir = new THREE.Vector3();
       const sph = new THREE.Spherical();
@@ -59,11 +58,13 @@ const Controls = props => {
       if (heading == 360) {
         heading = 0;
       }
+      const [cx, cy, cz] = window.mergin_mode.center;
+
       setInfoState({
         position: {
-          x: x.toFixed(2) + "m",
-          y: z.toFixed(2) + "m",
-          z: y.toFixed(2) + "m"
+          x: (cx + x).toFixed(2) + "m",
+          y: (cz + z).toFixed(2) + "m",
+          z: (cy + y).toFixed(2) + "m"
         },
         heading: heading + "deg"
       });
@@ -89,11 +90,6 @@ const Controls = props => {
                       <QRModal
                         onClose={data => {
                           setModalData(null);
-                          setInfoState({
-                            ...infoState,
-                            position: data.position,
-                            heading: data.heading
-                          });
                         }}
                       />
                     )
@@ -162,32 +158,31 @@ const Controls = props => {
               icon: (
                 <span
                   onClick={() => {
-                    setShowInfo(true);
+                    setShowInfo(!showInfo);
                   }}
                   id="shi"
                 >
-                  Show/Hide Info
+                  <i className="fas fa-info-circle"></i>
                 </span>
               ),
               name: "Show/Hide Info"
             }
           ]}
         />
-        <div id="info-panel">
-          <div className="info-group">
-            <label>Position</label>
-            <div>{JSON.stringify(infoState.position)}</div>
+        {showInfo && (
+          <div id="info-panel">
+            <div className="info-group">
+              <label>Position</label>
+              <div>{`${infoState.position.x},${infoState.position.y},${infoState.position.z}`}</div>
+            </div>
+            <div className="info-group">
+              <label>Heading</label>
+              <div>{infoState.heading}</div>
+            </div>
           </div>
-          <div className="info-group">
-            <label>Heading</label>
-            <div>{infoState.heading}</div>
-          </div>
-        </div>
-
+        )}
         <div id="available-worlds">
-          {worlds.map(w => (
-            <WorldItem key={`p-${w.id}`} item={w} />
-          ))}
+          <WorldItem item={window.mergin_mode.worlds} />
         </div>
 
         <div

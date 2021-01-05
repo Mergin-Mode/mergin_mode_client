@@ -55,7 +55,7 @@
 	<script type="text/javascript">
 		var hidden = true;
 			showHide.onclick = ()=> {
-					const theObject = window.parent.mergin_mode.world.filter(element=>element.refId == "white_tower")[0].object;
+					const theObject = window.parent.mergin_mode.world[window.parent.mergin_mode.currentWorldId].filter(element=>element.refId == "white_tower")[0].object;
 				// theObject.visible = hidden;
 				theObject.traverse(child => {
           			if (child.isMesh) {

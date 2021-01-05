@@ -39,7 +39,9 @@ const World = props => {
       mixers,
       uuid => {
         const descriptiveData = uuid
-          ? window.mergin_mode.world.filter(o => o.id == uuid)[0].description
+          ? window.mergin_mode.world[window.mergin_mode.currentWorldId].filter(
+              o => o.id == uuid
+            )[0].description
           : null;
         window["descriptive-data-container"].classList.add("transition");
 

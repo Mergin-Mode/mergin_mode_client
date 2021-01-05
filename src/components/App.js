@@ -3,7 +3,7 @@ import "./App.css";
 import World from "./world";
 import Controls from "./controls";
 import createWorld from "../helpers/createWorld.js";
-import world from "../testFiles/worldOne";
+// import world from "../testFiles/worldOne";
 
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 
@@ -51,7 +51,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <div className="App">
-        <World context={world.content} />
+        <World />
         <Controls />
       </div>
     </ThemeProvider>

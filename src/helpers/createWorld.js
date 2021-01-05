@@ -229,10 +229,15 @@ export default function createWorld(
   const raycaster = new THREE.Raycaster();
   const mouse = new THREE.Vector2();
   const getParentElement = object => {
-    if (!object || !window.mergin_mode.world) {
+    if (
+      !object ||
+      !window.mergin_mode.world[window.mergin_mode.currentWorldId]
+    ) {
       return false;
     }
-    const allIds = window.mergin_mode.world.map(obj => obj.id);
+    const allIds = window.mergin_mode.world[
+      window.mergin_mode.currentWorldId
+    ].map(obj => obj.id);
     if (allIds.indexOf(object.uuid) !== -1) {
       return object;
     }
@@ -277,9 +282,9 @@ export default function createWorld(
       obj = getParentElement(record?.object);
       if (obj) {
         //check if obj is selectable
-        const referenceObj = window.mergin_mode.world.filter(
-          model => model.id == obj.uuid
-        )[0];
+        const referenceObj = window.mergin_mode.world[
+          window.mergin_mode.currentWorldId
+        ].filter(model => model.id == obj.uuid)[0];
         if (referenceObj.selectable !== false) {
           break;
         }
@@ -311,9 +316,9 @@ export default function createWorld(
     //   }
     // });
     scene.add(window.mergin_mode.selected.objectHelper);
-    const model = window.mergin_mode.world.filter(
-      model => model.id == obj.uuid
-    )[0];
+    const model = window.mergin_mode.world[
+      window.mergin_mode.currentWorldId
+    ].filter(model => model.id == obj.uuid)[0];
     const runtimeInfo = model.selectedRuntimeInfo;
 
     if (runtimeInfo) {
@@ -363,38 +368,42 @@ export default function createWorld(
 
   function render() {
     renderer.render(scene, camera);
-    if (!window.mergin_mode.world) {
+    if (!window.mergin_mode.world[window.mergin_mode.currentWorldId]) {
       return true;
     }
     const delta = clock.getDelta();
-    window.mergin_mode.world.forEach(worldModel => {
-      if (worldModel.actions) {
-        const runtimeInfo =
-          window.mergin_mode.selected.object?.uuid == worldModel.id
-            ? worldModel.selectedRuntimeInfo
-            : worldModel.runtimeInfo;
-        if (runtimeInfo) {
-          runtimeInfo.mixer.update(delta);
-        }
-      }
-    });
-    window.mergin_mode.world.forEach(model => {
-      if (
-        model.runtimeInfo &&
-        model.actions?.onLoad?.animations &&
-        model.object
-      ) {
-        const transormation = CalculateTransformation(delta, model);
-        if (transormation) {
-          if (transormation.position) {
-            model.object.position.set(...transormation.position);
-          }
-          if (transormation.rotation) {
-            model.object.rotation.set(...transormation.rotation);
+    window.mergin_mode.world[window.mergin_mode.currentWorldId].forEach(
+      worldModel => {
+        if (worldModel.actions) {
+          const runtimeInfo =
+            window.mergin_mode.selected.object?.uuid == worldModel.id
+              ? worldModel.selectedRuntimeInfo
+              : worldModel.runtimeInfo;
+          if (runtimeInfo) {
+            runtimeInfo.mixer.update(delta);
           }
         }
       }
-    });
+    );
+    window.mergin_mode.world[window.mergin_mode.currentWorldId].forEach(
+      model => {
+        if (
+          model.runtimeInfo &&
+          model.actions?.onLoad?.animations &&
+          model.object
+        ) {
+          const transormation = CalculateTransformation(delta, model);
+          if (transormation) {
+            if (transormation.position) {
+              model.object.position.set(...transormation.position);
+            }
+            if (transormation.rotation) {
+              model.object.rotation.set(...transormation.rotation);
+            }
+          }
+        }
+      }
+    );
     if (window.mergin_mode.selected.object) {
       window.mergin_mode.selected.objectHelper.update();
       // window.mergin_mode.selected.objectHelper.position.set(

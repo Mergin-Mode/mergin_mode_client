@@ -1,6 +1,7 @@
 import { combineReducers } from "redux";
 import api from "./api";
-
+import worldDataOne from "../testFiles/worldOne.js";
+import worldDataTwo from "../testFiles/worldTwo.js";
 window.mergin_mode = {
   modelLayer: [],
   vectors: [],
@@ -22,7 +23,10 @@ window.mergin_mode = {
     mouseMoved: false
   },
   center: [0, 0, 0],
-  onWindowResize: () => {}
+  onWindowResize: () => {},
+  world: {},
+  currentWorldId: null,
+  worlds: [worldDataOne, worldDataTwo]
 };
 
 const rootReducer = combineReducers({

@@ -30,7 +30,10 @@ export default async worldId => {
     const { renderer, scene, camera } = window.mergin_mode;
 
     const loadings = [];
-    window.mergin_mode.world = [];
+    if (window.mergin_mode.world[world.id]) {
+      return true;
+    }
+    window.mergin_mode.world[world.id] = [];
     for (const [index, record] of data.entries()) {
       if (record.type === "model") {
         loadings.push(
@@ -43,14 +46,18 @@ export default async worldId => {
             record.blending
           )
         );
-        window.mergin_mode.world.push(record);
+        window.mergin_mode.world[world.id].push(record);
       }
     }
     return Promise.all(loadings)
       .then(models => {
         models.forEach(model => {
-          window.mergin_mode.world[model.referenceIndex].id = model.uuid;
-          window.mergin_mode.world[model.referenceIndex].object = model.object;
+          window.mergin_mode.world[window.mergin_mode.currentWorldId][
+            model.referenceIndex
+          ].id = model.uuid;
+          window.mergin_mode.world[window.mergin_mode.currentWorldId][
+            model.referenceIndex
+          ].object = model.object;
           window.mergin_mode.scene.add(model.object);
           // if (window.mergin_mode.world[model.referenceIndex].visible == false) {
           //   model.object.visible = false;
@@ -58,7 +65,9 @@ export default async worldId => {
           model.object.traverse(child => {
             if (child.isMesh) {
               if (
-                window.mergin_mode.world[model.referenceIndex].visible == false
+                window.mergin_mode.world[window.mergin_mode.currentWorldId][
+                  model.referenceIndex
+                ].visible == false
               ) {
                 child.material.opacity = 0;
                 child.material.transparent = true;
@@ -72,12 +81,14 @@ export default async worldId => {
           });
           //check for animations and create the mixers
           const actions =
-            window.mergin_mode.world[model.referenceIndex].actions || {};
+            window.mergin_mode.world[window.mergin_mode.currentWorldId][
+              model.referenceIndex
+            ].actions || {};
           if ((actions.onLoad || {}).animations) {
             const mixer = new THREE.AnimationMixer(model.object);
             const theAnimation = window.mergin_mode.world[
-              model.referenceIndex
-            ].object.animations.filter(animation => {
+              window.mergin_mode.currentWorldId
+            ][model.referenceIndex].object.animations.filter(animation => {
               return animation.name == actions.onLoad.animations[0].name;
             })[0];
             mixer
@@ -86,7 +97,9 @@ export default async worldId => {
                 (actions.onLoad.animations[0].singleLoopDuration || 1000) / 1000
               )
               .play();
-            window.mergin_mode.world[model.referenceIndex].runtimeInfo = {
+            window.mergin_mode.world[window.mergin_mode.currentWorldId][
+              model.referenceIndex
+            ].runtimeInfo = {
               animationIndex: 0,
               pathIndex: 0,
               duration: 0,
@@ -96,8 +109,8 @@ export default async worldId => {
           if ((actions.onSelect || {}).animations) {
             const mixer = new THREE.AnimationMixer(model.object);
             const theAnimation = window.mergin_mode.world[
-              model.referenceIndex
-            ].object.animations.filter(animation => {
+              window.mergin_mode.currentWorldId
+            ][model.referenceIndex].object.animations.filter(animation => {
               return animation.name == actions.onSelect.animations[0].name;
             })[0];
             mixer
@@ -107,7 +120,7 @@ export default async worldId => {
                   1000
               )
               .play();
-            window.mergin_mode.world[
+            window.mergin_mode.world[window.mergin_mode.currentWorldId][
               model.referenceIndex
             ].selectedRuntimeInfo = {
               animationIndex: 0,

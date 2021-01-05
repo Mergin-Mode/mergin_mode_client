@@ -160,7 +160,9 @@ export const CalculateTransformation = (timeDelta, model) => {
         ];
     const newZ = CalculateZ(
       { x: newPosition[0], z: newPosition[1], y: newPosition[2] },
-      window.mergin_mode.world.filter(model => model.ground == true)[0].object,
+      window.mergin_mode.world[window.mergin_mode.currentWorldId].filter(
+        model => model.ground == true
+      )[0].object,
       3
     );
     // const rotate = Gab ? Gab / gradToRad : 0;
@@ -175,7 +177,9 @@ export const CalculateTransformation = (timeDelta, model) => {
   const posXY = ThemeliodesProblima_1(Xa, Ya, Sab, Gab);
   const newZ = CalculateZ(
     { x: posXY.Xb, z: posXY.Yb, y: model.object.position.y },
-    window.mergin_mode.world.filter(model => model.ground == true)[0].object,
+    window.mergin_mode.world[window.mergin_mode.currentWorldId].filter(
+      model => model.ground == true
+    )[0].object,
     3
   );
 
