@@ -6,15 +6,18 @@ import WorldItem from "../_layout/WorldItem";
 import SideBar from "../_layout/SideBar";
 import FullscreenIcon from "@material-ui/icons/Fullscreen";
 import StreetviewIcon from "@material-ui/icons/Streetview";
+import GpsFixedIcon from "@material-ui/icons/GpsFixed";
 import CropFreeIcon from "@material-ui/icons/CropFree";
 import QRModal from "../_layout/QRModal";
 import Button from "@material-ui/core/Button";
 import { DescriptiveDataListener } from "../../helpers/listeners";
 import * as THREE from "three";
+import { fromLonLat } from "ol/proj.js";
 
 const Controls = props => {
   const sliderHelperRef = useRef();
   const containerRef = useRef();
+  const [state, setState] = useState({ geolocation: false });
   const [modalData, setModalData] = useState(null);
   const [infoState, setInfoState] = useState({
     position: { x: 0, y: 0, z: 0 },
@@ -42,6 +45,41 @@ const Controls = props => {
     }
   };
   React.useEffect(() => {
+    if (state.geolocation) {
+      // get position from geolocation
+      navigator.geolocation.getCurrentPosition(
+        function success(position) {
+          if (!window.mergin_mode.camera.position) return false;
+          const latitude = position.coords.latitude;
+          const longitude = position.coords.longitude;
+          const newPos = fromLonLat([latitude, longitude, 0]);
+          const cameraX = Number(
+            (newPos[0] - window.mergin_mode.center[0]).toFixed(4)
+          );
+          const cameraZ = Number(
+            window.mergin_mode.camera.position.y.toFixed(4)
+          );
+          const cameraY = Number(
+            (newPos[1] - window.mergin_mode.center[2]).toFixed(4)
+          );
+          if (Math.abs(cameraX) > 1000 || Math.abs(cameraY) > 1000) {
+            const distance = Math.sqrt(
+              Math.pow(cameraX, 2) + Math.pow(cameraY, 2)
+            );
+            alert(
+              `Your location is to far from the virtual world. You are ${distance.toFixed(
+                2
+              )} meter far away.`
+            );
+            return true;
+          }
+          window.mergin_mode.camera.position.set(cameraX, cameraZ, cameraY);
+        },
+        () => {}
+      );
+    }
+  }, [state.geolocation]);
+  React.useEffect(() => {
     // if (typeof window.mergin_mode.controls.alphaOffset !== "undefined") {
     //   window.mergin_mode.controls.alphaOffset = -Math.PI / 2;
     // }
@@ -59,7 +97,6 @@ const Controls = props => {
         heading = 0;
       }
       const [cx, cy, cz] = window.mergin_mode.center;
-
       setInfoState({
         position: {
           x: (cx + x).toFixed(2) + "m",
@@ -166,6 +203,19 @@ const Controls = props => {
                 </span>
               ),
               name: "Show/Hide Info"
+            },
+            {
+              icon: (
+                <span
+                  onClick={() => {
+                    setState({ ...state, geolocation: !state.geolocation });
+                  }}
+                  id="geolocation"
+                >
+                  <GpsFixedIcon />
+                </span>
+              ),
+              name: "Geolocate"
             }
           ]}
         />
