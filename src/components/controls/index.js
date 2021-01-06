@@ -46,37 +46,52 @@ const Controls = props => {
   };
   React.useEffect(() => {
     if (state.geolocation) {
-      // get position from geolocation
-      navigator.geolocation.getCurrentPosition(
-        function success(position) {
-          if (!window.mergin_mode.camera.position) return false;
-          const latitude = position.coords.latitude;
-          const longitude = position.coords.longitude;
-          const newPos = fromLonLat([latitude, longitude, 0]);
-          const cameraX = Number(
-            (newPos[0] - window.mergin_mode.center[0]).toFixed(4)
+      let id, target, options;
+
+      function success(position) {
+        if (!window.mergin_mode.camera.position) return false;
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+        const newPos = fromLonLat([latitude, longitude, 0]);
+        const cameraX = Number(
+          (newPos[0] - window.mergin_mode.center[0]).toFixed(4)
+        );
+        const cameraZ = Number(window.mergin_mode.camera.position.y.toFixed(4));
+        const cameraY = Number(
+          (newPos[1] - window.mergin_mode.center[2]).toFixed(4)
+        );
+        if (Math.abs(cameraX) > 1000 || Math.abs(cameraY) > 1000) {
+          const distance = Math.sqrt(
+            Math.pow(cameraX, 2) + Math.pow(cameraY, 2)
           );
-          const cameraZ = Number(
-            window.mergin_mode.camera.position.y.toFixed(4)
+          alert(
+            `Your location is to far from the virtual world. You are ${distance.toFixed(
+              2
+            )} meter far away.`
           );
-          const cameraY = Number(
-            (newPos[1] - window.mergin_mode.center[2]).toFixed(4)
-          );
-          if (Math.abs(cameraX) > 1000 || Math.abs(cameraY) > 1000) {
-            const distance = Math.sqrt(
-              Math.pow(cameraX, 2) + Math.pow(cameraY, 2)
-            );
-            alert(
-              `Your location is to far from the virtual world. You are ${distance.toFixed(
-                2
-              )} meter far away.`
-            );
-            return true;
-          }
-          window.mergin_mode.camera.position.set(cameraX, cameraZ, cameraY);
-        },
-        () => {}
-      );
+          setState({ ...state, geolocation: false });
+          navigator.geolocation.clearWatch(id);
+          return true;
+        }
+        window.mergin_mode.camera.position.set(cameraX, cameraZ, cameraY);
+      }
+
+      function error(err) {
+        console.warn("ERROR(" + err.code + "): " + err.message);
+      }
+
+      target = {
+        latitude: 0,
+        longitude: 0
+      };
+
+      options = {
+        enableHighAccuracy: false,
+        timeout: 5000,
+        maximumAge: 0
+      };
+
+      id = navigator.geolocation.watchPosition(success, error, options);
     }
   }, [state.geolocation]);
   React.useEffect(() => {
