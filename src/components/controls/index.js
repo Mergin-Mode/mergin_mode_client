@@ -44,6 +44,7 @@ const Controls = props => {
       document.exitFullscreen();
     }
   };
+
   React.useEffect(() => {
     if (state.geolocation) {
       let id, target, options;

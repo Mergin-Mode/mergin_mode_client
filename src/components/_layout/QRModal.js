@@ -54,12 +54,14 @@ export default props => {
           heading = 0;
         }
 
-        if (heading != d.heading) {
-          window.mergin_mode.controls.alphaOffset = Number(
+        if (
+          heading != d.heading &&
+          typeof window.mergin_mode.controls.alphaOffset !== "undefined"
+        ) {
+          window.mergin_mode.controls.alphaOffset -= Number(
             (((d.heading - heading) * Math.PI) / 180).toFixed(4)
           );
         }
-        debugger;
         window.mergin_mode.controls.update();
         props.onClose();
       }

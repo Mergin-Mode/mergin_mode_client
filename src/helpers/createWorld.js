@@ -123,27 +123,25 @@ export default function createWorld(
     virtual: () => {
       renderer.setClearColor("#4285f4", 1);
       //remove mixed objects
-      // window.mergin_mode.world
       scene.background = undefined;
-      // if (!mobileCheck()) {
-      scene.position.set(0, 0, 0);
-      camera.position.set(-15.08, +1.7, +52.64);
-      // } else {
-      //   camera.position.set(0, 0, 0);
-      //   scene.position.set(0, 0, 0);
-      // }
+      if (!mobileCheck()) {
+        camera.position.set(-15.08, +1.7, +52.64);
+      }
     },
     augmented: () => {
       scene.background = texture;
       renderer.setClearColor(0x000000, 0);
-      scene.position.set(0, 0, 0);
-      camera.position.set(-15.08, +1.7, +52.64);
+      if (!mobileCheck()) {
+        camera.position.set(-15.08, +1.7, +52.64);
+      }
     },
     mixed: () => {
       scene.background = texture;
       renderer.setClearColor(0x000000, 0);
-      scene.position.set(0, 0, 0);
-      camera.position.set(-15.08, +1.7, +52.64);
+      if (!mobileCheck()) {
+        // scene.position.set(0, 0, 0);
+        camera.position.set(-15.08, +1.7, +52.64);
+      }
     }
   };
   window.mergin_mode.realities.virtual();
