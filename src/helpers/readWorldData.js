@@ -1,10 +1,7 @@
 import { fromLonLat } from "ol/proj.js";
 import { loadGLTFModel, loadFBXModel } from "../helpers/loaders";
-import worldDataOne from "../testFiles/worldOne.js";
-import worldDataTwo from "../testFiles/worldTwo.js";
 import * as THREE from "three";
 
-const worlds = [worldDataOne, worldDataTwo];
 const loader = {
   gltf: loadGLTFModel,
   glb: loadGLTFModel,
@@ -35,15 +32,12 @@ export default async worldId => {
     }
     window.mergin_mode.world[world.id] = [];
     for (const [index, record] of data.entries()) {
-      if (record.type === "model") {
+      if (["virtual", "mapped"].indexOf(record.type) !== -1) {
         loadings.push(
           loader[get_url_extension(record.url)](
             [{ url: record.url }],
-            record.position,
-            record.rotation,
-            record.scale,
-            index,
-            record.blending
+            record,
+            index
           )
         );
         window.mergin_mode.world[world.id].push(record);
@@ -67,7 +61,7 @@ export default async worldId => {
               if (
                 window.mergin_mode.world[window.mergin_mode.currentWorldId][
                   model.referenceIndex
-                ].visible == false
+                ].visible === false
               ) {
                 child.material.opacity = 0;
                 child.material.transparent = true;
@@ -88,9 +82,11 @@ export default async worldId => {
             const mixer = new THREE.AnimationMixer(model.object);
             const theAnimation = window.mergin_mode.world[
               window.mergin_mode.currentWorldId
-            ][model.referenceIndex].object.animations.filter(animation => {
-              return animation.name == actions.onLoad.animations[0].name;
-            })[0];
+            ][model.referenceIndex].object.children[0].animations.filter(
+              animation => {
+                return animation.name === actions.onLoad.animations[0].name;
+              }
+            )[0];
             mixer
               .clipAction(theAnimation)
               .setDuration(
@@ -110,9 +106,11 @@ export default async worldId => {
             const mixer = new THREE.AnimationMixer(model.object);
             const theAnimation = window.mergin_mode.world[
               window.mergin_mode.currentWorldId
-            ][model.referenceIndex].object.animations.filter(animation => {
-              return animation.name == actions.onSelect.animations[0].name;
-            })[0];
+            ][model.referenceIndex].object.children[0].animations.filter(
+              animation => {
+                return animation.name === actions.onSelect.animations[0].name;
+              }
+            )[0];
             mixer
               .clipAction(theAnimation)
               .setDuration(
@@ -135,5 +133,5 @@ export default async worldId => {
         console.error(e);
       });
   };
-  readWorldData(worlds.filter(w => w.id == worldId)[0]);
+  readWorldData(window.mergin_mode.worlds.filter(w => w.id === worldId)[0]);
 };

@@ -4,7 +4,7 @@ export default {
   description: "A simple overview of the area near the tower of thessaloniki.",
   content: [
     {
-      type: "model",
+      type: "mapped",
       url: process.env.PUBLIC_URL + "/14th_century_great_wall.glb",
       position: [0, 0, 0],
       rotation: [0, 0, 0],
@@ -19,7 +19,7 @@ export default {
           src="${process.env.PUBLIC_URL}/templates/white-tower.html"></iframe>`
     },
     {
-      type: "model",
+      type: "virtual",
       url: process.env.PUBLIC_URL + "/animated_dragon.glb",
       position: [1.5, 13, 3],
       rotation: [0, 0, 0],

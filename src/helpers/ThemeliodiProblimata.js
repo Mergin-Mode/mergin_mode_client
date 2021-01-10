@@ -45,11 +45,13 @@ export const ThemeliodesProblima_2 = (Xa, Ya, Xb, Yb) => {
 
   return { Gab: Gab.toFixed(4), Sab: Sab.toFixed(4) };
 };
+const origin = new THREE.Vector3();
+const direcition = new THREE.Vector3(0, -1, 0);
+const raycaster = new THREE.Raycaster();
 
 export const CalculateZ = (point, targetReference, offset) => {
-  const origin = new THREE.Vector3(point.x, point.y + offset, point.z);
-
-  const raycaster = new THREE.Raycaster(origin, new THREE.Vector3(0, -1, 0));
+  origin.set(point.x, point.y + offset, point.z);
+  raycaster.set(origin, direcition);
   const intersects = raycaster.intersectObjects(targetReference.children, true);
   const newY = ((intersects[0] || {}).point || {}).y;
   // if (Math.abs(Math.abs(point.y) - Math.abs(newY)) > 0.3) {

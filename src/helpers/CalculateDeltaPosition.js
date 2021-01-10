@@ -3,7 +3,7 @@ import {
   ThemeliodesProblima_2,
   CalculateZ
 } from "./ThemeliodiProblimata";
-import { AnimationMixer } from "three";
+// import { AnimationMixer } from "three";
 import { posZ } from "./computeZ";
 
 const gradToRad = 63.661977236758;
@@ -47,37 +47,39 @@ export const CalculateTransformation = (timeDelta, model) => {
       if (action.animations.length - 1 > runtimeInfo.animationIndex) {
         runtimeInfo.animationIndex++;
         runtimeInfo.pathIndex = 0;
-        const mixer = new AnimationMixer(model.object);
+        const mixer = runtimeInfo.mixer;
+        mixer.stopAllAction();
+
         mixer
           .clipAction(
-            model.object.animations.filter(animation => {
+            model.object.children[0].animations.filter(animation => {
               return (
                 animation.name ==
                 action.animations[runtimeInfo.animationIndex].name
               );
             })[0]
           )
-          .setDuration(1)
+          .setDuration((currentAnimation.singleLoopDuration || 1000) / 1000)
           .play();
-        runtimeInfo.mixer = mixer;
       }
       // restart animation
       else {
         runtimeInfo.animationIndex = 0;
         runtimeInfo.pathIndex = 0;
-        const mixer = new AnimationMixer(model.object);
+        const mixer = runtimeInfo.mixer;
+        mixer.stopAllAction();
         mixer
           .clipAction(
-            model.object.animations.filter(animation => {
+            model.object.children[0].animations.filter(animation => {
               return (
                 animation.name ==
                 action.animations[runtimeInfo.animationIndex].name
               );
             })[0]
           )
-          .setDuration(1)
+          .setDuration((currentAnimation.singleLoopDuration || 1000) / 1000)
           .play();
-        runtimeInfo.mixer = mixer;
+        // runtimeInfo.mixer = mixer;
       }
     }
     return false;
@@ -115,38 +117,43 @@ export const CalculateTransformation = (timeDelta, model) => {
       runtimeInfo.animationIndex++;
       runtimeInfo.pathIndex = 0;
       runtimeInfo.duration = 0;
-      const mixer = new AnimationMixer(model.object);
+      const mixer = runtimeInfo.mixer;
+      mixer.stopAllAction();
+
       mixer
         .clipAction(
-          model.object.animations.filter(animation => {
+          model.object.children[0].animations.filter(animation => {
             return (
               animation.name ==
               action.animations[runtimeInfo.animationIndex].name
             );
           })[0]
         )
-        .setDuration(1)
+        .setDuration((currentAnimation.singleLoopDuration || 1000) / 1000)
+
         .play();
-      runtimeInfo.mixer = mixer;
+      // runtimeInfo.mixer = mixer;
     }
     // restart animation
     else {
       runtimeInfo.animationIndex = 0;
       runtimeInfo.pathIndex = 0;
       runtimeInfo.duration = 0;
-      const mixer = new AnimationMixer(model.object);
+      const mixer = runtimeInfo.mixer;
+      mixer.stopAllAction();
       mixer
         .clipAction(
-          model.object.animations.filter(animation => {
+          model.object.children[0].animations.filter(animation => {
             return (
               animation.name ==
               action.animations[runtimeInfo.animationIndex].name
             );
           })[0]
         )
-        .setDuration(1)
+        .setDuration((currentAnimation.singleLoopDuration || 1000) / 1000)
+
         .play();
-      runtimeInfo.mixer = mixer;
+      // runtimeInfo.mixer = mixer;
     }
 
     const newPosition = action.animations[runtimeInfo.animationIndex].path[
@@ -158,13 +165,6 @@ export const CalculateTransformation = (timeDelta, model) => {
       : action.animations[runtimeInfo.animationIndex].path[
           runtimeInfo.pathIndex
         ];
-    const newZ = CalculateZ(
-      { x: newPosition[0], z: newPosition[1], y: newPosition[2] },
-      window.mergin_mode.world[window.mergin_mode.currentWorldId].filter(
-        model => model.ground == true
-      )[0].object,
-      3
-    );
     // const rotate = Gab ? Gab / gradToRad : 0;
     return {
       position: newPosition.reduce(
@@ -175,13 +175,18 @@ export const CalculateTransformation = (timeDelta, model) => {
   }
 
   const posXY = ThemeliodesProblima_1(Xa, Ya, Sab, Gab);
-  const newZ = CalculateZ(
-    { x: posXY.Xb, z: posXY.Yb, y: model.object.position.y },
-    window.mergin_mode.world[window.mergin_mode.currentWorldId].filter(
-      model => model.ground == true
-    )[0].object,
-    3
-  );
+  let newZ;
+  if (currentAnimation.dynamicHeight) {
+    newZ = CalculateZ(
+      { x: posXY.Xb, z: posXY.Yb, y: model.object.position.y },
+      window.mergin_mode.world[window.mergin_mode.currentWorldId].filter(
+        model => model.ground == true
+      )[0].object,
+      3
+    );
+  } else {
+    newZ = model.object.position.y;
+  }
 
   // if (Math.abs(newZ) - Math.abs(model.object.position.y) > 0.3) {
   //   console.log(newZ.toFixed(2));

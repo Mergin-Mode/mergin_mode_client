@@ -7,6 +7,9 @@ export default function WorldItem(props) {
   return (
     <React.Fragment>
       {props.item.map(w => {
+        if (w.id == 0) {
+          return <React.Fragment key={w.id} />;
+        }
         return (
           <div
             key={w.id}
@@ -48,7 +51,9 @@ export default function WorldItem(props) {
               }
             }}
           >
-            {w.meta.thumbnail && <img src={w.meta.thumbnail} />}
+            {w.meta.thumbnail && (
+              <img src={w.meta.thumbnail} sty={{ objectFit: "contain" }} />
+            )}
             <label>{w.name}</label>
             <p>{w.description}</p>
           </div>

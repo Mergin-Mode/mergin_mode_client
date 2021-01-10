@@ -441,33 +441,34 @@ export default function createWorld(
   VRButton.createButton(renderer, window.vrh);
   VRButton.createButton(renderer, window.mrh);
 
-  // document.getElementById("three-map").addEventListener("mousedown", event => {
-  //   if (event.which !== 1) return false;
-  //   const mouse = new THREE.Vector2();
-  //   const raycaster = new THREE.Raycaster();
-  //   const rect = renderer.domElement.getBoundingClientRect();
-  //   mouse.x =
-  //     (((event.clientX || event.changedTouches[0].clientX) - rect.left) /
-  //       rect.width) *
-  //       2 -
-  //     1;
-  //   mouse.y =
-  //     -(
-  //       ((event.clientY || event.changedTouches[0].clientY) - rect.top) /
-  //       rect.height
-  //     ) *
-  //       2 +
-  //     1;
+  document.getElementById("three-map").addEventListener("mousedown", event => {
+    if (event.which !== 1) return false;
+    const mouse = new THREE.Vector2();
+    const raycaster = new THREE.Raycaster();
+    const rect = renderer.domElement.getBoundingClientRect();
+    mouse.x =
+      (((event.clientX || event.changedTouches[0].clientX) - rect.left) /
+        rect.width) *
+        2 -
+      1;
+    mouse.y =
+      -(
+        ((event.clientY || event.changedTouches[0].clientY) - rect.top) /
+        rect.height
+      ) *
+        2 +
+      1;
 
-  //   raycaster.setFromCamera(mouse, camera);
-  //   const intersects = raycaster.intersectObjects(scene.children, true);
-  //   window.positions = window.positions || [];
-  //   window.positions.push([
-  //     intersects[0].point.x.toFixed(2) - 0,
-  //     intersects[0].point.y.toFixed(2) - 0,
-  //     intersects[0].point.z.toFixed(2) - 0
-  //   ]);
-  // });
+    raycaster.setFromCamera(mouse, camera);
+    const intersects = raycaster.intersectObjects(scene.children, true);
+    window.positions = window.positions || [];
+    if (!intersects[0]) return;
+    window.positions.push([
+      (window.mergin_mode.center[0] + intersects[0].point.x).toFixed(2) - 0,
+      (window.mergin_mode.center[1] + intersects[0].point.y).toFixed(2) - 0,
+      (window.mergin_mode.center[2] + intersects[0].point.z).toFixed(2) - 0
+    ]);
+  });
   return {
     plane,
     camera,

@@ -1,14 +1,16 @@
 import * as THREE from "three";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
-export const loadGLTFModel = (
-  file,
-  position,
-  rotation,
-  scale,
-  referenceIndex,
-  blending
-) => {
-  const { name, size, url } = file[0];
+import InstancedGroupMesh from "three-instanced-group-mesh";
+export const loadGLTFModel = (file, record, referenceIndex) => {
+  const {
+    position,
+    rotation,
+    scale,
+    scaleDifferenceXY,
+    scaleDifferenceZ,
+    blending
+  } = record;
+  const { url } = file[0];
   const { scene, loaders } = window.mergin_mode;
 
   const loader = new loaders.GLTFLoader();
@@ -18,14 +20,6 @@ export const loadGLTFModel = (
     loader.load(
       url,
       gltf => {
-        gltf.scene.position.set(
-          ...position.reduce(
-            (a, b, i) => [...a, b - window.mergin_mode.center[i]],
-            []
-          )
-        );
-        gltf.scene.scale.set(...scale);
-        gltf.scene.rotation.set(...rotation);
         gltf.scene.animations = gltf.animations;
         let material;
         if (blending) {
@@ -49,7 +43,73 @@ export const loadGLTFModel = (
             }
           }
         });
-        resolve({ referenceIndex, uuid: gltf.scene.uuid, object: gltf.scene });
+
+        const group = new THREE.Group();
+        // if (record.visible == false) {
+        //   group.visible = false;
+        // }
+        if (position[0] instanceof Array) {
+          const new_mesh = new InstancedGroupMesh(gltf.scene, position.length);
+          for (let p = 0; p < position.length - 1; p++) {
+            const transform = new THREE.Object3D();
+            transform.frustumCulled = false;
+            const rot = {};
+            rot.x = Number(rotation[0]);
+            rot.y = Number(rotation[1]);
+            rot.z = Number(rotation[2]);
+            const axisX = new THREE.Vector3(1, 0, 0);
+            const axisY = new THREE.Vector3(0, 1, 0);
+            const axisZ = new THREE.Vector3(0, 0, 1);
+            transform.rotateOnWorldAxis(axisX, rot.x);
+            transform.rotateOnWorldAxis(axisZ, rot.z);
+            transform.rotateOnWorldAxis(axisY, Math.random() * 2 * Math.PI);
+
+            const randomXY = Math.random() * scaleDifferenceXY;
+            const randomZ =
+              Math.random() * scaleDifferenceXY +
+              Math.random() * scaleDifferenceZ;
+            const sca = {};
+            sca.x = Number(scale[0]) + randomXY;
+            sca.y = Number(scale[1]) + randomXY;
+            sca.z = Number(scale[2]) + randomZ;
+            transform.scale.set(sca.x, sca.y, sca.z);
+            transform.position.set(
+              ...position[p].reduce(
+                (a, b, i) => [...a, b - window.mergin_mode.center[i]],
+                []
+              )
+            );
+            transform.updateMatrix();
+
+            new_mesh.setMatrixAt(p, transform.matrix);
+          }
+          // new_mesh.traverse(function(node) {
+          //   if (node.isMesh) {
+          //     node.castShadow = true;
+          //     node.receiveShadow = true;
+          //   }
+          // });
+
+          group.add(new_mesh);
+
+          resolve({ referenceIndex, uuid: gltf.scene.uuid, object: group });
+        } else {
+          gltf.scene.position.set(
+            ...position.reduce(
+              (a, b, i) => [...a, b - window.mergin_mode.center[i]],
+              []
+            )
+          );
+          gltf.scene.scale.set(...scale);
+          gltf.scene.rotation.set(...rotation);
+          group.add(gltf.scene);
+
+          resolve({
+            referenceIndex,
+            uuid: gltf.scene.uuid,
+            object: group
+          });
+        }
       },
       () => {},
       e => {
@@ -58,15 +118,16 @@ export const loadGLTFModel = (
     );
   });
 };
-export const loadFBXModel = (
-  file,
-  position,
-  rotation,
-  scale,
-  referenceIndex,
-  blending
-) => {
-  const { name, size, url } = file[0];
+export const loadFBXModel = (file, record, referenceIndex) => {
+  const {
+    position,
+    rotation,
+    scale,
+    scaleDifferenceXY,
+    scaleDifferenceZ,
+    blending
+  } = record;
+  const { url } = file[0];
   const { scene, loaders } = window.mergin_mode;
   const loader = new loaders.FBXLoader();
   return new Promise((resolve, reject) => {
@@ -83,15 +144,66 @@ export const loadFBXModel = (
             }
           }
         });
-        object.position.set(
-          ...position.reduce(
-            (a, b, i) => [...a, b - window.mergin_mode.center[i]],
-            []
-          )
-        );
-        object.scale.set(...scale);
-        object.rotation.set(...rotation);
-        resolve({ referenceIndex, uuid: object.uuid, object });
+        const group = new THREE.Group();
+        // if (record.visible == false) {
+        //   group.visible = false;
+        // }
+        if (position[0] instanceof Array) {
+          const new_mesh = new InstancedGroupMesh(object, position.length);
+          for (let p = 0; p < position.length - 1; p++) {
+            const transform = new THREE.Object3D();
+            transform.frustumCulled = false;
+            const rot = {};
+            rot.x = Number(rotation[0]);
+            rot.y = Number(rotation[1]);
+            rot.z = Number(rotation[2]);
+            const axisX = new THREE.Vector3(1, 0, 0);
+            const axisY = new THREE.Vector3(0, 1, 0);
+            const axisZ = new THREE.Vector3(0, 0, 1);
+            transform.rotateOnWorldAxis(axisX, rot.x);
+            transform.rotateOnWorldAxis(axisZ, rot.z);
+            transform.rotateOnWorldAxis(axisY, Math.random() * 2 * Math.PI);
+
+            const randomXY = Math.random() * scaleDifferenceXY;
+            const randomZ =
+              Math.random() * scaleDifferenceXY +
+              Math.random() * scaleDifferenceZ;
+            const sca = {};
+            sca.x = Number(scale[0]) + randomXY;
+            sca.y = Number(scale[1]) + randomXY;
+            sca.z = Number(scale[2]) + randomZ;
+            transform.scale.set(sca.x, sca.y, sca.z);
+            transform.position.set(
+              ...position[p].reduce(
+                (a, b, i) => [...a, b - window.mergin_mode.center[i]],
+                []
+              )
+            );
+            transform.updateMatrix();
+
+            new_mesh.setMatrixAt(p, transform.matrix);
+          }
+          // new_mesh.traverse(function(node) {
+          //   if (node.isMesh) {
+          //     node.castShadow = true;
+          //     node.receiveShadow = true;
+          //   }
+          // });
+
+          group.add(new_mesh);
+          resolve({ referenceIndex, uuid: object.uuid, object: group });
+        } else {
+          object.position.set(
+            ...position.reduce(
+              (a, b, i) => [...a, b - window.mergin_mode.center[i]],
+              []
+            )
+          );
+          object.scale.set(...scale);
+          object.rotation.set(...rotation);
+          group.add(object);
+          resolve({ referenceIndex, uuid: object.uuid, object: group });
+        }
       },
       () => {},
       e => {
