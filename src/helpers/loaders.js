@@ -105,13 +105,6 @@ export const loadGLTFModel = (file, record, referenceIndex) => {
         }
         if (record.type == "mapped") {
           group.renderOrder = 1;
-          group.traverse(child => {
-            if (child.isMesh) {
-              child.material.side = THREE["DoubleSide"];
-              child.material.blending = THREE["AdditiveBlending"];
-              child.material.needsUpdate = true;
-            }
-          });
         }
         resolve({
           referenceIndex,
@@ -203,14 +196,6 @@ export const loadFBXModel = (file, record, referenceIndex) => {
         }
         if (record.type == "mapped") {
           group.renderOrder = 1;
-          group.traverse(child => {
-            if (child.isMesh) {
-              child.material.blending = THREE["AdditiveBlending"];
-              child.material.depthFunc = THREE.AlwaysDepth;
-              child.material.side = THREE["DoubleSide"];
-              child.material.needsUpdate = true;
-            }
-          });
         }
         resolve({ referenceIndex, uuid: group.uuid, object: group });
       },
