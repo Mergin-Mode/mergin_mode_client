@@ -21,30 +21,33 @@ export const loadGLTFModel = (file, record, referenceIndex) => {
       url,
       gltf => {
         gltf.scene.animations = gltf.animations;
-        let material;
-        if (blending) {
-          material = new THREE.MeshPhongMaterial({
-            color: 0x000000, // red (can also use a CSS color string here)
-            blending: THREE[blending]
-          });
-          gltf.scene.renderOrder = 999;
-        }
-
-        gltf.scene.traverse(child => {
-          if (child.isMesh) {
-            // child.castShadow = true;
-            // child.receiveShadow = true;
-
-            if (blending) {
-              child.material = material;
-              // child.material.blending = THREE[blending];
-              child.renderOrder = 999;
-              // child.material.depthWrite = false;
-            }
-          }
-        });
-
+        // let material;
         const group = new THREE.Group();
+        if (record.type == "mapped") {
+          group.renderOrder = 999;
+        }
+        // if (blending) {
+        //   material = new THREE.MeshPhongMaterial({
+        //     color: 0x000000, // red (can also use a CSS color string here)
+        //     blending: THREE[blending]
+        //   });
+        //   gltf.scene.renderOrder = 999;
+        // }
+
+        // gltf.scene.traverse(child => {
+        //   if (child.isMesh) {
+        //     // child.castShadow = true;
+        //     // child.receiveShadow = true;
+
+        //     if (blending) {
+        //       child.material = material;
+        //       // child.material.blending = THREE[blending];
+        //       child.renderOrder = 999;
+        //       // child.material.depthWrite = false;
+        //     }
+        //   }
+        // });
+
         // if (record.visible == false) {
         //   group.visible = false;
         // }
@@ -94,15 +97,15 @@ export const loadGLTFModel = (file, record, referenceIndex) => {
 
           resolve({ referenceIndex, uuid: gltf.scene.uuid, object: group });
         } else {
-          gltf.scene.position.set(
+          group.add(gltf.scene);
+          group.position.set(
             ...position.reduce(
               (a, b, i) => [...a, b - window.mergin_mode.center[i]],
               []
             )
           );
-          gltf.scene.scale.set(...scale);
-          gltf.scene.rotation.set(...rotation);
-          group.add(gltf.scene);
+          group.scale.set(...scale);
+          group.rotation.set(...rotation);
 
           resolve({
             referenceIndex,
@@ -134,17 +137,18 @@ export const loadFBXModel = (file, record, referenceIndex) => {
     loader.load(
       url,
       object => {
-        object.traverse(child => {
-          if (child.isMesh) {
-            // child.castShadow = true;
-            // child.receiveShadow = true;
-            if (blending) {
-              child.material.blending = THREE[blending];
+        const group = new THREE.Group();
+        if (record.type == "mapped") {
+          group.renderOrder = 999;
+        } /*else {
+          object.traverse(child => {
+            if (child.isMesh) {
+              child.material.depthWrite = false;
               child.material.needsUpdate = true;
             }
-          }
-        });
-        const group = new THREE.Group();
+          });
+        }*/
+
         // if (record.visible == false) {
         //   group.visible = false;
         // }
@@ -191,18 +195,18 @@ export const loadFBXModel = (file, record, referenceIndex) => {
           // });
 
           group.add(new_mesh);
-          resolve({ referenceIndex, uuid: object.uuid, object: group });
+          resolve({ referenceIndex, uuid: group.uuid, object: group });
         } else {
-          object.position.set(
+          group.add(object);
+          group.position.set(
             ...position.reduce(
               (a, b, i) => [...a, b - window.mergin_mode.center[i]],
               []
             )
           );
-          object.scale.set(...scale);
-          object.rotation.set(...rotation);
-          group.add(object);
-          resolve({ referenceIndex, uuid: object.uuid, object: group });
+          group.scale.set(...scale);
+          group.rotation.set(...rotation);
+          resolve({ referenceIndex, uuid: group.uuid, object: group });
         }
       },
       () => {},

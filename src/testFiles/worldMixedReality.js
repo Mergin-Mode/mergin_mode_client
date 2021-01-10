@@ -40,7 +40,7 @@ export default {
       run: () => {
         window.mergin_mode.world[window.mergin_mode.currentWorldId].map(
           item => {
-            if (item.type === "virtual") {
+            if (item.type === "mapped") {
               item.object.visible = !item.object.visible;
               item.object.traverse(child => {
                 if (child.isMesh) {
@@ -61,6 +61,7 @@ export default {
           item => {
             if (item.type === "mapped") {
               item.object.visible = !item.object.visible;
+              item.object.renderOrder = 999;
               item.object.traverse(child => {
                 if (child.isMesh) {
                   child.material.wireframe = false;
@@ -77,7 +78,7 @@ export default {
   content: [
     {
       type: "virtual",
-      visible: false,
+      //visible: false,
       url: process.env.PUBLIC_URL + "/trees.glb",
       rotation: [-Math.PI / 2, 0, 0],
       position: [
@@ -103,7 +104,7 @@ export default {
       type: "mapped",
       ground: true,
       selectable: false,
-      visible: false,
+      //visible: false,
       url: process.env.PUBLIC_URL + "/white-tower-area.gltf",
       position: [4522507.2664, 15.25, 2625770.4946],
       rotation: [0, -Math.PI / 2, 0],
@@ -112,7 +113,7 @@ export default {
     },
     {
       type: "virtual",
-      visible: false,
+      //visible: false,
       url: process.env.PUBLIC_URL + "/Soldier.glb",
       position: [4522518.11, 15.86, 2625797.41],
       rotation: [0, Math.PI, 0],
@@ -149,7 +150,7 @@ export default {
     },
     {
       type: "virtual",
-      visible: false,
+      //visible: false,
       url: process.env.PUBLIC_URL + "/animated_dragon.glb",
       position: [1.5, 13, 3],
       rotation: [0, 0, 0],
@@ -207,7 +208,7 @@ export default {
     },
     {
       type: "virtual",
-      visible: false,
+      //visible: false,
       url: process.env.PUBLIC_URL + "/Soldier.glb",
       position: [4522519.65, 15.58, 2625805.5],
       rotation: [0, Math.PI, 0],
