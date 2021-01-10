@@ -23,9 +23,7 @@ export const loadGLTFModel = (file, record, referenceIndex) => {
         gltf.scene.animations = gltf.animations;
         // let material;
         const group = new THREE.Group();
-        if (record.type == "mapped") {
-          group.renderOrder = 999;
-        }
+
         // if (blending) {
         //   material = new THREE.MeshPhongMaterial({
         //     color: 0x000000, // red (can also use a CSS color string here)
@@ -94,8 +92,6 @@ export const loadGLTFModel = (file, record, referenceIndex) => {
           // });
 
           group.add(new_mesh);
-
-          resolve({ referenceIndex, uuid: gltf.scene.uuid, object: group });
         } else {
           group.add(gltf.scene);
           group.position.set(
@@ -106,13 +102,22 @@ export const loadGLTFModel = (file, record, referenceIndex) => {
           );
           group.scale.set(...scale);
           group.rotation.set(...rotation);
-
-          resolve({
-            referenceIndex,
-            uuid: gltf.scene.uuid,
-            object: group
+        }
+        if (record.type == "mapped") {
+          group.renderOrder = 1;
+          group.traverse(child => {
+            if (child.isMesh) {
+              child.material.side = THREE["DoubleSide"];
+              child.material.blending = THREE["AdditiveBlending"];
+              child.material.needsUpdate = true;
+            }
           });
         }
+        resolve({
+          referenceIndex,
+          uuid: gltf.scene.uuid,
+          object: group
+        });
       },
       () => {},
       e => {
@@ -138,16 +143,6 @@ export const loadFBXModel = (file, record, referenceIndex) => {
       url,
       object => {
         const group = new THREE.Group();
-        if (record.type == "mapped") {
-          group.renderOrder = 999;
-        } /*else {
-          object.traverse(child => {
-            if (child.isMesh) {
-              child.material.depthWrite = false;
-              child.material.needsUpdate = true;
-            }
-          });
-        }*/
 
         // if (record.visible == false) {
         //   group.visible = false;
@@ -195,7 +190,6 @@ export const loadFBXModel = (file, record, referenceIndex) => {
           // });
 
           group.add(new_mesh);
-          resolve({ referenceIndex, uuid: group.uuid, object: group });
         } else {
           group.add(object);
           group.position.set(
@@ -206,8 +200,19 @@ export const loadFBXModel = (file, record, referenceIndex) => {
           );
           group.scale.set(...scale);
           group.rotation.set(...rotation);
-          resolve({ referenceIndex, uuid: group.uuid, object: group });
         }
+        if (record.type == "mapped") {
+          group.renderOrder = 1;
+          group.traverse(child => {
+            if (child.isMesh) {
+              child.material.blending = THREE["AdditiveBlending"];
+              child.material.depthFunc = THREE.AlwaysDepth;
+              child.material.side = THREE["DoubleSide"];
+              child.material.needsUpdate = true;
+            }
+          });
+        }
+        resolve({ referenceIndex, uuid: group.uuid, object: group });
       },
       () => {},
       e => {

@@ -21,6 +21,7 @@ export default {
     },
     {
       type: "virtual",
+      //visible: false,
       url: process.env.PUBLIC_URL + "/trees.glb",
       rotation: [-Math.PI / 2, 0, 0],
       position: [
@@ -32,7 +33,9 @@ export default {
         [4522530.58, 16.51, 2625771.71],
         [4522527.9, 15.99, 2625787.42]
       ],
-      scale: [4, 5, 4],
+      scale: [4, 4, 4],
+      scaleDifferenceXY: 2,
+      scaleDifferenceZ: 2,
       description: `<iframe
             style="
               width: 100%;

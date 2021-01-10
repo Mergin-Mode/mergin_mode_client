@@ -77,30 +77,6 @@ export default {
   ],
   content: [
     {
-      type: "virtual",
-      //visible: false,
-      url: process.env.PUBLIC_URL + "/trees.glb",
-      rotation: [-Math.PI / 2, 0, 0],
-      position: [
-        [4522489.53, 15.29, 2625782.71],
-        [4522488.77, 15.72, 2625773],
-        [4522489.97, 15.92, 2625763.99],
-        [4522493.06, 15.91, 2625756.79],
-        [4522499.14, 16.14, 2625750.56],
-        [4522530.58, 16.51, 2625771.71],
-        [4522527.9, 15.99, 2625787.42]
-      ],
-      scale: [4, 4, 4],
-      scaleDifferenceXY: 2,
-      scaleDifferenceZ: 2,
-      description: `<iframe
-            style="
-              width: 100%;
-              height: 100%;
-              border:none;"
-            src="https://en.wikipedia.org/wiki/Tree"></iframe>`
-    },
-    {
       type: "mapped",
       ground: true,
       selectable: false,
@@ -280,6 +256,30 @@ export default {
             height: 100%;
             border:none;"
           src="${process.env.PUBLIC_URL}/templates/soldier.html"></iframe>`
+    },
+    {
+      type: "virtual",
+      //visible: false,
+      url: process.env.PUBLIC_URL + "/trees.glb",
+      rotation: [-Math.PI / 2, 0, 0],
+      position: [
+        [4522489.53, 15.29, 2625782.71],
+        [4522488.77, 15.72, 2625773],
+        [4522489.97, 15.92, 2625763.99],
+        [4522493.06, 15.91, 2625756.79],
+        [4522499.14, 16.14, 2625750.56],
+        [4522530.58, 16.51, 2625771.71],
+        [4522527.9, 15.99, 2625787.42]
+      ],
+      scale: [4, 4, 4],
+      scaleDifferenceXY: 2,
+      scaleDifferenceZ: 2,
+      description: `<iframe
+            style="
+              width: 100%;
+              height: 100%;
+              border:none;"
+            src="https://en.wikipedia.org/wiki/Tree"></iframe>`
     }
   ],
   meta: {
