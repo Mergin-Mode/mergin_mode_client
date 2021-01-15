@@ -26,6 +26,7 @@ export default {
               item.object.traverse(child => {
                 if (child.isMesh) {
                   child.material.blending = THREE["NormalBlending"];
+                  child.material.color = new THREE.Color("#fff");
                   child.material.wireframe = false;
                   child.material.needsUpdate = true;
                 }
@@ -36,26 +37,7 @@ export default {
       }
     },
     {
-      name: "Show/Hide Mapped Wireframed",
-      run: () => {
-        window.mergin_mode.world[window.mergin_mode.currentWorldId].map(
-          item => {
-            if (item.type === "mapped") {
-              item.object.visible = !item.object.visible;
-              item.object.traverse(child => {
-                if (child.isMesh) {
-                  child.material.blending = THREE["NormalBlending"];
-                  child.material.wireframe = true;
-                  child.material.needsUpdate = true;
-                }
-              });
-            }
-          }
-        );
-      }
-    },
-    {
-      name: "Show/Hide Mixed Objects",
+      name: "Show/Hide Mixed Objects Semi Transparent",
       run: () => {
         window.mergin_mode.world[window.mergin_mode.currentWorldId].map(
           item => {
@@ -66,6 +48,28 @@ export default {
                 if (child.isMesh) {
                   child.material.wireframe = false;
                   child.material.blending = THREE["AdditiveBlending"];
+                  child.material.color = new THREE.Color("#fff");
+                  child.material.needsUpdate = true;
+                }
+              });
+            }
+          }
+        );
+      }
+    },
+    {
+      name: "Show/Hide Mixed Objects Transparent",
+      run: () => {
+        window.mergin_mode.world[window.mergin_mode.currentWorldId].map(
+          item => {
+            if (item.type === "mapped") {
+              item.object.visible = !item.object.visible;
+              item.object.renderOrder = 999;
+              item.object.traverse(child => {
+                if (child.isMesh) {
+                  child.material.wireframe = false;
+                  child.material.blending = THREE["AdditiveBlending"];
+                  child.material.color = new THREE.Color("#000");
                   child.material.needsUpdate = true;
                 }
               });

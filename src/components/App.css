@@ -225,6 +225,16 @@ div[role=presentation] {
   pointer-events: none;
 }
 
+.world-actions {
+  display: flex;
+  flex-wrap: wrap;
+}
+.world-action{
+  margin: 5px;
+  border: 1px solid #323228;
+  padding: 5px;
+  border-radius: 4px;
+}
 .world-item img {
   object-fit: cover;
     width: 100%;

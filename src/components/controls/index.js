@@ -45,6 +45,11 @@ const Controls = props => {
     }
   };
 
+  const worldActions =
+    window.mergin_mode.currentWorldId !== 0 &&
+    window.mergin_mode.worlds.filter(
+      world => window.mergin_mode.currentWorldId === world.id
+    )[0]?.actions;
   React.useEffect(() => {
     if (state.geolocation) {
       let id, target, options;
@@ -270,6 +275,15 @@ const Controls = props => {
             ref={elem => (sliderHelperRef.current = elem)}
           ></Button>
           <div id="slider"></div>
+          {worldActions && (
+            <div className="world-actions">
+              {worldActions.map(action => (
+                <div className="world-action" onClick={action.run}>
+                  {action.name}
+                </div>
+              ))}
+            </div>
+          )}
           {props.descriptiveData ? (
             <div
               id="descriptive-data"
