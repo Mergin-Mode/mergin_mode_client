@@ -121,7 +121,7 @@ export default function createWorld(
   );
   window.mergin_mode.realities = {
     virtual: () => {
-      renderer.setClearColor("#4285f4", 1);
+      renderer.setClearColor("#87ceeb", 1);
       //remove mixed objects
       scene.background = undefined;
       if (!mobileCheck()) {
@@ -185,7 +185,7 @@ export default function createWorld(
   const gridHelper = new THREE.GridHelper(1000, 100);
   // gridHelper.geometry.rotateX(Math.PI / 2);
 
-  scene.add(gridHelper);
+  // scene.add(gridHelper);
   const light = new THREE.AmbientLight(0xffffff, 2); // soft white light
   light.channel = 123;
   scene.add(light);

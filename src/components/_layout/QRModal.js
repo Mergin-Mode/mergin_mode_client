@@ -93,7 +93,7 @@ export default props => {
         </h2>
       </div>
       <p id="simple-modal-description" style={{ flex: 1 }}>
-        <div style={{ height: "calc(100% - 30px)", position: "relative" }}>
+        <div style={{ height: "calc(100% - 110px)", position: "relative" }}>
           <div className="scan-tip">
             <QrReader
               delay={300}
@@ -101,6 +101,39 @@ export default props => {
               onScan={handleScan}
               style={{ width: "100%" }}
             />
+          </div>
+        </div>
+        <div style={{ textAlign: "center" }}>
+          <p>or type the id of the observation point</p>
+          <input
+            onChange={e =>
+              setState({ ...state, observationId: e.target.value })
+            }
+          />
+          <div
+            style={{
+              textAlign: "center"
+            }}
+          >
+            <Button
+              style={{
+                fontSize: "18px",
+                // background: "#2f72e8",
+                color: "#313129",
+                fontWeight: 600
+              }}
+              onClick={() => {
+                const observationId = state.observationId;
+                const data = window.mergin_mode.worlds
+                  .filter(w => w.id == window.mergin_mode.currentWorldId)[0]
+                  .meta.observationPoints.filter(op => {
+                    return op.pointId == observationId;
+                  });
+                handleScan(JSON.stringify(data[0]));
+              }}
+            >
+              Submit
+            </Button>
           </div>
         </div>
         <div

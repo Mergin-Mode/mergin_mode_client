@@ -37,6 +37,43 @@ export default {
       }
     },
     {
+      name: "Show/Hide Wireframed",
+      run: () => {
+        window.mergin_mode.world[window.mergin_mode.currentWorldId].map(
+          item => {
+            if (item.type === "mapped") {
+              item.object.visible = !item.object.visible;
+              item.object.traverse(child => {
+                if (child.isMesh) {
+                  child.material.blending = THREE["AdditiveBlending"];
+                  child.material.color = new THREE.Color("#000");
+                  // wireframe
+                  const geo = new THREE.EdgesGeometry(child.geometry); // or WireframeGeometry
+                  const mat = new THREE.LineBasicMaterial({
+                    color: "#111",
+                    linewidth: 2
+                  });
+                  const wireframe = new THREE.LineSegments(geo, mat);
+                  child.add(wireframe);
+
+                  child.material.needsUpdate = true;
+                }
+              });
+            } else if (item.type === "virtual") {
+              item.object.visible = !item.object.visible;
+              item.object.traverse(child => {
+                if (child.isMesh) {
+                  child.material.color = new THREE.Color("#00309d");
+                  child.material.map = null;
+                  child.material.needsUpdate = true;
+                }
+              });
+            }
+          }
+        );
+      }
+    },
+    {
       name: "Show/Hide Mixed Objects Semi Transparent",
       run: () => {
         window.mergin_mode.world[window.mergin_mode.currentWorldId].map(
@@ -295,7 +332,8 @@ export default {
     coordinates: [4522507.2664, 15.25, 2625770.4946],
     observationPoints: [
       {
-        id: 1,
+        id: "006cb9aE-F317",
+        pointId: 1,
         position: {
           x: 4522473.81,
           y: 2625774.06,
@@ -304,7 +342,8 @@ export default {
         heading: 85
       },
       {
-        id: 2,
+        id: "006cb9aE-F317",
+        pointId: 2,
         position: {
           x: 4522516.39,
           y: 2625740.93,
@@ -313,7 +352,8 @@ export default {
         heading: 190
       },
       {
-        id: 3,
+        id: "006cb9aE-F317",
+        pointId: 3,
         position: {
           x: 4522523.05,
           y: 2625809.84,
