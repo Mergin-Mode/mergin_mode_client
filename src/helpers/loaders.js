@@ -21,34 +21,14 @@ export const loadGLTFModel = (file, record, referenceIndex) => {
       url,
       gltf => {
         gltf.scene.animations = gltf.animations;
-        // let material;
         const group = new THREE.Group();
 
-        // if (blending) {
-        //   material = new THREE.MeshPhongMaterial({
-        //     color: 0x000000, // red (can also use a CSS color string here)
-        //     blending: THREE[blending]
-        //   });
-        //   gltf.scene.renderOrder = 999;
-        // }
-
-        // gltf.scene.traverse(child => {
-        //   if (child.isMesh) {
-        //     // child.castShadow = true;
-        //     // child.receiveShadow = true;
-
-        //     if (blending) {
-        //       child.material = material;
-        //       // child.material.blending = THREE[blending];
-        //       child.renderOrder = 999;
-        //       // child.material.depthWrite = false;
-        //     }
-        //   }
-        // });
-
-        // if (record.visible == false) {
-        //   group.visible = false;
-        // }
+        gltf.scene.traverse(child => {
+          if (child.isMesh) {
+            child.material.side = THREE.DoubleSide;
+            child.material.needsUpdate = true;
+          }
+        });
         if (position[0] instanceof Array) {
           const new_mesh = new InstancedGroupMesh(gltf.scene, position.length);
           for (let p = 0; p < position.length - 1; p++) {
@@ -84,12 +64,6 @@ export const loadGLTFModel = (file, record, referenceIndex) => {
 
             new_mesh.setMatrixAt(p, transform.matrix);
           }
-          // new_mesh.traverse(function(node) {
-          //   if (node.isMesh) {
-          //     node.castShadow = true;
-          //     node.receiveShadow = true;
-          //   }
-          // });
 
           group.add(new_mesh);
         } else {
@@ -136,10 +110,12 @@ export const loadFBXModel = (file, record, referenceIndex) => {
       url,
       object => {
         const group = new THREE.Group();
-
-        // if (record.visible == false) {
-        //   group.visible = false;
-        // }
+        object.traverse(child => {
+          if (child.isMesh) {
+            child.material.side = THREE.DoubleSide;
+            child.material.needsUpdate = true;
+          }
+        });
         if (position[0] instanceof Array) {
           const new_mesh = new InstancedGroupMesh(object, position.length);
           for (let p = 0; p < position.length - 1; p++) {
@@ -175,12 +151,6 @@ export const loadFBXModel = (file, record, referenceIndex) => {
 
             new_mesh.setMatrixAt(p, transform.matrix);
           }
-          // new_mesh.traverse(function(node) {
-          //   if (node.isMesh) {
-          //     node.castShadow = true;
-          //     node.receiveShadow = true;
-          //   }
-          // });
 
           group.add(new_mesh);
         } else {

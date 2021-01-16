@@ -278,7 +278,11 @@ const Controls = props => {
           {worldActions && (
             <div className="world-actions">
               {worldActions.map(action => (
-                <div className="world-action" onClick={action.run}>
+                <div
+                  key={action.name}
+                  className="world-action"
+                  onClick={action.run}
+                >
                   {action.name}
                 </div>
               ))}

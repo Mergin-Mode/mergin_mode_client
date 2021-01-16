@@ -36,43 +36,43 @@ export default {
         );
       }
     },
-    {
-      name: "Show/Hide Wireframed",
-      run: () => {
-        window.mergin_mode.world[window.mergin_mode.currentWorldId].map(
-          item => {
-            if (item.type === "mapped") {
-              item.object.visible = !item.object.visible;
-              item.object.traverse(child => {
-                if (child.isMesh) {
-                  child.material.blending = THREE["AdditiveBlending"];
-                  child.material.color = new THREE.Color("#000");
-                  // wireframe
-                  const geo = new THREE.EdgesGeometry(child.geometry); // or WireframeGeometry
-                  const mat = new THREE.LineBasicMaterial({
-                    color: "#111",
-                    linewidth: 2
-                  });
-                  const wireframe = new THREE.LineSegments(geo, mat);
-                  child.add(wireframe);
+    // {
+    //   name: "Show/Hide Wireframed",
+    //   run: () => {
+    //     window.mergin_mode.world[window.mergin_mode.currentWorldId].map(
+    //       item => {
+    //         if (item.type === "mapped") {
+    //           item.object.visible = !item.object.visible;
+    //           item.object.traverse(child => {
+    //             if (child.isMesh) {
+    //               child.material.blending = THREE["AdditiveBlending"];
+    //               child.material.color = new THREE.Color("#000");
+    //               // wireframe
+    //               const geo = new THREE.EdgesGeometry(child.geometry); // or WireframeGeometry
+    //               const mat = new THREE.LineBasicMaterial({
+    //                 color: "#111",
+    //                 linewidth: 2
+    //               });
+    //               const wireframe = new THREE.LineSegments(geo, mat);
+    //               child.add(wireframe);
 
-                  child.material.needsUpdate = true;
-                }
-              });
-            } else if (item.type === "virtual") {
-              item.object.visible = !item.object.visible;
-              item.object.traverse(child => {
-                if (child.isMesh) {
-                  child.material.color = new THREE.Color("#00309d");
-                  child.material.map = null;
-                  child.material.needsUpdate = true;
-                }
-              });
-            }
-          }
-        );
-      }
-    },
+    //               child.material.needsUpdate = true;
+    //             }
+    //           });
+    //         } else if (item.type === "virtual") {
+    //           item.object.visible = !item.object.visible;
+    //           item.object.traverse(child => {
+    //             if (child.isMesh) {
+    //               child.material.color = new THREE.Color("#00309d");
+    //               child.material.map = null;
+    //               child.material.needsUpdate = true;
+    //             }
+    //           });
+    //         }
+    //       }
+    //     );
+    //   }
+    // },
     {
       name: "Show/Hide Mixed Objects Semi Transparent",
       run: () => {
@@ -208,7 +208,8 @@ export default {
                 [4522480.91, 30, 2625793.36],
                 [4522489.27, 30, 2625796.78],
                 [4522501.6, 30, 2625802.34],
-                [4522514.55, 30, 2625811.76]
+                [4522514.55, 30, 2625811.76],
+                [4522519.65, 30, 2625805.5]
               ],
               speed: 45,
               speedUnit: "km/h"
@@ -272,7 +273,8 @@ export default {
                 [4522480.91, 14.73, 2625793.36],
                 [4522489.27, 14.88, 2625796.78],
                 [4522501.6, 15.05, 2625802.34],
-                [4522514.55, 15.29, 2625811.76]
+                [4522514.55, 15.29, 2625811.76],
+                [4522519.65, 15.58, 2625805.5]
               ],
               speed: 10,
               speedUnit: "km/h",

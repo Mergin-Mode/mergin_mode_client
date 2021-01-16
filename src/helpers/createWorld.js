@@ -121,7 +121,7 @@ export default function createWorld(
   );
   window.mergin_mode.realities = {
     virtual: () => {
-      renderer.setClearColor("#87ceeb", 1);
+      renderer.setClearColor("#4285f4", 1);
       //remove mixed objects
       scene.background = undefined;
       if (!mobileCheck()) {
