@@ -25,7 +25,7 @@ const mobileCheck = function() {
   })(navigator.userAgent || navigator.vendor || window.opera);
   return check;
 };
-
+const isMobile = mobileCheck();
 GLTFLoader.prototype.load2 = function(files, callback) {
   const scope = this;
   const file = files[0];
@@ -361,7 +361,9 @@ export default function createWorld(
   }
   animate();
   function render() {
+    // if (!mobileCheck()) {
     TWEEN.update();
+    // }
     renderer.render(scene, camera);
     if (!window.mergin_mode.world[window.mergin_mode.currentWorldId]) {
       return true;

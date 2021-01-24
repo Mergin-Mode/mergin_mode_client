@@ -128,33 +128,33 @@ export default {
       scale: [1, 1, 1],
       description: ``
     },
-    {
-      type: "virtual",
-      //visible: false,
-      url: process.env.PUBLIC_URL + "/mantalk.glb",
-      position: [4522518.11, 15.56, 2625803.41],
-      rotation: [0, Math.PI - 0.1, 0],
-      scale: [0.6, 0.6, 0.6],
-      actions: {
-        onLoad: {
-          animations: [
-            {
-              singleLoopDuration: 5000,
-              name: "mixamo.com",
-              duration: 10000,
-              path: [[4522518.11, 15.86, 2625797.41]]
-              //dynamicHeight: true
-            }
-          ]
-        }
-      },
-      description: `<iframe
-          style="
-            width: 100%;
-            height: 100%;
-            border:none;"
-          src="${process.env.PUBLIC_URL}/templates/soldier.html"></iframe>`
-    },
+    // {
+    //   type: "virtual",
+    //   //visible: false,
+    //   url: process.env.PUBLIC_URL + "/mantalk.glb",
+    //   position: [4522518.11, 15.56, 2625803.41],
+    //   rotation: [0, Math.PI - 0.1, 0],
+    //   scale: [0.5, 0.5, 0.5],
+    //   actions: {
+    //     onLoad: {
+    //       animations: [
+    //         {
+    //           singleLoopDuration: 5000,
+    //           name: "mixamo.com",
+    //           duration: 10000,
+    //           path: [[4522518.11, 15.86, 2625797.41]]
+    //           //dynamicHeight: true
+    //         }
+    //       ]
+    //     }
+    //   },
+    //   description: `<iframe
+    //       style="
+    //         width: 100%;
+    //         height: 100%;
+    //         border:none;"
+    //       src="${process.env.PUBLIC_URL}/templates/soldier.html"></iframe>`
+    // },
     {
       type: "virtual",
       //visible: false,
@@ -217,17 +217,17 @@ export default {
     {
       type: "virtual",
       //visible: false,
-      url: process.env.PUBLIC_URL + "/man.glb",
+      url: process.env.PUBLIC_URL + "/man1.glb",
       position: [4522519.65, 15.58, 2625805.5],
       rotation: [0, 0, 0],
-      scale: [0.6, 0.6, 0.6],
+      scale: [0.5, 0.5, 0.5],
       smoothRotation: false,
       actions: {
         onLoad: {
           animations: [
             {
-              name: "Take 001",
-              singleLoopDuration: 1500,
+              name: "mixamo.com",
+              singleLoopDuration: 1000,
               path: [
                 [4522519.65, 15.58, 2625805.5],
                 [4522524.24, 15.7, 2625800.43],
@@ -262,8 +262,8 @@ export default {
                 [4522519.65, 15.58, 2625805.5]
               ],
               speed: 8,
-              speedUnit: "km/h",
-              dynamicHeight: true
+              speedUnit: "km/h"
+              // dynamicHeight: true
             }
           ]
         }
@@ -278,17 +278,17 @@ export default {
     {
       type: "virtual",
       //visible: false,
-      url: process.env.PUBLIC_URL + "/man.glb",
+      url: process.env.PUBLIC_URL + "/man1.glb",
       position: [4522508.69, 15.58, 2625813.48],
       rotation: [0, 0, 0],
-      scale: [0.6, 0.6, 0.6],
+      scale: [0.5, 0.5, 0.5],
       smoothRotation: false,
       actions: {
         onLoad: {
           animations: [
             {
-              name: "Take 001",
-              singleLoopDuration: 2500,
+              name: "mixamo.com",
+              singleLoopDuration: 1200,
               path: [
                 [4522508.69, 15.58, 2625813.48],
                 [4522535.21, 16.15, 2625788.34]
@@ -304,17 +304,17 @@ export default {
     {
       type: "virtual",
       //visible: false,
-      url: process.env.PUBLIC_URL + "/man.glb",
+      url: process.env.PUBLIC_URL + "/man1.glb",
       position: [4522515.27, 15.58, 2625812.48],
       rotation: [0, 0, 0],
-      scale: [0.6, 0.6, 0.6],
+      scale: [0.5, 0.5, 0.5],
       smoothRotation: false,
       actions: {
         onLoad: {
           animations: [
             {
-              name: "Take 001",
-              singleLoopDuration: 2000,
+              name: "mixamo.com",
+              singleLoopDuration: 1400,
               path: [
                 [4522515.27, 15.58, 2625812.48],
                 [4522535.84, 16.15, 2625790.95]
@@ -347,9 +347,9 @@ export default {
         [4522530.58, 16.51, 2625771.71],
         [4522527.9, 15.99, 2625787.42]
       ],
-      scale: [4, 4, 4],
-      scaleDifferenceXY: 2,
-      scaleDifferenceZ: 2,
+      scale: [0.5, 0.5, 0.5],
+      scaleDifferenceXY: 0.1,
+      scaleDifferenceZ: 0.2,
       description: `<iframe
             style="
               width: 100%;
