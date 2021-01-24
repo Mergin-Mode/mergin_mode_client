@@ -121,7 +121,7 @@ export default function createWorld(
   camera.setFocalLength = 26;
   window.mergin_mode.realities = {
     virtual: () => {
-      renderer.setClearColor("#fff", 1);
+      renderer.setClearColor("#4285f4", 1);
       //remove mixed objects
       scene.background = undefined;
       if (!mobileCheck()) {
