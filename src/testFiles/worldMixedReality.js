@@ -26,7 +26,7 @@ export default {
               item.object.traverse(child => {
                 if (child.isMesh) {
                   child.material.blending = THREE["NormalBlending"];
-                  child.material.color = new THREE.Color("#fff");
+                  child.material.color = new THREE.Color("#000");
                   child.material.wireframe = false;
                   child.material.needsUpdate = true;
                 }
@@ -131,29 +131,19 @@ export default {
     {
       type: "virtual",
       //visible: false,
-      url: process.env.PUBLIC_URL + "/Soldier.glb",
-      position: [4522518.11, 15.86, 2625797.41],
-      rotation: [0, Math.PI, 0],
-      scale: [0.8, 0.8, 0.8],
+      url: process.env.PUBLIC_URL + "/mantalk.glb",
+      position: [4522518.11, 15.56, 2625803.41],
+      rotation: [0, Math.PI - 0.1, 0],
+      scale: [0.6, 0.6, 0.6],
       actions: {
         onLoad: {
           animations: [
             {
-              name: "Idle",
-              duration: 5000,
-              path: [[4522518.11, 15.86, 2625797.41]],
-              dynamicHeight: true
-            }
-          ]
-        },
-        onSelect: {
-          animations: [
-            {
-              name: "Idle",
-              duration: Infinity,
-              path: [[4522518.11, 15.86, 2625797.41]],
-              lookAt: "camera",
-              dynamicHeight: true
+              singleLoopDuration: 5000,
+              name: "mixamo.com",
+              duration: 10000,
+              path: [[4522518.11, 15.86, 2625797.41]]
+              //dynamicHeight: true
             }
           ]
         }
@@ -168,48 +158,48 @@ export default {
     {
       type: "virtual",
       //visible: false,
-      url: process.env.PUBLIC_URL + "/animated_dragon.glb",
+      url: process.env.PUBLIC_URL + "/helicopter.glb",
       position: [1.5, 13, 3],
-      rotation: [0, 0, 0],
-      scale: [20, 20, 20],
+      rotation: [0, Math.PI / 2, 0],
+      scale: [1, 1, 1],
       actions: {
         onLoad: {
           animations: [
             {
-              name: "flying",
-              singleLoopDuration: 6000,
+              name: "CINEMA_4D_Main",
+              singleLoopDuration: 1000,
               path: [
-                [4522519.65, 30, 2625805.5],
-                [4522524.24, 30, 2625800.43],
-                [4522530.28, 30, 2625794.24],
-                [4522534.54, 30, 2625790.12],
-                [4522540.35, 30, 2625784.5],
-                [4522542.02, 30, 2625778.88],
-                [4522539.23, 30, 2625769.28],
-                [4522537.11, 30, 2625763.71],
-                [4522533.94, 30, 2625759.93],
-                [4522531.36, 30, 2625757.23],
-                [4522530.56, 30, 2625755.17],
-                [4522528.4, 30, 2625752.29],
-                [4522523.42, 30, 2625748.53],
-                [4522517.18, 30, 2625744],
-                [4522511.25, 30, 2625740.3],
-                [4522506.57, 30, 2625737.46],
-                [4522503.06, 30, 2625737.66],
-                [4522498.91, 30, 2625739.57],
-                [4522493.38, 30, 2625740.6],
-                [4522486.96, 30, 2625743.43],
-                [4522479.19, 30, 2625749.28],
-                [4522478.52, 30, 2625752.2],
-                [4522474.53, 30, 2625758.14],
-                [4522474.4, 30, 2625767.36],
-                [4522477.27, 30, 2625774.56],
-                [4522477.27, 30, 2625781.59],
-                [4522480.91, 30, 2625793.36],
-                [4522489.27, 30, 2625796.78],
-                [4522501.6, 30, 2625802.34],
-                [4522514.55, 30, 2625811.76],
-                [4522519.65, 30, 2625805.5]
+                [4522519.65, 40, 2625805.5],
+                [4522524.24, 40, 2625800.43],
+                [4522530.28, 40, 2625794.24],
+                [4522534.54, 40, 2625790.12],
+                [4522540.35, 40, 2625784.5],
+                [4522542.02, 40, 2625778.88],
+                [4522539.23, 40, 2625769.28],
+                [4522537.11, 40, 2625763.71],
+                [4522533.94, 40, 2625759.93],
+                [4522531.36, 40, 2625757.23],
+                [4522530.56, 40, 2625755.17],
+                [4522528.4, 40, 2625752.29],
+                [4522523.42, 40, 2625748.53],
+                [4522517.18, 40, 2625744],
+                [4522511.25, 40, 2625740.3],
+                [4522506.57, 40, 2625737.46],
+                [4522503.06, 40, 2625737.66],
+                [4522498.91, 40, 2625739.57],
+                [4522493.38, 40, 2625740.6],
+                [4522486.96, 40, 2625743.43],
+                [4522479.19, 40, 2625749.28],
+                [4522478.52, 40, 2625752.2],
+                [4522474.53, 40, 2625758.14],
+                [4522474.4, 40, 2625767.36],
+                [4522477.27, 40, 2625774.56],
+                [4522477.27, 40, 2625781.59],
+                [4522480.91, 40, 2625793.36],
+                [4522489.27, 40, 2625796.78],
+                [4522501.6, 40, 2625802.34],
+                [4522514.55, 40, 2625811.76],
+                [4522519.65, 40, 2625805.5]
               ],
               speed: 45,
               speedUnit: "km/h"
@@ -227,22 +217,17 @@ export default {
     {
       type: "virtual",
       //visible: false,
-      url: process.env.PUBLIC_URL + "/Soldier.glb",
+      url: process.env.PUBLIC_URL + "/man.glb",
       position: [4522519.65, 15.58, 2625805.5],
-      rotation: [0, Math.PI, 0],
-      scale: [0.8, 0.8, 0.8],
+      rotation: [0, 0, 0],
+      scale: [0.6, 0.6, 0.6],
+      smoothRotation: false,
       actions: {
         onLoad: {
           animations: [
             {
-              name: "Idle",
-              duration: 10000,
-              path: [[4522519.65, 15.58, 2625805.5]],
-              dynamicHeight: true
-            },
-
-            {
-              name: "Run",
+              name: "Take 001",
+              singleLoopDuration: 1500,
               path: [
                 [4522519.65, 15.58, 2625805.5],
                 [4522524.24, 15.7, 2625800.43],
@@ -276,19 +261,67 @@ export default {
                 [4522514.55, 15.29, 2625811.76],
                 [4522519.65, 15.58, 2625805.5]
               ],
-              speed: 10,
+              speed: 8,
               speedUnit: "km/h",
               dynamicHeight: true
             }
           ]
-        },
-        onSelect: {
+        }
+      },
+      description: `<iframe
+          style="
+            width: 100%;
+            height: 100%;
+            border:none;"
+          src="${process.env.PUBLIC_URL}/templates/soldier.html"></iframe>`
+    },
+    {
+      type: "virtual",
+      //visible: false,
+      url: process.env.PUBLIC_URL + "/man.glb",
+      position: [4522508.69, 15.58, 2625813.48],
+      rotation: [0, 0, 0],
+      scale: [0.6, 0.6, 0.6],
+      smoothRotation: false,
+      actions: {
+        onLoad: {
           animations: [
             {
-              name: "Idle",
-              duration: Infinity,
-              path: [[0, 0, 0]],
-              lookAt: "camera"
+              name: "Take 001",
+              singleLoopDuration: 2500,
+              path: [
+                [4522508.69, 15.58, 2625813.48],
+                [4522535.21, 16.15, 2625788.34]
+              ],
+              speed: 4,
+              speedUnit: "km/h"
+              //dynamicHeight: true
+            }
+          ]
+        }
+      }
+    },
+    {
+      type: "virtual",
+      //visible: false,
+      url: process.env.PUBLIC_URL + "/man.glb",
+      position: [4522515.27, 15.58, 2625812.48],
+      rotation: [0, 0, 0],
+      scale: [0.6, 0.6, 0.6],
+      smoothRotation: false,
+      actions: {
+        onLoad: {
+          animations: [
+            {
+              name: "Take 001",
+              singleLoopDuration: 2000,
+              path: [
+                [4522515.27, 15.58, 2625812.48],
+                [4522535.84, 16.15, 2625790.95]
+              ],
+              speed: 6,
+              speedUnit: "km/h"
+              //dynamicHeight: true
             }
           ]
         }

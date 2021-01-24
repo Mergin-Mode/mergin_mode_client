@@ -6,11 +6,10 @@ import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader.js";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { CalculateTransformation } from "./CalculateDeltaPosition";
 import { calculateSab } from "./ThemeliodiProblimata";
-
+import TWEEN from "@tweenjs/tween.js";
 import { VRButton } from "../components/_layout/VRButton.js";
 // var modelName = "models/gltf/" + model.name + ".glb";
 const degtorad = Math.PI / 180; // Degree-to-Radian conversion
-
 const mobileCheck = function() {
   let check = false;
   (function(a) {
@@ -114,14 +113,14 @@ export default function createWorld(
 
   host.appendChild(renderer.domElement);
   camera = new THREE.PerspectiveCamera(
-    60,
+    100,
     host.clientWidth / host.clientHeight,
     1,
     1000000
   );
   window.mergin_mode.realities = {
     virtual: () => {
-      renderer.setClearColor("#4285f4", 1);
+      renderer.setClearColor("#fff", 1);
       //remove mixed objects
       scene.background = undefined;
       if (!mobileCheck()) {
@@ -221,7 +220,6 @@ export default function createWorld(
       side: THREE.DoubleSide
     })
   );
-  // sky.rotation.set(Math.PI / 2, 0, 0);
   scene.add(sky);
 
   const raycaster = new THREE.Raycaster();
@@ -352,7 +350,6 @@ export default function createWorld(
     camera.updateProjectionMatrix();
     renderer.setSize(host.clientWidth, host.clientHeight);
   }
-
   function animate() {
     // requestAnimationFrame(animate);
     renderer.setAnimationLoop(function() {
@@ -363,8 +360,8 @@ export default function createWorld(
     });
   }
   animate();
-
   function render() {
+    TWEEN.update();
     renderer.render(scene, camera);
     if (!window.mergin_mode.world[window.mergin_mode.currentWorldId]) {
       return true;
@@ -396,7 +393,26 @@ export default function createWorld(
               model.object.position.set(...transormation.position);
             }
             if (transormation.rotation) {
-              model.object.rotation.set(...transormation.rotation);
+              //smooth rotation
+              if (
+                Math.abs(transormation.rotation[1] - model.object.rotation.y) >
+                  Math.PI / 2 ||
+                model.smoothRotation == false
+              ) {
+                model.object.rotation.set(...transormation.rotation);
+              } else {
+                new TWEEN.Tween(model.object.rotation)
+                  .to(
+                    {
+                      x: transormation.rotation[0],
+                      y: transormation.rotation[1],
+                      z: transormation.rotation[2]
+                    },
+                    100
+                  )
+                  .easing(TWEEN.Easing.Quadratic.InOut)
+                  .start();
+              }
             }
           }
         }

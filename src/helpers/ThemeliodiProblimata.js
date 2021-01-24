@@ -42,8 +42,7 @@ export const ThemeliodesProblima_2 = (Xa, Ya, Xb, Yb) => {
   } else if (DX === 0 && DY === 0) {
     Gab = 0;
   }
-
-  return { Gab: Gab.toFixed(4), Sab: Sab.toFixed(4) };
+  return { Gab: Number(Gab.toFixed(4)), Sab: Number(Sab.toFixed(4)) };
 };
 const origin = new THREE.Vector3();
 const direcition = new THREE.Vector3(0, -1, 0);

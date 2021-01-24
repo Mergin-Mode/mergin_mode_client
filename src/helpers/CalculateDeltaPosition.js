@@ -40,10 +40,12 @@ export const CalculateTransformation = (timeDelta, model) => {
   const currentAnimation = action.animations[runtimeInfo.animationIndex];
 
   runtimeInfo.duration += timeDelta;
+  runtimeInfo.lastUpdate += timeDelta;
   if (currentAnimation.duration) {
     if (runtimeInfo.duration >= currentAnimation.duration / 1000) {
       //check if animation has other path to animate
       runtimeInfo.duration = 0;
+      runtimeInfo.lastUpdate = 0;
       if (action.animations.length - 1 > runtimeInfo.animationIndex) {
         runtimeInfo.animationIndex++;
         runtimeInfo.pathIndex = 0;
@@ -93,13 +95,11 @@ export const CalculateTransformation = (timeDelta, model) => {
   const start = currentAnimation.path[runtimeInfo.pathIndex - 1]
     ? currentAnimation.path[runtimeInfo.pathIndex - 1]
     : currentAnimation.path[runtimeInfo.pathIndex];
-  const Gab = Number(
-    ThemeliodesProblima_2(
-      start[0] - window.mergin_mode.center[0],
-      start[2] - window.mergin_mode.center[2],
-      Xb,
-      Yb
-    ).Gab
+  const { Gab, Sab: TotalSab } = ThemeliodesProblima_2(
+    start[0] - window.mergin_mode.center[0],
+    start[2] - window.mergin_mode.center[2],
+    Xb,
+    Yb
   );
   if (
     (Gab <= 100 && Xa >= Xb && Ya >= Yb) ||
@@ -111,12 +111,14 @@ export const CalculateTransformation = (timeDelta, model) => {
     if (currentAnimation.path.length - 1 > runtimeInfo.pathIndex) {
       runtimeInfo.pathIndex++;
       runtimeInfo.duration = 0;
+      runtimeInfo.lastUpdate = 0;
     }
     //check if model has other animations
     else if (action.animations.length - 1 > runtimeInfo.animationIndex) {
       runtimeInfo.animationIndex++;
       runtimeInfo.pathIndex = 0;
       runtimeInfo.duration = 0;
+      runtimeInfo.lastUpdate = 0;
       const mixer = runtimeInfo.mixer;
       mixer.stopAllAction();
 
@@ -139,6 +141,7 @@ export const CalculateTransformation = (timeDelta, model) => {
       runtimeInfo.animationIndex = 0;
       runtimeInfo.pathIndex = 0;
       runtimeInfo.duration = 0;
+      runtimeInfo.lastUpdate = 0;
       const mixer = runtimeInfo.mixer;
       mixer.stopAllAction();
       mixer
@@ -177,6 +180,7 @@ export const CalculateTransformation = (timeDelta, model) => {
   const posXY = ThemeliodesProblima_1(Xa, Ya, Sab, Gab);
   let newZ;
   if (currentAnimation.dynamicHeight) {
+    runtimeInfo.lastUpdate = 0;
     newZ = CalculateZ(
       { x: posXY.Xb, z: posXY.Yb, y: model.object.position.y },
       window.mergin_mode.world[window.mergin_mode.currentWorldId].filter(
@@ -185,7 +189,17 @@ export const CalculateTransformation = (timeDelta, model) => {
       3
     );
   } else {
-    newZ = model.object.position.y;
+    const nextPath = currentAnimation.path[runtimeInfo.pathIndex];
+    const Zdif = nextPath[1] - start[1];
+    const currentSab = ThemeliodesProblima_2(
+      start[0] - window.mergin_mode.center[0],
+      start[2] - window.mergin_mode.center[2],
+      model.object.position.x,
+      model.object.position.z
+    ).Sab;
+    const percentage = currentSab / TotalSab;
+    // newZ = model.object.position.y;
+    newZ = start[1] - window.mergin_mode.center[1] + Zdif * percentage;
   }
 
   // if (Math.abs(newZ) - Math.abs(model.object.position.y) > 0.3) {

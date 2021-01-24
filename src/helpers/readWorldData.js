@@ -99,6 +99,7 @@ export default async worldId => {
               animationIndex: 0,
               pathIndex: 0,
               duration: 0,
+              lastUpdate: 0,
               mixer
             };
           }
@@ -124,6 +125,7 @@ export default async worldId => {
               animationIndex: 0,
               pathIndex: 0,
               duration: 0,
+              lastUpdate: 0,
               mixer
             };
           }
