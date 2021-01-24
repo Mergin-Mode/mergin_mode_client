@@ -26,7 +26,7 @@ export default {
               item.object.traverse(child => {
                 if (child.isMesh) {
                   child.material.blending = THREE["NormalBlending"];
-                  child.material.color = new THREE.Color("#000");
+                  child.material.color = new THREE.Color("#fff");
                   child.material.wireframe = false;
                   child.material.needsUpdate = true;
                 }
@@ -36,43 +36,6 @@ export default {
         );
       }
     },
-    // {
-    //   name: "Show/Hide Wireframed",
-    //   run: () => {
-    //     window.mergin_mode.world[window.mergin_mode.currentWorldId].map(
-    //       item => {
-    //         if (item.type === "mapped") {
-    //           item.object.visible = !item.object.visible;
-    //           item.object.traverse(child => {
-    //             if (child.isMesh) {
-    //               child.material.blending = THREE["AdditiveBlending"];
-    //               child.material.color = new THREE.Color("#000");
-    //               // wireframe
-    //               const geo = new THREE.EdgesGeometry(child.geometry); // or WireframeGeometry
-    //               const mat = new THREE.LineBasicMaterial({
-    //                 color: "#111",
-    //                 linewidth: 2
-    //               });
-    //               const wireframe = new THREE.LineSegments(geo, mat);
-    //               child.add(wireframe);
-
-    //               child.material.needsUpdate = true;
-    //             }
-    //           });
-    //         } else if (item.type === "virtual") {
-    //           item.object.visible = !item.object.visible;
-    //           item.object.traverse(child => {
-    //             if (child.isMesh) {
-    //               child.material.color = new THREE.Color("#00309d");
-    //               child.material.map = null;
-    //               child.material.needsUpdate = true;
-    //             }
-    //           });
-    //         }
-    //       }
-    //     );
-    //   }
-    // },
     {
       name: "Show/Hide Mixed Objects Semi Transparent",
       run: () => {
@@ -113,6 +76,17 @@ export default {
             }
           }
         );
+      }
+    },
+    {
+      name: "Change FoV",
+      run: () => {
+        window.mergin_mode.camera.fov += 5;
+
+        if (window.mergin_mode.camera.fov > 130) {
+          window.mergin_mode.camera.fov = 50;
+        }
+        window.mergin_mode.camera.updateProjectionMatrix();
       }
     }
   ],

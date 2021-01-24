@@ -241,20 +241,22 @@ const Controls = props => {
           ]}
         />
         {showInfo && (
-          <div id="info-panel">
-            <div className="info-group">
-              <label>Position</label>
-              <div>{`${infoState.position.x},${infoState.position.y},${infoState.position.z}`}</div>
+          <React.Fragment>
+            <div id="info-panel">
+              <div className="info-group">
+                <label>Position</label>
+                <div>{`${infoState.position.x},${infoState.position.y},${infoState.position.z}`}</div>
+              </div>
+              <div className="info-group">
+                <label>Heading</label>
+                <div>{infoState.heading}</div>
+              </div>
             </div>
-            <div className="info-group">
-              <label>Heading</label>
-              <div>{infoState.heading}</div>
+            <div id="available-worlds">
+              <WorldItem item={window.mergin_mode.worlds} />
             </div>
-          </div>
+          </React.Fragment>
         )}
-        <div id="available-worlds">
-          <WorldItem item={window.mergin_mode.worlds} />
-        </div>
 
         <div
           id="descriptive-data-container"
