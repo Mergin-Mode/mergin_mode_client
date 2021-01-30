@@ -78,7 +78,7 @@ export const loadGLTFModel = (file, record, referenceIndex) => {
           group.rotation.set(...rotation);
         }
         if (record.type == "mapped") {
-          group.renderOrder = 1;
+          group.renderOrder = 999;
         }
         resolve({
           referenceIndex,

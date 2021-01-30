@@ -109,16 +109,16 @@ export default function createWorld(
   renderer.xr.enabled = true;
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(host.clientWidth, host.clientHeight);
-  // renderer.sortObjects = false;
+  renderer.sortObjects = false;
 
   host.appendChild(renderer.domElement);
   camera = new THREE.PerspectiveCamera(
-    90,
+    50,
     host.clientWidth / host.clientHeight,
     1,
-    1000000
+    1000
   );
-  camera.setFocalLength = 26;
+  camera.setFocalLength = 32;
   window.mergin_mode.realities = {
     virtual: () => {
       renderer.setClearColor("#4285f4", 1);
@@ -243,107 +243,98 @@ export default function createWorld(
   const moved = false;
 
   function onMouseClick(event) {
-    if (window.mergin_mode.listeners.mouseMoved) return true;
-
-    if (window.mergin_mode.selected.object) {
-      scene.remove(window.mergin_mode.selected.objectHelper);
-      // window.mergin_mode.selected.object.traverse(child => {
-      //   if (child.isMesh) {
-      //     child.material.color.setHex(
-      //       window.mergin_mode.selected.material[child.uuid]
-      //     );
-      //     // child.material = window.mergin_mode.selected.material[child.uuid];
-      //   }
-      // });
-      window.mergin_mode.selected.object = null;
-      window.mergin_mode.selected.material = null;
-    }
-    const rect = renderer.domElement.getBoundingClientRect();
-    mouse.x =
-      (((event.clientX || event.changedTouches[0].clientX) - rect.left) /
-        rect.width) *
-        2 -
-      1;
-    mouse.y =
-      -(
-        ((event.clientY || event.changedTouches[0].clientY) - rect.top) /
-        rect.height
-      ) *
-        2 +
-      1;
-
-    raycaster.setFromCamera(mouse, camera);
-    const intersects = raycaster.intersectObjects(scene.children, true);
-    let obj;
-    for (const record of intersects) {
-      obj = getParentElement(record?.object);
-      if (obj) {
-        //check if obj is selectable
-        const referenceObj = window.mergin_mode.world[
-          window.mergin_mode.currentWorldId
-        ].filter(model => model.id == obj.uuid)[0];
-        if (referenceObj.selectable !== false) {
-          break;
-        }
-      }
-    }
-
-    if (!obj) {
-      selectModel(null);
-      return false;
-    }
-    const material = new THREE.MeshPhongMaterial({
-      color: "#b34f0b",
-      side: THREE.DoubleSide
-    });
-
-    window.mergin_mode.selected.object = obj;
-
-    window.mergin_mode.selected.objectHelper = new THREE.BoxHelper(obj);
-    window.mergin_mode.selected.objectHelper.material.color.set(0xffffff);
-    scene.add(window.mergin_mode.selected.objectHelper);
-
-    // obj.traverse(child => {
-    //   if (child.isMesh) {
-    //     window.mergin_mode.selected.material[
-    //       child.uuid
-    //     ] = child.material.color.getHex();
-
-    //     child.material.color.setHex(0xff0000);
+    // if (window.mergin_mode.listeners.mouseMoved) return true;
+    // if (window.mergin_mode.selected.object) {
+    //   scene.remove(window.mergin_mode.selected.objectHelper);
+    //   // window.mergin_mode.selected.object.traverse(child => {
+    //   //   if (child.isMesh) {
+    //   //     child.material.color.setHex(
+    //   //       window.mergin_mode.selected.material[child.uuid]
+    //   //     );
+    //   //     // child.material = window.mergin_mode.selected.material[child.uuid];
+    //   //   }
+    //   // });
+    //   window.mergin_mode.selected.object = null;
+    //   window.mergin_mode.selected.material = null;
+    // }
+    // const rect = renderer.domElement.getBoundingClientRect();
+    // mouse.x =
+    //   (((event.clientX || event.changedTouches[0].clientX) - rect.left) /
+    //     rect.width) *
+    //     2 -
+    //   1;
+    // mouse.y =
+    //   -(
+    //     ((event.clientY || event.changedTouches[0].clientY) - rect.top) /
+    //     rect.height
+    //   ) *
+    //     2 +
+    //   1;
+    // raycaster.setFromCamera(mouse, camera);
+    // const intersects = raycaster.intersectObjects(scene.children, true);
+    // let obj;
+    // for (const record of intersects) {
+    //   obj = getParentElement(record?.object);
+    //   if (obj) {
+    //     //check if obj is selectable
+    //     const referenceObj = window.mergin_mode.world[
+    //       window.mergin_mode.currentWorldId
+    //     ].filter(model => model.id == obj.uuid)[0];
+    //     if (referenceObj.selectable !== false) {
+    //       break;
+    //     }
     //   }
+    // }
+    // if (!obj) {
+    //   selectModel(null);
+    //   return false;
+    // }
+    // const material = new THREE.MeshPhongMaterial({
+    //   color: "#b34f0b",
+    //   side: THREE.DoubleSide
     // });
-    scene.add(window.mergin_mode.selected.objectHelper);
-    const model = window.mergin_mode.world[
-      window.mergin_mode.currentWorldId
-    ].filter(model => model.id == obj.uuid)[0];
-    const runtimeInfo = model.selectedRuntimeInfo;
-
-    if (runtimeInfo) {
-      runtimeInfo.animationIndex = 0;
-      runtimeInfo.pathIndex = 0;
-      runtimeInfo.duration = 0;
-      const mixer = new THREE.AnimationMixer(obj);
-      mixer
-        .clipAction(
-          obj.animations.filter(animation => {
-            return (
-              animation.name ==
-              model.actions.onSelect.animations[
-                model.selectedRuntimeInfo.animationIndex
-              ].name
-            );
-          })[0]
-        )
-        .setDuration(
-          (model.actions.onSelect.animations[
-            model.selectedRuntimeInfo.animationIndex
-          ].singleLoopDuration || 1000) / 1000
-        )
-        .play();
-      runtimeInfo.mixer = mixer;
-    }
-
-    selectModel(obj.uuid);
+    // window.mergin_mode.selected.object = obj;
+    // window.mergin_mode.selected.objectHelper = new THREE.BoxHelper(obj);
+    // window.mergin_mode.selected.objectHelper.material.color.set(0xffffff);
+    // scene.add(window.mergin_mode.selected.objectHelper);
+    // // obj.traverse(child => {
+    // //   if (child.isMesh) {
+    // //     window.mergin_mode.selected.material[
+    // //       child.uuid
+    // //     ] = child.material.color.getHex();
+    // //     child.material.color.setHex(0xff0000);
+    // //   }
+    // // });
+    // scene.add(window.mergin_mode.selected.objectHelper);
+    // const model = window.mergin_mode.world[
+    //   window.mergin_mode.currentWorldId
+    // ].filter(model => model.id == obj.uuid)[0];
+    // const runtimeInfo = model.selectedRuntimeInfo;
+    // if (runtimeInfo) {
+    //   runtimeInfo.animationIndex = 0;
+    //   runtimeInfo.pathIndex = 0;
+    //   runtimeInfo.duration = 0;
+    //   const mixer = new THREE.AnimationMixer(obj);
+    //   mixer
+    //     .clipAction(
+    //       obj.animations.filter(animation => {
+    //         return (
+    //           animation.name ==
+    //           model.actions.onSelect.animations[
+    //             model.selectedRuntimeInfo.animationIndex
+    //           ].name
+    //         );
+    //       })[0]
+    //     )
+    //     .setDuration(
+    //       (model.actions.onSelect.animations[
+    //         model.selectedRuntimeInfo.animationIndex
+    //       ].singleLoopDuration || 1000) / 1000
+    //     )
+    //     .play();
+    //   runtimeInfo.mixer = mixer;
+    // }
+    // selectModel(obj.uuid);
   }
 
   function onWindowResize() {
@@ -460,34 +451,34 @@ export default function createWorld(
   VRButton.createButton(renderer, window.vrh);
   VRButton.createButton(renderer, window.mrh);
 
-  document.getElementById("three-map").addEventListener("mousedown", event => {
-    if (event.which !== 1) return false;
-    const mouse = new THREE.Vector2();
-    const raycaster = new THREE.Raycaster();
-    const rect = renderer.domElement.getBoundingClientRect();
-    mouse.x =
-      (((event.clientX || event.changedTouches[0].clientX) - rect.left) /
-        rect.width) *
-        2 -
-      1;
-    mouse.y =
-      -(
-        ((event.clientY || event.changedTouches[0].clientY) - rect.top) /
-        rect.height
-      ) *
-        2 +
-      1;
+  // document.getElementById("three-map").addEventListener("mousedown", event => {
+  //   if (event.which !== 1) return false;
+  //   const mouse = new THREE.Vector2();
+  //   const raycaster = new THREE.Raycaster();
+  //   const rect = renderer.domElement.getBoundingClientRect();
+  //   mouse.x =
+  //     (((event.clientX || event.changedTouches[0].clientX) - rect.left) /
+  //       rect.width) *
+  //       2 -
+  //     1;
+  //   mouse.y =
+  //     -(
+  //       ((event.clientY || event.changedTouches[0].clientY) - rect.top) /
+  //       rect.height
+  //     ) *
+  //       2 +
+  //     1;
 
-    raycaster.setFromCamera(mouse, camera);
-    const intersects = raycaster.intersectObjects(scene.children, true);
-    window.positions = window.positions || [];
-    if (!intersects[0]) return;
-    window.positions.push([
-      (window.mergin_mode.center[0] + intersects[0].point.x).toFixed(2) - 0,
-      (window.mergin_mode.center[1] + intersects[0].point.y).toFixed(2) - 0,
-      (window.mergin_mode.center[2] + intersects[0].point.z).toFixed(2) - 0
-    ]);
-  });
+  //   raycaster.setFromCamera(mouse, camera);
+  //   const intersects = raycaster.intersectObjects(scene.children, true);
+  //   window.positions = window.positions || [];
+  //   if (!intersects[0]) return;
+  //   window.positions.push([
+  //     (window.mergin_mode.center[0] + intersects[0].point.x).toFixed(2) - 0,
+  //     (window.mergin_mode.center[1] + intersects[0].point.y).toFixed(2) - 0,
+  //     (window.mergin_mode.center[2] + intersects[0].point.z).toFixed(2) - 0
+  //   ]);
+  // });
   return {
     plane,
     camera,
