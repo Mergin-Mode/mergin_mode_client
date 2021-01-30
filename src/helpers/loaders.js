@@ -23,12 +23,12 @@ export const loadGLTFModel = (file, record, referenceIndex) => {
         gltf.scene.animations = gltf.animations;
         const group = new THREE.Group();
 
-        gltf.scene.traverse(child => {
-          if (child.isMesh) {
-            child.material.side = THREE.DoubleSide;
-            child.material.needsUpdate = true;
-          }
-        });
+        // gltf.scene.traverse(child => {
+        //   if (child.isMesh) {
+        //     child.material.side = THREE.DoubleSide;
+        //     child.material.needsUpdate = true;
+        //   }
+        // });
         if (position[0] instanceof Array) {
           const new_mesh = new InstancedGroupMesh(gltf.scene, position.length);
           for (let p = 0; p < position.length - 1; p++) {
