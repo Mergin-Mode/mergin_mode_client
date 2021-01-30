@@ -113,12 +113,12 @@ export default function createWorld(
 
   host.appendChild(renderer.domElement);
   camera = new THREE.PerspectiveCamera(
-    50,
+    60,
     host.clientWidth / host.clientHeight,
     1,
     1000
   );
-  camera.setFocalLength = 32;
+  camera.setFocalLength = 26;
   window.mergin_mode.realities = {
     virtual: () => {
       renderer.setClearColor("#4285f4", 1);

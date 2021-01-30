@@ -37,6 +37,27 @@ export default {
       }
     },
     {
+      name: "Show/Hide Mapped Black",
+      run: () => {
+        window.mergin_mode.world[window.mergin_mode.currentWorldId].map(
+          item => {
+            if (item.type === "mapped") {
+              item.object.visible = !item.object.visible;
+              item.object.renderOrder = 999;
+              item.object.traverse(child => {
+                if (child.isMesh) {
+                  child.material.wireframe = false;
+                  child.material.blending = THREE["NormalBlending"];
+                  child.material.color = new THREE.Color("#000");
+                  child.material.needsUpdate = true;
+                }
+              });
+            }
+          }
+        );
+      }
+    },
+    {
       name: "Show/Hide Mixed Objects Semi Transparent",
       run: () => {
         window.mergin_mode.world[window.mergin_mode.currentWorldId].map(
@@ -135,7 +156,7 @@ export default {
       url: process.env.PUBLIC_URL + "/helicopter.glb",
       position: [4522532.38, 40, 2625794],
       rotation: [0, Math.PI / 2, 0],
-      scale: [1, 1, 1],
+      scale: [1.1, 1.1, 1.1],
       actions: {
         onLoad: {
           animations: [
@@ -175,7 +196,7 @@ export default {
       url: process.env.PUBLIC_URL + "/man1.glb",
       position: [4522519.65, 15.58, 2625805.5],
       rotation: [0, 0, 0],
-      scale: [0.5, 0.5, 0.5],
+      scale: [0.7, 0.7, 0.7],
       smoothRotation: false,
       actions: {
         onLoad: {
@@ -236,7 +257,7 @@ export default {
       url: process.env.PUBLIC_URL + "/man1.glb",
       position: [4522476.11, 15.03, 2625758.52],
       rotation: [0, 0, 0],
-      scale: [0.5, 0.5, 0.5],
+      scale: [0.7, 0.7, 0.7],
       smoothRotation: false,
       actions: {
         onLoad: {
@@ -249,7 +270,7 @@ export default {
                 [4522482.1, 14.77, 2625793.26],
                 [4522476.11, 15.03, 2625758.52]
               ],
-              speed: 4,
+              speed: 6,
               speedUnit: "km/h"
               //dynamicHeight: true
             }
@@ -263,7 +284,7 @@ export default {
       url: process.env.PUBLIC_URL + "/man1.glb",
       position: [4522513.55, 15.18, 2625816.88],
       rotation: [0, 0, 0],
-      scale: [0.5, 0.5, 0.5],
+      scale: [0.7, 0.7, 0.7],
       smoothRotation: false,
       actions: {
         onLoad: {
@@ -276,7 +297,7 @@ export default {
                 [4522529.4, 16.04, 2625795.93],
                 [4522513.55, 15.18, 2625816.88]
               ],
-              speed: 6,
+              speed: 4,
               speedUnit: "km/h"
               //dynamicHeight: true
             }
@@ -296,7 +317,7 @@ export default {
       url: process.env.PUBLIC_URL + "/man1.glb",
       position: [4522512.53, 15.27, 2625812.8],
       rotation: [0, 0, 0],
-      scale: [0.5, 0.5, 0.5],
+      scale: [0.7, 0.7, 0.7],
       smoothRotation: false,
       actions: {
         onLoad: {
@@ -309,7 +330,7 @@ export default {
                 [4522525.04, 15.8, 2625798.98],
                 [4522512.53, 15.27, 2625812.8]
               ],
-              speed: 6,
+              speed: 8,
               speedUnit: "km/h"
               //dynamicHeight: true
             }
@@ -329,7 +350,7 @@ export default {
       url: process.env.PUBLIC_URL + "/man1.glb",
       position: [4522524.93, 16.66, 2625749.88],
       rotation: [0, 0, 0],
-      scale: [0.5, 0.5, 0.5],
+      scale: [0.7, 0.7, 0.7],
       smoothRotation: false,
       actions: {
         onLoad: {
@@ -342,7 +363,7 @@ export default {
                 [4522503, 16.45, 2625736.87],
                 [4522524.93, 16.66, 2625749.88]
               ],
-              speed: 6,
+              speed: 4,
               speedUnit: "km/h"
               //dynamicHeight: true
             }
