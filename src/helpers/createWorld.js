@@ -243,98 +243,102 @@ export default function createWorld(
   const moved = false;
 
   function onMouseClick(event) {
-    // if (window.mergin_mode.listeners.mouseMoved) return true;
-    // if (window.mergin_mode.selected.object) {
-    //   scene.remove(window.mergin_mode.selected.objectHelper);
-    //   // window.mergin_mode.selected.object.traverse(child => {
-    //   //   if (child.isMesh) {
-    //   //     child.material.color.setHex(
-    //   //       window.mergin_mode.selected.material[child.uuid]
-    //   //     );
-    //   //     // child.material = window.mergin_mode.selected.material[child.uuid];
-    //   //   }
-    //   // });
-    //   window.mergin_mode.selected.object = null;
-    //   window.mergin_mode.selected.material = null;
-    // }
-    // const rect = renderer.domElement.getBoundingClientRect();
-    // mouse.x =
-    //   (((event.clientX || event.changedTouches[0].clientX) - rect.left) /
-    //     rect.width) *
-    //     2 -
-    //   1;
-    // mouse.y =
-    //   -(
-    //     ((event.clientY || event.changedTouches[0].clientY) - rect.top) /
-    //     rect.height
-    //   ) *
-    //     2 +
-    //   1;
-    // raycaster.setFromCamera(mouse, camera);
-    // const intersects = raycaster.intersectObjects(scene.children, true);
-    // let obj;
-    // for (const record of intersects) {
-    //   obj = getParentElement(record?.object);
-    //   if (obj) {
-    //     //check if obj is selectable
-    //     const referenceObj = window.mergin_mode.world[
-    //       window.mergin_mode.currentWorldId
-    //     ].filter(model => model.id == obj.uuid)[0];
-    //     if (referenceObj.selectable !== false) {
-    //       break;
-    //     }
-    //   }
-    // }
-    // if (!obj) {
-    //   selectModel(null);
-    //   return false;
-    // }
-    // const material = new THREE.MeshPhongMaterial({
-    //   color: "#b34f0b",
-    //   side: THREE.DoubleSide
-    // });
-    // window.mergin_mode.selected.object = obj;
-    // window.mergin_mode.selected.objectHelper = new THREE.BoxHelper(obj);
-    // window.mergin_mode.selected.objectHelper.material.color.set(0xffffff);
-    // scene.add(window.mergin_mode.selected.objectHelper);
-    // // obj.traverse(child => {
-    // //   if (child.isMesh) {
-    // //     window.mergin_mode.selected.material[
-    // //       child.uuid
-    // //     ] = child.material.color.getHex();
-    // //     child.material.color.setHex(0xff0000);
-    // //   }
-    // // });
-    // scene.add(window.mergin_mode.selected.objectHelper);
-    // const model = window.mergin_mode.world[
-    //   window.mergin_mode.currentWorldId
-    // ].filter(model => model.id == obj.uuid)[0];
-    // const runtimeInfo = model.selectedRuntimeInfo;
-    // if (runtimeInfo) {
-    //   runtimeInfo.animationIndex = 0;
-    //   runtimeInfo.pathIndex = 0;
-    //   runtimeInfo.duration = 0;
-    //   const mixer = new THREE.AnimationMixer(obj);
-    //   mixer
-    //     .clipAction(
-    //       obj.animations.filter(animation => {
-    //         return (
-    //           animation.name ==
-    //           model.actions.onSelect.animations[
-    //             model.selectedRuntimeInfo.animationIndex
-    //           ].name
-    //         );
-    //       })[0]
-    //     )
-    //     .setDuration(
-    //       (model.actions.onSelect.animations[
-    //         model.selectedRuntimeInfo.animationIndex
-    //       ].singleLoopDuration || 1000) / 1000
-    //     )
-    //     .play();
-    //   runtimeInfo.mixer = mixer;
-    // }
-    // selectModel(obj.uuid);
+    try {
+      if (window.mergin_mode.listeners.mouseMoved) return true;
+      if (window.mergin_mode.selected.object) {
+        scene.remove(window.mergin_mode.selected.objectHelper);
+        // window.mergin_mode.selected.object.traverse(child => {
+        //   if (child.isMesh) {
+        //     child.material.color.setHex(
+        //       window.mergin_mode.selected.material[child.uuid]
+        //     );
+        //     // child.material = window.mergin_mode.selected.material[child.uuid];
+        //   }
+        // });
+        window.mergin_mode.selected.object = null;
+        window.mergin_mode.selected.material = null;
+      }
+      const rect = renderer.domElement.getBoundingClientRect();
+      mouse.x =
+        (((event.clientX || event.changedTouches[0].clientX) - rect.left) /
+          rect.width) *
+          2 -
+        1;
+      mouse.y =
+        -(
+          ((event.clientY || event.changedTouches[0].clientY) - rect.top) /
+          rect.height
+        ) *
+          2 +
+        1;
+      raycaster.setFromCamera(mouse, camera);
+      const intersects = raycaster.intersectObjects(scene.children, true);
+      let obj;
+      for (const record of intersects) {
+        obj = getParentElement(record?.object);
+        if (obj) {
+          //check if obj is selectable
+          const referenceObj = window.mergin_mode.world[
+            window.mergin_mode.currentWorldId
+          ].filter(model => model.id == obj.uuid)[0];
+          if (referenceObj.selectable !== false) {
+            break;
+          }
+        }
+      }
+      if (!obj) {
+        selectModel(null);
+        return false;
+      }
+      const material = new THREE.MeshPhongMaterial({
+        color: "#b34f0b",
+        side: THREE.DoubleSide
+      });
+      window.mergin_mode.selected.object = obj;
+      window.mergin_mode.selected.objectHelper = new THREE.BoxHelper(obj);
+      window.mergin_mode.selected.objectHelper.material.color.set(0xffffff);
+      scene.add(window.mergin_mode.selected.objectHelper);
+      // obj.traverse(child => {
+      //   if (child.isMesh) {
+      //     window.mergin_mode.selected.material[
+      //       child.uuid
+      //     ] = child.material.color.getHex();
+      //     child.material.color.setHex(0xff0000);
+      //   }
+      // });
+      scene.add(window.mergin_mode.selected.objectHelper);
+      const model = window.mergin_mode.world[
+        window.mergin_mode.currentWorldId
+      ].filter(model => model.id == obj.uuid)[0];
+      const runtimeInfo = model.selectedRuntimeInfo;
+      if (runtimeInfo) {
+        runtimeInfo.animationIndex = 0;
+        runtimeInfo.pathIndex = 0;
+        runtimeInfo.duration = 0;
+        const mixer = new THREE.AnimationMixer(obj);
+        mixer
+          .clipAction(
+            obj.animations.filter(animation => {
+              return (
+                animation.name ==
+                model.actions.onSelect.animations[
+                  model.selectedRuntimeInfo.animationIndex
+                ].name
+              );
+            })[0]
+          )
+          .setDuration(
+            (model.actions.onSelect.animations[
+              model.selectedRuntimeInfo.animationIndex
+            ].singleLoopDuration || 1000) / 1000
+          )
+          .play();
+        runtimeInfo.mixer = mixer;
+      }
+      selectModel(obj.uuid);
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   function onWindowResize() {
@@ -421,26 +425,27 @@ export default function createWorld(
   }
 
   window.addEventListener("resize", onWindowResize, false);
+  document.getElementById("three-map").addEventListener("click", onMouseClick);
 
-  document.getElementById("three-map").addEventListener("mousedown", () => {
-    const onMove = () => {
-      window.mergin_mode.listeners.mouseMoved = true;
-    };
+  // document.getElementById("three-map").addEventListener("mousedown", () => {
+  //   const onMove = () => {
+  //     window.mergin_mode.listeners.mouseMoved = true;
+  //   };
 
-    const onUp = e => {
-      if (!window.mergin_mode.listeners.mouseMoved) {
-        onMouseClick(e);
-      }
-      window.mergin_mode.listeners.mouseMoved = false;
-      document.getElementById("three-map").removeEventListener("mouseup", onUp);
-      document
-        .getElementById("three-map")
-        .removeEventListener("mousemove", onMove);
-    };
+  //   const onUp = e => {
+  //     if (!window.mergin_mode.listeners.mouseMoved) {
+  //       onMouseClick(e);
+  //     }
+  //     window.mergin_mode.listeners.mouseMoved = false;
+  //     document.getElementById("three-map").removeEventListener("mouseup", onUp);
+  //     document
+  //       .getElementById("three-map")
+  //       .removeEventListener("mousemove", onMove);
+  //   };
 
-    document.getElementById("three-map").addEventListener("mousemove", onMove);
-    document.getElementById("three-map").addEventListener("mouseup", onUp);
-  });
+  //   document.getElementById("three-map").addEventListener("mousemove", onMove);
+  //   document.getElementById("three-map").addEventListener("mouseup", onUp);
+  // });
 
   // document.getElementById("three-map").partials = {
   //   plane,

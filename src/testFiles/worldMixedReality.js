@@ -113,6 +113,22 @@ export default {
   ],
   content: [
     {
+      refId: "white_tower",
+      type: "virtual",
+      url: process.env.PUBLIC_URL + "/white-tower.gltf",
+      position: [4522513.2664, 15.25, 2625771.4946],
+      rotation: [0, 0, 0],
+      scale: [1.1, 1.1, 1.1],
+      selectable: true,
+      actions: [],
+      description: `<iframe
+          style="
+            width: 100%;
+            height: 100%;
+            border:none;"
+          src="${process.env.PUBLIC_URL}/templates/white-tower.html"></iframe>`
+    },
+    {
       type: "mapped",
       ground: true,
       selectable: false,
@@ -123,33 +139,6 @@ export default {
       scale: [1, 1, 1],
       description: ``
     },
-    // {
-    //   type: "virtual",
-    //   //visible: false,
-    //   url: process.env.PUBLIC_URL + "/mantalk.glb",
-    //   position: [4522518.11, 15.56, 2625803.41],
-    //   rotation: [0, Math.PI - 0.1, 0],
-    //   scale: [0.5, 0.5, 0.5],
-    //   actions: {
-    //     onLoad: {
-    //       animations: [
-    //         {
-    //           singleLoopDuration: 5000,
-    //           name: "mixamo.com",
-    //           duration: 10000,
-    //           path: [[4522518.11, 15.86, 2625797.41]]
-    //           //dynamicHeight: true
-    //         }
-    //       ]
-    //     }
-    //   },
-    //   description: `<iframe
-    //       style="
-    //         width: 100%;
-    //         height: 100%;
-    //         border:none;"
-    //       src="${process.env.PUBLIC_URL}/templates/soldier.html"></iframe>`
-    // },
     {
       type: "virtual",
       //visible: false,
@@ -194,6 +183,7 @@ export default {
       type: "virtual",
       //visible: false,
       url: process.env.PUBLIC_URL + "/man1.glb",
+      selectable: false,
       position: [4522519.65, 15.58, 2625805.5],
       rotation: [0, 0, 0],
       scale: [0.7, 0.7, 0.7],
@@ -255,6 +245,7 @@ export default {
       type: "virtual",
       //visible: false,
       url: process.env.PUBLIC_URL + "/man1.glb",
+      selectable: false,
       position: [4522476.11, 15.03, 2625758.52],
       rotation: [0, 0, 0],
       scale: [0.7, 0.7, 0.7],
@@ -282,6 +273,7 @@ export default {
       type: "virtual",
       //visible: false,
       url: process.env.PUBLIC_URL + "/man1.glb",
+      selectable: false,
       position: [4522513.55, 15.18, 2625816.88],
       rotation: [0, 0, 0],
       scale: [0.7, 0.7, 0.7],
@@ -315,6 +307,7 @@ export default {
       type: "virtual",
       //visible: false,
       url: process.env.PUBLIC_URL + "/man1.glb",
+      selectable: false,
       position: [4522512.53, 15.27, 2625812.8],
       rotation: [0, 0, 0],
       scale: [0.7, 0.7, 0.7],
@@ -346,8 +339,76 @@ export default {
     },
     {
       type: "virtual",
+      url: process.env.PUBLIC_URL + "/Soldier.glb",
+      position: [4522519.65, 15.58, 2625805.5],
+      rotation: [0, Math.PI, 0],
+      scale: [1.5, 1.5, 1.5],
+      smoothRotation: false,
+      actions: {
+        onLoad: {
+          animations: [
+            {
+              name: "Run",
+              path: [
+                [4522519.65, 15.58, 2625805.5],
+                [4522524.24, 15.7, 2625800.43],
+                [4522530.28, 16.05, 2625794.24],
+                [4522534.54, 16.24, 2625790.12],
+                [4522540.35, 16.26, 2625784.5],
+                [4522542.02, 16.46, 2625778.88],
+                [4522539.23, 16.56, 2625769.28],
+                [4522537.11, 16.58, 2625763.71],
+                [4522533.94, 16.73, 2625759.93],
+                [4522531.36, 16.61, 2625757.23],
+                [4522530.56, 16.62, 2625755.17],
+                [4522528.4, 16.64, 2625752.29],
+                [4522523.42, 16.64, 2625748.53],
+                [4522517.18, 16.59, 2625744],
+                [4522511.25, 16.61, 2625740.3],
+                [4522506.57, 16.48, 2625737.46],
+                [4522503.06, 16.46, 2625737.66],
+                [4522498.91, 16.3, 2625739.57],
+                [4522493.38, 15.89, 2625740.6],
+                [4522486.96, 15.57, 2625743.43],
+                [4522479.19, 15.23, 2625749.28],
+                [4522478.52, 15.13, 2625752.2],
+                [4522474.53, 15, 2625758.14],
+                [4522474.4, 14.93, 2625767.36],
+                [4522477.27, 15.25, 2625774.56],
+                [4522477.27, 15.25, 2625781.59],
+                [4522480.91, 14.73, 2625793.36],
+                [4522489.27, 14.88, 2625796.78],
+                [4522501.6, 15.05, 2625802.34],
+                [4522514.55, 15.29, 2625811.76]
+              ],
+              speed: 13,
+              speedUnit: "km/h"
+            }
+          ]
+        },
+        onSelect: {
+          animations: [
+            {
+              name: "Idle",
+              duration: Infinity,
+              path: [[30, 0, 30]],
+              lookAt: "camera"
+            }
+          ]
+        }
+      },
+      description: `<iframe
+          style="
+            width: 100%;
+            height: 100%;
+            border:none;"
+          src="${process.env.PUBLIC_URL}/templates/soldier.html"></iframe>`
+    },
+    {
+      type: "virtual",
       //visible: false,
       url: process.env.PUBLIC_URL + "/man1.glb",
+      selectable: false,
       position: [4522524.93, 16.66, 2625749.88],
       rotation: [0, 0, 0],
       scale: [0.7, 0.7, 0.7],
