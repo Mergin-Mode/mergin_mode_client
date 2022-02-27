@@ -1,8 +1,8 @@
 import { combineReducers } from "redux";
 import api from "./api";
-import worldDataZero from "../testFiles/worldMixedReality.js";
 import worldDataOne from "../testFiles/worldOne.js";
 import worldDataTwo from "../testFiles/worldTwo.js";
+import worldDataThree from "../testFiles/worldThree.js";
 const startWorld = {
   id: "0",
   name: "Start World",
@@ -41,7 +41,7 @@ window.mergin_mode = {
   onWindowResize: () => {},
   world: {},
   currentWorldId: 0,
-  worlds: [startWorld, worldDataZero, worldDataOne, worldDataTwo]
+  worlds: [startWorld, worldDataOne, worldDataTwo, worldDataThree]
 };
 
 const rootReducer = combineReducers({

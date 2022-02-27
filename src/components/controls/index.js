@@ -1,18 +1,16 @@
 import React, { useRef, useState, useEffect } from "react";
 import { connect } from "react-redux";
+
+import { DescriptiveDataListener } from "../../helpers/listeners";
+import * as THREE from "three";
+import { fromLonLat } from "ol/proj.js";
 import ActionButton from "../_layout/ActionButton";
 import Modal from "../_layout/Modal";
 import WorldItem from "../_layout/WorldItem";
-import SideBar from "../_layout/SideBar";
-import FullscreenIcon from "@material-ui/icons/Fullscreen";
-import StreetviewIcon from "@material-ui/icons/Streetview";
 import GpsFixedIcon from "@material-ui/icons/GpsFixed";
 import CropFreeIcon from "@material-ui/icons/CropFree";
 import QRModal from "../_layout/QRModal";
 import Button from "@material-ui/core/Button";
-import { DescriptiveDataListener } from "../../helpers/listeners";
-import * as THREE from "three";
-import { fromLonLat } from "ol/proj.js";
 
 const Controls = props => {
   const sliderHelperRef = useRef();

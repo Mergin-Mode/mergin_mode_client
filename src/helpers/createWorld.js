@@ -102,20 +102,20 @@ export default function createWorld(
   texture.magFilter = THREE.LinearFilter;
   texture.format = THREE.RGBFormat;
 
-  renderer = new THREE.WebGLRenderer({
-    antialias: true,
-    logarithmicDepthBuffer: true
-  });
+  renderer = new THREE.WebGLRenderer();
   renderer.xr.enabled = true;
+  renderer.physicallyCorrectLights = true;
+  renderer.gammaOutput = true;
+
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(host.clientWidth, host.clientHeight);
   renderer.sortObjects = false;
 
   host.appendChild(renderer.domElement);
   camera = new THREE.PerspectiveCamera(
-    60,
+    45,
     host.clientWidth / host.clientHeight,
-    1,
+    0.01,
     1000
   );
   camera.setFocalLength = 26;
@@ -185,8 +185,8 @@ export default function createWorld(
   const gridHelper = new THREE.GridHelper(1000, 100);
   // gridHelper.geometry.rotateX(Math.PI / 2);
 
-  // scene.add(gridHelper);
-  const light = new THREE.AmbientLight(0xffffff, 2); // soft white light
+  // // scene.add(gridHelper);
+  const light = new THREE.AmbientLight(0xffffff, 1); // soft white light
   light.channel = 123;
   scene.add(light);
 
@@ -196,14 +196,24 @@ export default function createWorld(
   // hemiLight.position.set(0, 0, 50);
   // scene.add(hemiLight);
 
-  // const dirLight = new THREE.DirectionalLight(0xffffff, 1);
-  // window.dirLight = dirLight;
-  // dirLight.position.set(1, -1, 1);
-  // dirLight.position.multiplyScalar(50);
-  // dirLight.name = "dirlight";
-  // dirLight.shadowCameraVisible = true;
+  const dirLight = new THREE.DirectionalLight(0xffffff, 1);
+  window.dirLight = dirLight;
+  dirLight.position.set(20, 10, 20);
+  dirLight.name = "dirlight";
+  dirLight.shadowCameraVisible = true;
 
-  // scene.add(dirLight);
+  // const helper = new THREE.DirectionalLightHelper(dirLight, 5);
+  // scene.add(helper);
+  scene.add(dirLight);
+
+  const dirLight1 = new THREE.DirectionalLight(0xffffff, 1);
+  window.dirLight1 = dirLight1;
+  dirLight1.position.set(-17, 10, -31);
+  dirLight1.name = "dirlight1";
+  dirLight1.shadowCameraVisible = true;
+  // const helper1 = new THREE.DirectionalLightHelper(dirLight1, 2);
+  // scene.add(helper1);
+  scene.add(dirLight1);
 
   // dirLight.castShadow = false;
 

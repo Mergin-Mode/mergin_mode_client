@@ -78,20 +78,20 @@ export default async worldId => {
             window.mergin_mode.world[window.mergin_mode.currentWorldId][
               model.referenceIndex
             ].actions || {};
+
           if ((actions.onLoad || {}).animations) {
+            const anim = actions.onLoad.animations[0];
             const mixer = new THREE.AnimationMixer(model.object);
             const theAnimation = window.mergin_mode.world[
               window.mergin_mode.currentWorldId
             ][model.referenceIndex].object.children[0].animations.filter(
               animation => {
-                return animation.name === actions.onLoad.animations[0].name;
+                return animation.name === anim.name;
               }
             )[0];
             mixer
               .clipAction(theAnimation)
-              .setDuration(
-                (actions.onLoad.animations[0].singleLoopDuration || 1000) / 1000
-              )
+              .setDuration((anim.singleLoopDuration || 1000) / 1000)
               .play();
             window.mergin_mode.world[window.mergin_mode.currentWorldId][
               model.referenceIndex
