@@ -96,11 +96,11 @@ export default function createWorld(
 
   scene = new THREE.Scene();
 
-  const video = document.getElementsByTagName("video")[0];
-  const texture = new THREE.VideoTexture(video);
-  texture.minFilter = THREE.LinearFilter;
-  texture.magFilter = THREE.LinearFilter;
-  texture.format = THREE.RGBFormat;
+  // const video = document.getElementsByTagName("video")[0];
+  // const texture = new THREE.VideoTexture(video);
+  // texture.minFilter = THREE.LinearFilter;
+  // texture.magFilter = THREE.LinearFilter;
+  // texture.format = THREE.RGBFormat;
 
   renderer = new THREE.WebGLRenderer();
   renderer.xr.enabled = true;
@@ -124,25 +124,25 @@ export default function createWorld(
       renderer.setClearColor("#4285f4", 1);
       //remove mixed objects
       scene.background = undefined;
-      if (!mobileCheck()) {
-        camera.position.set(-15.08, +1.7, +52.64);
-      }
+      // if (!mobileCheck()) {
+      //   camera.position.set(-15.08, +1.7, +52.64);
+      // }
     },
     augmented: () => {
-      scene.background = texture;
+      // scene.background = texture;
       renderer.setClearColor(0x000000, 0);
-      if (!mobileCheck()) {
-        camera.position.set(-15.08, +1.7, +52.64);
-      }
+      // if (!mobileCheck()) {
+      //   camera.position.set(-15.08, +1.7, +52.64);
+      // }
     },
     mixed: () => {
-      scene.background = texture;
+      // scene.background = texture;
       renderer.setClearColor(0x000000, 0);
-      if (!mobileCheck()) {
-        // scene.position.set(0, 0, 0);
-        camera.position.set(-15.08, +1.7, +52.64);
-      }
-    }
+      // if (!mobileCheck()) {
+      //   // scene.position.set(0, 0, 0);
+      //   // camera.position.set(-15.08, +1.7, +52.64);
+      // }
+    },
   };
   window.mergin_mode.realities.virtual();
   // camera.up.set(0, 0, 1);
@@ -169,7 +169,7 @@ export default function createWorld(
   const material = new THREE.MeshPhongMaterial({
     wireframe: true,
     color: "#222",
-    side: THREE.DoubleSide
+    side: THREE.DoubleSide,
   });
 
   material.flatShading = true;
@@ -228,14 +228,14 @@ export default function createWorld(
       opacity: 0,
       transparent: true,
       alphaTest: 0.05,
-      side: THREE.DoubleSide
+      side: THREE.DoubleSide,
     })
   );
   scene.add(sky);
 
   const raycaster = new THREE.Raycaster();
   const mouse = new THREE.Vector2();
-  const getParentElement = object => {
+  const getParentElement = (object) => {
     if (
       !object ||
       !window.mergin_mode.world[window.mergin_mode.currentWorldId]
@@ -244,7 +244,7 @@ export default function createWorld(
     }
     const allIds = window.mergin_mode.world[
       window.mergin_mode.currentWorldId
-    ].map(obj => obj.id);
+    ].map((obj) => obj.id);
     if (allIds.indexOf(object.uuid) !== -1) {
       return object;
     }
@@ -290,7 +290,7 @@ export default function createWorld(
           //check if obj is selectable
           const referenceObj = window.mergin_mode.world[
             window.mergin_mode.currentWorldId
-          ].filter(model => model.id == obj.uuid)[0];
+          ].filter((model) => model.id == obj.uuid)[0];
           if (referenceObj.selectable !== false) {
             break;
           }
@@ -302,7 +302,7 @@ export default function createWorld(
       }
       const material = new THREE.MeshPhongMaterial({
         color: "#b34f0b",
-        side: THREE.DoubleSide
+        side: THREE.DoubleSide,
       });
       window.mergin_mode.selected.object = obj;
       window.mergin_mode.selected.objectHelper = new THREE.BoxHelper(obj);
@@ -319,7 +319,7 @@ export default function createWorld(
       scene.add(window.mergin_mode.selected.objectHelper);
       const model = window.mergin_mode.world[
         window.mergin_mode.currentWorldId
-      ].filter(model => model.id == obj.uuid)[0];
+      ].filter((model) => model.id == obj.uuid)[0];
       const runtimeInfo = model.selectedRuntimeInfo;
       if (runtimeInfo) {
         runtimeInfo.animationIndex = 0;
@@ -328,7 +328,7 @@ export default function createWorld(
         const mixer = new THREE.AnimationMixer(obj);
         mixer
           .clipAction(
-            obj.animations.filter(animation => {
+            obj.animations.filter((animation) => {
               return (
                 animation.name ==
                 model.actions.onSelect.animations[
@@ -376,7 +376,7 @@ export default function createWorld(
     }
     const delta = clock.getDelta();
     window.mergin_mode.world[window.mergin_mode.currentWorldId].forEach(
-      worldModel => {
+      (worldModel) => {
         if (worldModel.actions) {
           const runtimeInfo =
             window.mergin_mode.selected.object?.uuid == worldModel.id
@@ -389,7 +389,7 @@ export default function createWorld(
       }
     );
     window.mergin_mode.world[window.mergin_mode.currentWorldId].forEach(
-      model => {
+      (model) => {
         if (
           model.runtimeInfo &&
           model.actions?.onLoad?.animations &&
@@ -414,7 +414,7 @@ export default function createWorld(
                     {
                       x: transormation.rotation[0],
                       y: transormation.rotation[1],
-                      z: transormation.rotation[2]
+                      z: transormation.rotation[2],
                     },
                     100
                   )
@@ -463,8 +463,9 @@ export default function createWorld(
   //   sky,
   //   gridHelper
   // };
-  VRButton.createButton(renderer, window.vrh);
-  VRButton.createButton(renderer, window.mrh);
+  VRButton.createButton(renderer, window.vrh, "immersive-vr");
+  VRButton.createButton(renderer, window.mrh, "immersive-ar");
+  // ARButton.createButton(renderer, window.mrh);
 
   // document.getElementById("three-map").addEventListener("mousedown", event => {
   //   if (event.which !== 1) return false;
@@ -503,6 +504,7 @@ export default function createWorld(
     pointer,
     partials,
     loaders,
-    onWindowResize
+    onWindowResize,
   };
 }
+

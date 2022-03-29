@@ -4,7 +4,7 @@
  */
 
 const VRButton = {
-  createButton: function(renderer, button) {
+  createButton: function(renderer, button, type) {
     // if (options && options.referenceSpaceType) {
     //   renderer.xr.setReferenceSpaceType(options.referenceSpaceType);
     // }
@@ -57,11 +57,9 @@ const VRButton = {
           // be requested separately.)
 
           const sessionInit = {
-            optionalFeatures: ["local-floor", "bounded-floor"]
+            optionalFeatures: ["local-floor", "bounded-floor"],
           };
-          navigator.xr
-            .requestSession("immersive-vr", sessionInit)
-            .then(onSessionStarted);
+          navigator.xr.requestSession(type, sessionInit).then(onSessionStarted);
         } else {
           currentSession.end();
         }
@@ -132,7 +130,8 @@ const VRButton = {
 
       return message;
     }
-  }
+  },
 };
 
 export { VRButton };
+

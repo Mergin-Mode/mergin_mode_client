@@ -4,34 +4,38 @@ import QrReader from "react-qr-reader";
 import readWorldData from "../../helpers/readWorldData";
 import * as THREE from "three";
 
-export default props => {
+export default (props) => {
   const [state, setState] = React.useState(true);
 
-  const handleScan = data => {
+  const handleScan = (data) => {
     //case scan data
     if (data) {
       const d = JSON.parse(data);
-      const w = window.mergin_mode.worlds.filter(w => w.id == d.id)[0];
+      const w = window.mergin_mode.worlds.filter((w) => w.id == d.id)[0];
       //case the world matches
       if (w) {
         if (
           window.mergin_mode.currentWorldId &&
           w.id !== window.mergin_mode.currentWorldId
         ) {
-          window.mergin_mode.world[window.mergin_mode.currentWorldId].map(o => {
-            if (o.object) {
-              o.object.visible = false;
+          window.mergin_mode.world[window.mergin_mode.currentWorldId].map(
+            (o) => {
+              if (o.object) {
+                o.object.visible = false;
+              }
             }
-          });
+          );
         }
         window.mergin_mode.currentWorldId = w.id;
         window.mergin_mode.center = w.meta.coordinates;
         if (window.mergin_mode.world.hasOwnProperty(w.id)) {
-          window.mergin_mode.world[window.mergin_mode.currentWorldId].map(o => {
-            if (o.object) {
-              o.object.visible = true;
+          window.mergin_mode.world[window.mergin_mode.currentWorldId].map(
+            (o) => {
+              if (o.object) {
+                o.object.visible = true;
+              }
             }
-          });
+          );
         } else {
           (async function() {
             await readWorldData(w.id);
@@ -67,7 +71,7 @@ export default props => {
       }
     }
   };
-  const handleScanError = err => {};
+  const handleScanError = (err) => {};
   return (
     <React.Fragment>
       <div
@@ -75,7 +79,7 @@ export default props => {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          marginBottom: 25
+          marginBottom: 25,
         }}
       >
         <i style={{ fontSize: 70 }} className="fas fa-qrcode"></i>
@@ -85,7 +89,7 @@ export default props => {
             fontWeight: 900,
             textTransform: "uppercase",
             color: "#606059",
-            letterSpacing: 5
+            letterSpacing: 5,
           }}
           id="simple-modal-title"
         >
@@ -106,13 +110,13 @@ export default props => {
         <div style={{ textAlign: "center" }}>
           <p>or type the id of the observation point</p>
           <input
-            onChange={e =>
+            onChange={(e) =>
               setState({ ...state, observationId: e.target.value })
             }
           />
           <div
             style={{
-              textAlign: "center"
+              textAlign: "center",
             }}
           >
             <Button
@@ -120,13 +124,13 @@ export default props => {
                 fontSize: "18px",
                 // background: "#2f72e8",
                 color: "#313129",
-                fontWeight: 600
+                fontWeight: 600,
               }}
               onClick={() => {
                 const observationId = state.observationId;
                 const data = window.mergin_mode.worlds
-                  .filter(w => w.id == window.mergin_mode.currentWorldId)[0]
-                  .meta.observationPoints.filter(op => {
+                  .filter((w) => w.id == window.mergin_mode.currentWorldId)[0]
+                  .meta.observationPoints.filter((op) => {
                     return op.pointId == observationId;
                   });
                 handleScan(JSON.stringify(data[0]));
@@ -138,7 +142,7 @@ export default props => {
         </div>
         <div
           style={{
-            textAlign: "center"
+            textAlign: "center",
           }}
         >
           <Button
@@ -146,7 +150,7 @@ export default props => {
               fontSize: "18px",
               // background: "#2f72e8",
               color: "#313129",
-              fontWeight: 600
+              fontWeight: 600,
             }}
             onClick={props.onClose}
           >
@@ -157,3 +161,4 @@ export default props => {
     </React.Fragment>
   );
 };
+

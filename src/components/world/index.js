@@ -2,19 +2,19 @@ import React, { useRef, useState, useEffect } from "react";
 import { connect } from "react-redux";
 import createWorld from "../../helpers/createWorld";
 import { setDescriptiveData } from "../../actions";
-const World = props => {
+const World = (props) => {
   useEffect(() => {
-    if (!navigator.mediaDevices?.getUserMedia) {
-      return false;
-    }
-    const constraints = {
-      video: { width: 1280, height: 720, facingMode: "environment" }
-    };
-    navigator.mediaDevices.getUserMedia(constraints).then(response => {
-      const video = document.getElementById("video");
-      video.srcObject = response;
-      video.play();
-    });
+    // if (!navigator.mediaDevices?.getUserMedia) {
+    //   return false;
+    // }
+    // const constraints = {
+    //   video: { width: 1280, height: 720, facingMode: "environment" }
+    // };
+    // navigator.mediaDevices.getUserMedia(constraints).then(response => {
+    //   const video = document.getElementById("video");
+    //   video.srcObject = response;
+    //   video.play();
+    // });
 
     const {
       mixers,
@@ -24,7 +24,7 @@ const World = props => {
       renderer,
       pointer,
       partials,
-      loaders
+      loaders,
     } = window.mergin_mode;
     const rendererContainer = document.getElementById("three-map");
     const newWorld = createWorld(
@@ -37,10 +37,10 @@ const World = props => {
       loaders,
       rendererContainer,
       mixers,
-      uuid => {
+      (uuid) => {
         const descriptiveData = uuid
           ? window.mergin_mode.world[window.mergin_mode.currentWorldId].filter(
-              o => o.id == uuid
+              (o) => o.id == uuid
             )[0].description
           : null;
         window["descriptive-data-container"].classList.add("transition");
@@ -61,36 +61,37 @@ const World = props => {
 
   return (
     <div id="world">
-      <video
+      {/* <video
         id="video"
         style={{ display: "none" }}
         autoPlay
         playsInline
-      ></video>
+      ></video> */}
       <div
         id="three-map"
         style={{
           position: "absolute",
           width: `100%`,
-          height: `100%`
+          height: `100%`,
         }}
       ></div>
     </div>
   );
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
-    api: state.api
+    api: state.api,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    setDescriptiveData: context => dispatch(setDescriptiveData(context))
+    setDescriptiveData: (context) => dispatch(setDescriptiveData(context)),
   };
 };
 
 World.propTypes = {};
 
 export default connect(mapStateToProps, mapDispatchToProps)(World);
+
