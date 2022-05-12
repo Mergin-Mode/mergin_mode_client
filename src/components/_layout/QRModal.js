@@ -4,7 +4,7 @@ import QrReader from "react-qr-reader";
 import readWorldData from "../../helpers/readWorldData";
 import * as THREE from "three";
 
-export default (props) => {
+export default function QRModal(props) {
   const [state, setState] = React.useState(true);
 
   const handleScan = (data) => {
@@ -128,11 +128,11 @@ export default (props) => {
               }}
               onClick={() => {
                 const observationId = state.observationId;
-                const data = window.mergin_mode.worlds
-                  .filter((w) => w.id == window.mergin_mode.currentWorldId)[0]
-                  .meta.observationPoints.filter((op) => {
-                    return op.pointId == observationId;
-                  });
+                const data = (window.mergin_mode.worlds?.filter(
+                  (w) => w.id == window.mergin_mode.currentWorldId
+                ) || [])[0].meta.observationPoints.filter((op) => {
+                  return op.pointId == observationId;
+                });
                 handleScan(JSON.stringify(data[0]));
               }}
             >
@@ -160,5 +160,4 @@ export default (props) => {
       </p>
     </React.Fragment>
   );
-};
-
+}
