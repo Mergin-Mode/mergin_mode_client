@@ -42,10 +42,10 @@ export default function QRModal(props) {
           })();
         }
 
-        window.mergin_mode.camera.position.set(
-          d.position.x - window.mergin_mode.center[0],
-          d.position.z - window.mergin_mode.center[1],
-          d.position.y - window.mergin_mode.center[2]
+        window.mergin_mode.scene.position.set(
+          window.mergin_mode.center[0] - d.position.x,
+          window.mergin_mode.center[1] - d.position.z,
+          window.mergin_mode.center[2] - d.position.y
         );
 
         const dir = new THREE.Vector3();
