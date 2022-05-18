@@ -1,8 +1,11 @@
 import { combineReducers } from "redux";
 import api from "./api";
+import worldDataTest from "../testFiles/worldTest.js";
 import worldDataOne from "../testFiles/worldOne.js";
 import worldDataTwo from "../testFiles/worldTwo.js";
 import worldDataThree from "../testFiles/worldThree.js";
+import { fromLonLat } from "ol/proj.js";
+console.log(fromLonLat([40.991193, 22.870323]));
 const startWorld = {
   id: "0",
   name: "Start World",
@@ -11,10 +14,10 @@ const startWorld = {
   meta: {
     authors: [
       { firstName: "Konstantinos", lastName: "Evanggelidis" },
-      { firstName: "Theofilos", lastName: "Papadopoulos" }
+      { firstName: "Theofilos", lastName: "Papadopoulos" },
     ],
-    coordinates: [0, 0, 0]
-  }
+    coordinates: [0, 0, 0],
+  },
 };
 
 window.mergin_mode = {
@@ -32,20 +35,26 @@ window.mergin_mode = {
   loaders: {},
   selected: {
     object: null,
-    material: null
+    material: null,
   },
   listeners: {
-    mouseMoved: false
+    mouseMoved: false,
   },
   center: [0, 0, 0],
   onWindowResize: () => {},
   world: {},
   currentWorldId: 0,
-  worlds: [startWorld, worldDataOne, worldDataTwo, worldDataThree]
+  worlds: [
+    startWorld,
+    worldDataOne,
+    worldDataTwo,
+    worldDataThree,
+    worldDataTest,
+  ],
 };
 
 const rootReducer = combineReducers({
-  api
+  api,
 });
 
 export default rootReducer;
