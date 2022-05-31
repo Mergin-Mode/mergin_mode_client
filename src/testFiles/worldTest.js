@@ -29,7 +29,7 @@ export default {
         position: {
           x: 5,
           y: -2.5,
-          z: 0,
+          z: 1.7,
         },
         heading: 230,
       },

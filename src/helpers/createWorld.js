@@ -8,6 +8,7 @@ import { CalculateTransformation } from "./CalculateDeltaPosition";
 import { calculateSab } from "./ThemeliodiProblimata";
 import TWEEN from "@tweenjs/tween.js";
 import { VRButton } from "../components/_layout/VRButton.js";
+
 // var modelName = "models/gltf/" + model.name + ".glb";
 const degtorad = Math.PI / 180; // Degree-to-Radian conversion
 const mobileCheck = function() {
@@ -96,11 +97,11 @@ export default function createWorld(
 
   scene = new THREE.Scene();
 
-  // const video = document.getElementsByTagName("video")[0];
-  // const texture = new THREE.VideoTexture(video);
-  // texture.minFilter = THREE.LinearFilter;
-  // texture.magFilter = THREE.LinearFilter;
-  // texture.format = THREE.RGBFormat;
+  const video = document.getElementsByTagName("video")[0];
+  const texture = new THREE.VideoTexture(video);
+  texture.minFilter = THREE.LinearFilter;
+  texture.magFilter = THREE.LinearFilter;
+  texture.format = THREE.RGBFormat;
 
   renderer = new THREE.WebGLRenderer();
   renderer.xr.enabled = true;
@@ -130,13 +131,14 @@ export default function createWorld(
     },
     augmented: () => {
       // scene.background = texture;
+
       renderer.setClearColor(0x000000, 0);
       // if (!mobileCheck()) {
       //   camera.position.set(-15.08, +1.7, +52.64);
       // }
     },
     mixed: () => {
-      // scene.background = texture;
+      scene.background = texture;
       renderer.setClearColor(0x000000, 0);
       // if (!mobileCheck()) {
       //   // scene.position.set(0, 0, 0);

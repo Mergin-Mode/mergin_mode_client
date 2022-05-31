@@ -8,7 +8,6 @@ const VRButton = {
     // if (options && options.referenceSpaceType) {
     //   renderer.xr.setReferenceSpaceType(options.referenceSpaceType);
     // }
-
     function showEnterVR(/*device*/) {
       let currentSession = null;
 
@@ -134,4 +133,3 @@ const VRButton = {
 };
 
 export { VRButton };
-

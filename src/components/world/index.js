@@ -4,17 +4,17 @@ import createWorld from "../../helpers/createWorld";
 import { setDescriptiveData } from "../../actions";
 const World = (props) => {
   useEffect(() => {
-    // if (!navigator.mediaDevices?.getUserMedia) {
-    //   return false;
-    // }
-    // const constraints = {
-    //   video: { width: 1280, height: 720, facingMode: "environment" }
-    // };
-    // navigator.mediaDevices.getUserMedia(constraints).then(response => {
-    //   const video = document.getElementById("video");
-    //   video.srcObject = response;
-    //   video.play();
-    // });
+    if (!navigator.mediaDevices?.getUserMedia) {
+      return false;
+    }
+    const constraints = {
+      video: { width: 1280, height: 720, facingMode: "environment" },
+    };
+    navigator.mediaDevices.getUserMedia(constraints).then((response) => {
+      const video = document.getElementById("video");
+      video.srcObject = response;
+      video.play();
+    });
 
     const {
       mixers,
@@ -61,12 +61,12 @@ const World = (props) => {
 
   return (
     <div id="world">
-      {/* <video
+      <video
         id="video"
         style={{ display: "none" }}
         autoPlay
         playsInline
-      ></video> */}
+      ></video>
       <div
         id="three-map"
         style={{
@@ -94,4 +94,3 @@ const mapDispatchToProps = (dispatch) => {
 World.propTypes = {};
 
 export default connect(mapStateToProps, mapDispatchToProps)(World);
-

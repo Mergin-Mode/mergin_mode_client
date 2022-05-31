@@ -31,6 +31,7 @@
     "react-color": "^2.18.0",
     "react-dom": "^16.12.0",
     "react-dropzone": "^10.2.2",
+    "react-joystick-component": "^4.0.1",
     "react-modal": "^3.11.1",
     "react-qr-reader": "^2.2.1",
     "react-redux": "^7.2.0",

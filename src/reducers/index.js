@@ -5,7 +5,6 @@ import worldDataOne from "../testFiles/worldOne.js";
 import worldDataTwo from "../testFiles/worldTwo.js";
 import worldDataThree from "../testFiles/worldThree.js";
 import { fromLonLat } from "ol/proj.js";
-console.log(fromLonLat([40.991193, 22.870323]));
 const startWorld = {
   id: "0",
   name: "Start World",

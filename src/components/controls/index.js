@@ -11,29 +11,40 @@ import GpsFixedIcon from "@material-ui/icons/GpsFixed";
 import CropFreeIcon from "@material-ui/icons/CropFree";
 import QRModal from "../_layout/QRModal";
 import Button from "@material-ui/core/Button";
+import { Box } from "@material-ui/core";
+import ControlCameraIcon from "@material-ui/icons/ControlCamera";
+// import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
+// import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
+// import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+// import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
+import { Joystick } from "react-joystick-component";
+const direction = new THREE.Vector3();
 
-const Controls = props => {
+const Controls = (props) => {
   const sliderHelperRef = useRef();
   const containerRef = useRef();
-  const [state, setState] = useState({ geolocation: false });
+  const [state, setState] = useState({
+    geolocation: false,
+    calibration: false,
+  });
   const [modalData, setModalData] = useState(null);
   const [infoState, setInfoState] = useState({
     position: { x: 0, y: 0, z: 0 },
-    heading: [0]
+    heading: [0],
   });
 
   const fheight = useRef({
     height: null,
     movementY: null,
     previousTouchY: null,
-    moved: false
+    moved: false,
   });
 
   const [showInfo, setShowInfo] = useState(true);
 
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
-      window.document.body.requestFullscreen().catch(err => {
+      window.document.body.requestFullscreen().catch((err) => {
         alert(
           `Error attempting to enable full-screen mode: ${err.message} (${err.name})`
         );
@@ -46,7 +57,7 @@ const Controls = props => {
   const worldActions =
     window.mergin_mode.currentWorldId !== 0 &&
     window.mergin_mode.worlds.filter(
-      world => window.mergin_mode.currentWorldId === world.id
+      (world) => window.mergin_mode.currentWorldId === world.id
     )[0]?.actions;
   React.useEffect(() => {
     if (state.geolocation) {
@@ -86,13 +97,13 @@ const Controls = props => {
 
       target = {
         latitude: 0,
-        longitude: 0
+        longitude: 0,
       };
 
       options = {
         enableHighAccuracy: false,
         timeout: 5000,
-        maximumAge: 0
+        maximumAge: 0,
       };
 
       id = navigator.geolocation.watchPosition(success, error, options);
@@ -120,12 +131,53 @@ const Controls = props => {
         position: {
           x: (cx + x).toFixed(2) + "m",
           y: (cz + z).toFixed(2) + "m",
-          z: (cy + y).toFixed(2) + "m"
+          z: (cy + y).toFixed(2) + "m",
         },
-        heading: heading + "deg"
+        heading: heading + "deg",
       });
     }, 1000);
   }, []);
+  const [locomotionMode, setLocomotionMode] = useState("Adjust");
+  const move = useRef();
+  const moveInterval = useRef();
+  const handleMove = (data) => {
+    if (locomotionMode == "Adjust") {
+      window.mergin_mode.controls.alphaOffset -= (0.001 * data.x) / 50;
+    } else {
+      if (move.current !== "FORWARDS" && data.y > 0) {
+        move.current = "FORWARDS";
+        clearInterval(moveInterval.current);
+        moveInterval.current = setInterval(() => {
+          eventOrLoopOrSomething(0.1);
+        }, 60);
+      }
+      if (move.current !== "BACKWARDS" && data.y < 0) {
+        move.current = "BACKWARDS";
+        clearInterval(moveInterval.current);
+        moveInterval.current = setInterval(() => {
+          eventOrLoopOrSomething(-0.1);
+        }, 60);
+      }
+    }
+  };
+  function eventOrLoopOrSomething(speed) {
+    window.mergin_mode.camera.getWorldDirection(direction);
+    window.mergin_mode.camera.position.addScaledVector(direction, speed);
+  }
+  const handleStop = () => {
+    clearInterval(moveInterval.current);
+  };
+  // const boxStyle = {
+  //   background: "rgba(0,0,0,0.7)",
+  //   color: "white",
+  //   padding: "12px",
+  //   borderRadius: "100%",
+  //   display: "flex",
+  //   alignItems: "center",
+  //   justifyContent: "center",
+  //   cursor: "pointer",
+  // };
+
   return (
     <div id="controls">
       <img
@@ -144,7 +196,7 @@ const Controls = props => {
                   onClick={() =>
                     setModalData(
                       <QRModal
-                        onClose={data => {
+                        onClose={(data) => {
                           setModalData(null);
                         }}
                       />
@@ -154,11 +206,24 @@ const Controls = props => {
                   <i style={{ fontSize: 18 }} className="fas fa-qrcode"></i>
                 </div>
               ),
-              name: "QR Scan"
+              name: "QR Scan",
+            },
+            {
+              icon: (
+                <span
+                  onClick={() => {
+                    setState({ ...state, calibration: !state.calibration });
+                  }}
+                  id="calibration"
+                >
+                  <ControlCameraIcon />
+                </span>
+              ),
+              name: "Calibrate",
             },
             {
               icon: <CropFreeIcon onClick={() => toggleFullscreen()} />,
-              name: "Full Screen"
+              name: "Full Screen",
             },
             {
               icon: (
@@ -170,7 +235,7 @@ const Controls = props => {
                   VR
                 </span>
               ),
-              name: "Virtual Reality"
+              name: "Virtual Reality",
             },
             {
               icon: (
@@ -182,7 +247,7 @@ const Controls = props => {
                   MR
                 </span>
               ),
-              name: "Mixed Reality"
+              name: "Mixed Reality",
             },
             {
               icon: (
@@ -195,7 +260,7 @@ const Controls = props => {
                   VRH
                 </span>
               ),
-              name: "VR Headset"
+              name: "VR Headset",
             },
             {
               icon: (
@@ -208,7 +273,7 @@ const Controls = props => {
                   MRH
                 </span>
               ),
-              name: "MR Headset"
+              name: "MR Headset",
             },
             {
               icon: (
@@ -221,7 +286,7 @@ const Controls = props => {
                   <i className="fas fa-info-circle"></i>
                 </span>
               ),
-              name: "Show/Hide Info"
+              name: "Show/Hide Info",
             },
             {
               icon: (
@@ -234,10 +299,92 @@ const Controls = props => {
                   <GpsFixedIcon />
                 </span>
               ),
-              name: "Geolocate"
-            }
+              name: "Geolocate",
+            },
           ]}
         />
+        {state.calibration && (
+          <Box
+            style={{
+              position: "absolute",
+              width: "100%",
+              height: "100%",
+              top: "0px",
+              left: "0px",
+              zIndex: 100,
+              background: "rgba(0,0,0,0.4)",
+              display: "flex",
+              gap: "12px",
+              pointerEvents: "auto",
+              alignItems: "flex-end",
+              justifyContent: "space-between",
+              padding: "50px",
+            }}
+          >
+            <Box
+              style={{
+                background: "rgba(0,0,0,0.7)",
+                color: "white",
+                padding: "8px 12px",
+                borderRadius: "6px",
+                cursor: "pointer",
+              }}
+              onClick={() =>
+                setLocomotionMode(
+                  locomotionMode === "Adjust" ? "Move" : "Adjust"
+                )
+              }
+            >
+              {locomotionMode}
+            </Box>
+            <Joystick
+              size={100}
+              baseColor="#323229"
+              stickColor="#b64f0c"
+              move={handleMove}
+              stop={handleStop}
+            ></Joystick>
+            <Box
+              style={{
+                background: "rgba(0,0,0,0.7)",
+                color: "white",
+                padding: "8px 12px",
+                borderRadius: "6px",
+                cursor: "pointer",
+              }}
+              onClick={() => setState({ ...state, calibration: false })}
+            >
+              Close
+            </Box>
+            {/*
+
+            <Box
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "50px",
+              }}
+            >
+              <Box
+                style={boxStyle}
+                onClick={() => {
+
+                }}
+              >
+                <ArrowBackIcon />
+              </Box>
+              <Box
+                style={boxStyle}
+                onClick={() => {
+                  window.mergin_mode.controls.alphaOffset += 0.1;
+                }}
+              >
+                <ArrowForwardIcon />
+              </Box>
+            </Box> */}
+          </Box>
+        )}
         {showInfo && (
           <React.Fragment>
             <div id="info-panel">
@@ -258,7 +405,7 @@ const Controls = props => {
 
         <div
           id="descriptive-data-container"
-          ref={elem => (containerRef.current = elem)}
+          ref={(elem) => (containerRef.current = elem)}
         >
           <Button
             id="slider-helper"
@@ -272,12 +419,12 @@ const Controls = props => {
               sliderHelperRef,
               fheight
             )}
-            ref={elem => (sliderHelperRef.current = elem)}
+            ref={(elem) => (sliderHelperRef.current = elem)}
           ></Button>
           <div id="slider"></div>
           {worldActions && (
             <div className="world-actions">
-              {worldActions.map(action => (
+              {worldActions.map((action) => (
                 <div
                   key={action.name}
                   className="world-action"
@@ -313,13 +460,13 @@ const Controls = props => {
   );
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
-    descriptiveData: state.api.descriptiveData
+    descriptiveData: state.api.descriptiveData,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {};
 };
 
