@@ -9,20 +9,24 @@ import { createMuiTheme } from "@material-ui/core/styles";
 const theme = createMuiTheme({
   palette: {
     primary: {
-      main: "#b34f0b"
+      main: "#b34f0b",
     },
     secondary: {
-      main: "#323228"
-    }
-  }
+      main: "#323228",
+    },
+  },
 });
 
 function App() {
+  const [renderVideo, setRenderVideo] = React.useState(false);
   return (
     <ThemeProvider theme={theme}>
       <div className="App">
-        <World />
-        <Controls />
+        <World renderVideo={renderVideo} />
+        <Controls
+          renderVideo={renderVideo}
+          setRenderVideo={(bool) => setRenderVideo(bool)}
+        />
       </div>
     </ThemeProvider>
   );

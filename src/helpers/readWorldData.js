@@ -5,9 +5,9 @@ import * as THREE from "three";
 const loader = {
   gltf: loadGLTFModel,
   glb: loadGLTFModel,
-  fbx: loadFBXModel
+  fbx: loadFBXModel,
 };
-export default async worldId => {
+export default async (worldId) => {
   const towerlocationConvert = fromLonLat([40.626374, 22.948324, 15.25]);
   // const treelocationConvert = fromLonLat([40.62626, 22.947929, 15.25]);
   // const userConvert = fromLonLat([40.626288, 22.947957, 15.25]);
@@ -19,7 +19,7 @@ export default async worldId => {
       .pop()
       .trim();
   }
-  const readWorldData = world => {
+  const readWorldData = (world) => {
     window.mergin_mode.center = world.meta.coordinates;
 
     const data = world.content;
@@ -44,8 +44,8 @@ export default async worldId => {
       }
     }
     return Promise.all(loadings)
-      .then(models => {
-        models.forEach(model => {
+      .then((models) => {
+        models.forEach((model) => {
           window.mergin_mode.world[window.mergin_mode.currentWorldId][
             model.referenceIndex
           ].id = model.uuid;
@@ -56,7 +56,7 @@ export default async worldId => {
           // if (window.mergin_mode.world[model.referenceIndex].visible == false) {
           //   model.object.visible = false;
           // }
-          model.object.traverse(child => {
+          model.object.traverse((child) => {
             if (child.isMesh) {
               if (
                 window.mergin_mode.world[window.mergin_mode.currentWorldId][
@@ -81,18 +81,22 @@ export default async worldId => {
 
           if ((actions.onLoad || {}).animations) {
             const anim = actions.onLoad.animations[0];
+            const startAt = anim.startAt || 0;
             const mixer = new THREE.AnimationMixer(model.object);
             const theAnimation = window.mergin_mode.world[
               window.mergin_mode.currentWorldId
             ][model.referenceIndex].object.children[0].animations.filter(
-              animation => {
+              (animation) => {
                 return animation.name === anim.name;
               }
             )[0];
-            mixer
-              .clipAction(theAnimation)
-              .setDuration((anim.singleLoopDuration || 1000) / 1000)
-              .play();
+            setTimeout(() => {
+              mixer
+                .clipAction(theAnimation)
+                .setDuration((anim.singleLoopDuration || 1000) / 1000)
+                .play();
+            }, startAt);
+
             window.mergin_mode.world[window.mergin_mode.currentWorldId][
               model.referenceIndex
             ].runtimeInfo = {
@@ -100,7 +104,7 @@ export default async worldId => {
               pathIndex: 0,
               duration: 0,
               lastUpdate: 0,
-              mixer
+              mixer,
             };
           }
           if ((actions.onSelect || {}).animations) {
@@ -108,7 +112,7 @@ export default async worldId => {
             const theAnimation = window.mergin_mode.world[
               window.mergin_mode.currentWorldId
             ][model.referenceIndex].object.children[0].animations.filter(
-              animation => {
+              (animation) => {
                 return animation.name === actions.onSelect.animations[0].name;
               }
             )[0];
@@ -126,14 +130,14 @@ export default async worldId => {
               pathIndex: 0,
               duration: 0,
               lastUpdate: 0,
-              mixer
+              mixer,
             };
           }
         });
       })
-      .catch(e => {
+      .catch((e) => {
         console.error(e);
       });
   };
-  readWorldData(window.mergin_mode.worlds.filter(w => w.id === worldId)[0]);
+  readWorldData(window.mergin_mode.worlds.filter((w) => w.id === worldId)[0]);
 };

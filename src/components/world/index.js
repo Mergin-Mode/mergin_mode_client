@@ -2,19 +2,38 @@ import React, { useRef, useState, useEffect } from "react";
 import { connect } from "react-redux";
 import createWorld from "../../helpers/createWorld";
 import { setDescriptiveData } from "../../actions";
+function stopStreamedVideo(videoElem) {
+  const stream = videoElem.srcObject;
+  if (!stream) return;
+  const tracks = stream.getTracks();
+
+  tracks.forEach(function(track) {
+    track.stop();
+  });
+
+  videoElem.srcObject = null;
+}
 const World = (props) => {
+  useEffect(() => {
+    const video = document.getElementById("video");
+    if (props.renderVideo) {
+      const video = document.getElementById("video");
+      const constraints = {
+        video: { width: 1280, height: 720, facingMode: "environment" },
+      };
+
+      navigator.mediaDevices.getUserMedia(constraints).then((response) => {
+        video.srcObject = response;
+        video.play();
+      });
+    } else {
+      if (video) stopStreamedVideo(video);
+    }
+  }, [props.renderVideo]);
   useEffect(() => {
     if (!navigator.mediaDevices?.getUserMedia) {
       return false;
     }
-    const constraints = {
-      video: { width: 1280, height: 720, facingMode: "environment" },
-    };
-    navigator.mediaDevices.getUserMedia(constraints).then((response) => {
-      const video = document.getElementById("video");
-      video.srcObject = response;
-      video.play();
-    });
 
     const {
       mixers,
@@ -62,6 +81,7 @@ const World = (props) => {
   return (
     <div id="world">
       <video
+        key={"video"}
         id="video"
         style={{ display: "none" }}
         autoPlay

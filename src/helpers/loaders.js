@@ -8,7 +8,7 @@ export const loadGLTFModel = (file, record, referenceIndex) => {
     scale,
     scaleDifferenceXY,
     scaleDifferenceZ,
-    blending
+    blending,
   } = record;
   const { url } = file[0];
   const { scene, loaders } = window.mergin_mode;
@@ -19,11 +19,11 @@ export const loadGLTFModel = (file, record, referenceIndex) => {
   return new Promise((resolve, reject) => {
     loader.load(
       url,
-      gltf => {
+      (gltf) => {
         gltf.scene.animations = gltf.animations;
         const group = new THREE.Group();
 
-        gltf.scene.traverse(child => {
+        gltf.scene.traverse((child) => {
           if (child.isMesh) {
             child.material.side = THREE.DoubleSide;
             child.material.needsUpdate = true;
@@ -84,11 +84,11 @@ export const loadGLTFModel = (file, record, referenceIndex) => {
         resolve({
           referenceIndex,
           uuid: gltf.scene.uuid,
-          object: group
+          object: group,
         });
       },
       () => {},
-      e => {
+      (e) => {
         reject(e);
       }
     );
@@ -101,7 +101,7 @@ export const loadFBXModel = (file, record, referenceIndex) => {
     scale,
     scaleDifferenceXY,
     scaleDifferenceZ,
-    blending
+    blending,
   } = record;
   const { url } = file[0];
   const { scene, loaders } = window.mergin_mode;
@@ -109,9 +109,9 @@ export const loadFBXModel = (file, record, referenceIndex) => {
   return new Promise((resolve, reject) => {
     loader.load(
       url,
-      object => {
+      (object) => {
         const group = new THREE.Group();
-        object.scene.traverse(child => {
+        object.scene.traverse((child) => {
           if (child.isMesh) {
             child.material.side = THREE.DoubleSide;
             child.material.needsUpdate = true;
@@ -172,7 +172,7 @@ export const loadFBXModel = (file, record, referenceIndex) => {
         resolve({ referenceIndex, uuid: group.uuid, object: group });
       },
       () => {},
-      e => {
+      (e) => {
         reject(e);
       }
     );
