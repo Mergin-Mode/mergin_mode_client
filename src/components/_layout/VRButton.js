@@ -20,6 +20,7 @@ const VRButton = {
         // button.textContent = "EXIT VR";
 
         scene.rotation.y = -3.14;
+        scene.position.y = 0;
 
         currentSession = session;
       }
@@ -30,6 +31,7 @@ const VRButton = {
 
         button.textContent = "ENTER VR";
         scene.rotation.y = 0;
+        scene.position.y = -1.7;
         currentSession = null;
       }
 
