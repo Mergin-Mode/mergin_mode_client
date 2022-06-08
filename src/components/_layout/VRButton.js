@@ -18,9 +18,12 @@ const VRButton = {
 
         renderer.xr.setSession(session);
         // button.textContent = "EXIT VR";
-
+        const scenepositionX = scene.position.x;
+        const scenepositionZ = scene.position.z;
+        scene.position.set(0, 0, 0);
+        camera.rotation.set(0, 0, 0);
         scene.rotation.y = -3.14;
-        scene.position.y = 0;
+        scene.position.set(scenepositionX, 0, scenepositionZ);
 
         currentSession = session;
       }
@@ -30,6 +33,11 @@ const VRButton = {
         currentSession.removeEventListener("end", onSessionEnded);
 
         button.textContent = "ENTER VR";
+        const scenepositionX = scene.position.x;
+        const scenepositionZ = scene.position.z;
+        scene.position.set(scenepositionX, -1.7, scenepositionZ);
+        camera.position.set(0, 0, 0);
+        camera.rotation.set(0, 0, 0);
         scene.rotation.y = 0;
         scene.position.y = -1.7;
         currentSession = null;
