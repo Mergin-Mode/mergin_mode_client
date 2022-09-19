@@ -1,6 +1,5 @@
 import { combineReducers } from "redux";
 import api from "./api";
-import worldDataTest from "../testFiles/worldTest.js";
 import worldDataOne from "../testFiles/worldOne.js";
 import worldDataTwo from "../testFiles/worldTwo.js";
 import worldDataThree from "../testFiles/worldThree.js";
@@ -43,13 +42,7 @@ window.mergin_mode = {
   onWindowResize: () => {},
   world: {},
   currentWorldId: 0,
-  worlds: [
-    startWorld,
-    worldDataOne,
-    worldDataTwo,
-    worldDataThree,
-    worldDataTest,
-  ],
+  worlds: [startWorld, worldDataOne, worldDataTwo, worldDataThree],
 };
 
 const rootReducer = combineReducers({
