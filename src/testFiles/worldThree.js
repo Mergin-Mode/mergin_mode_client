@@ -1,7 +1,53 @@
+import * as THREE from "three";
 export default {
   id: "006cb9aE-S324",
   name: "Apollonia Bath",
   description: "Simulation of the Otoman Bath in Apollonia.",
+  actions: [
+    {
+      name: "Show/Hide Ground",
+      run: () => {
+        window.mergin_mode.world[window.mergin_mode.currentWorldId].map(
+          (item) => {
+            if (item.ground) {
+              item.object.visible = !item.object.visible;
+            }
+          }
+        );
+      },
+    },
+    {
+      name: "Change Virtual Transparency",
+      run: () => {
+        window.mergin_mode.world[window.mergin_mode.currentWorldId].map(
+          (item) => {
+            if (item.type === "virtual") {
+              item.object.traverse((child) => {
+                if (child.isMesh) {
+                  child.material.transparent = true;
+                  if (child.material.opacity === 0.3)
+                    child.material.opacity = 1;
+                  else child.material.opacity = 0.3;
+                  child.material.needsUpdate = true;
+                }
+              });
+            }
+          }
+        );
+      },
+    },
+    {
+      name: "Change FoV",
+      run: () => {
+        window.mergin_mode.camera.fov += 5;
+
+        if (window.mergin_mode.camera.fov > 130) {
+          window.mergin_mode.camera.fov = 50;
+        }
+        window.mergin_mode.camera.updateProjectionMatrix();
+      },
+    },
+  ],
   content: [
     {
       type: "virtual",
@@ -126,4 +172,3 @@ export default {
     coordinates: [0, 0, 0],
   },
 };
-
