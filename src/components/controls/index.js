@@ -193,6 +193,13 @@ const Controls = (props) => {
             {
               icon: (
                 <div
+                  style={
+                    !props.renderVideo
+                      ? {
+                          pointerEvents: "none",
+                        }
+                      : {}
+                  }
                   onClick={() =>
                     setModalData(
                       <QRModal
@@ -207,6 +214,7 @@ const Controls = (props) => {
                 </div>
               ),
               name: "QR Scan",
+              disabled: !props.renderVideo,
             },
             {
               icon: (
@@ -229,6 +237,7 @@ const Controls = (props) => {
               icon: (
                 <span
                   onClick={() => {
+                    props.setRenderVideo(false);
                     window.mergin_mode.realities.virtual();
                   }}
                 >
@@ -241,6 +250,7 @@ const Controls = (props) => {
               icon: (
                 <span
                   onClick={() => {
+                    props.setRenderVideo(true);
                     window.mergin_mode.realities.mixed();
                   }}
                 >
@@ -253,7 +263,8 @@ const Controls = (props) => {
               icon: (
                 <span
                   onClick={() => {
-                    window.mergin_mode.realities.mixed();
+                    props.setRenderVideo(false);
+                    window.mergin_mode.realities.virtual();
                   }}
                   id="vrh"
                 >
@@ -265,8 +276,17 @@ const Controls = (props) => {
             {
               icon: (
                 <span
+                  style={
+                    props.renderVideo
+                      ? {
+                          pointerEvents: "none",
+                          textDecoration: "line-through",
+                        }
+                      : {}
+                  }
                   onClick={() => {
-                    window.mergin_mode.realities.mixed();
+                    props.setRenderVideo(false);
+                    window.mergin_mode.realities.mixedMRH();
                   }}
                   id="mrh"
                 >
@@ -274,6 +294,7 @@ const Controls = (props) => {
                 </span>
               ),
               name: "MR Headset",
+              disabled: props.renderVideo,
             },
             {
               icon: (

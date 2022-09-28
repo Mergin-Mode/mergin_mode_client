@@ -41,7 +41,6 @@ export default function QRModal(props) {
             await readWorldData(w.id);
           })();
         }
-
         window.mergin_mode.scene.position.set(
           window.mergin_mode.center[0] - d.position.x,
           window.mergin_mode.center[1] - d.position.z,

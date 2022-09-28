@@ -4,7 +4,7 @@
  */
 
 const VRButton = {
-  createButton: function(renderer, button, type) {
+  createButton: function(renderer, button, type, scene, camera) {
     // if (options && options.referenceSpaceType) {
     //   renderer.xr.setReferenceSpaceType(options.referenceSpaceType);
     // }
@@ -12,19 +12,34 @@ const VRButton = {
       let currentSession = null;
 
       function onSessionStarted(session) {
+        window.session = session;
+
         session.addEventListener("end", onSessionEnded);
 
         renderer.xr.setSession(session);
         // button.textContent = "EXIT VR";
+        const scenepositionX = scene.position.x;
+        const scenepositionZ = scene.position.z;
+        scene.position.set(0, 0, 0);
+        camera.rotation.set(0, 0, 0);
+        scene.rotation.y = -3.14;
+        scene.position.set(scenepositionX, 0, scenepositionZ);
 
         currentSession = session;
       }
 
       function onSessionEnded(/*event*/) {
+        window.mergin_mode.realities.virtual();
         currentSession.removeEventListener("end", onSessionEnded);
 
         button.textContent = "ENTER VR";
-
+        const scenepositionX = scene.position.x;
+        const scenepositionZ = scene.position.z;
+        scene.position.set(scenepositionX, -1.7, scenepositionZ);
+        camera.position.set(0, 0, 0);
+        camera.rotation.set(0, 0, 0);
+        scene.rotation.y = 0;
+        scene.position.y = -1.7;
         currentSession = null;
       }
 

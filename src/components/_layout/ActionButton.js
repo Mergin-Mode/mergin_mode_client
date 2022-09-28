@@ -6,8 +6,8 @@ import SpeedDial from "@material-ui/lab/SpeedDial";
 import SpeedDialAction from "@material-ui/lab/SpeedDialAction";
 import SpeedDialIcon from "@material-ui/lab/SpeedDialIcon";
 
-export default props => {
-  const useStyles = makeStyles(theme => ({
+export default (props) => {
+  const useStyles = makeStyles((theme) => ({
     root: {
       pointerEvents: "none",
       height: 380,
@@ -16,26 +16,26 @@ export default props => {
       flex: 1,
       zIndex: 10,
       width: "100%",
-      height: "100%"
+      height: "100%",
     },
     speedDial: {
       position: "absolute",
       bottom: theme.spacing(2),
       right: theme.spacing(2),
       "& .MuiSpeedDialAction-staticTooltip .MuiSpeedDialAction-staticTooltipLabel": {
-        whiteSpace: "nowrap"
+        whiteSpace: "nowrap",
       },
       "& .MuiButtonBase-root.MuiFab-root.MuiSpeedDial-fab.MuiFab-primary": {
         width: 48,
         height: 48,
         "& .MuiFab-label": {
-          display: "initial"
+          display: "initial",
         },
         "&:focus": {
-          outline: "none"
-        }
-      }
-    }
+          outline: "none",
+        },
+      },
+    },
   }));
 
   const classes = useStyles();
@@ -60,7 +60,7 @@ export default props => {
         onOpen={handleOpen}
         open={open}
       >
-        {props.actions.map(action => (
+        {props.actions.map((action) => (
           <SpeedDialAction
             key={action.name}
             icon={action.icon}
